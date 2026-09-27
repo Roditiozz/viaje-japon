@@ -88,6 +88,72 @@ if (
   );
 }
 
+
+// ===== COLA OFFLINE =====
+// Los cambios hechos sin conexión se guardan aquí y se envían a Supabase al volver Internet.
+const OFFLINE_QUEUE_KEY='japon_offline_queue_v1';
+function getOfflineQueue(){try{return JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY)||'[]')||[];}catch(e){return [];}}
+function setOfflineQueue(q){localStorage.setItem(OFFLINE_QUEUE_KEY,JSON.stringify(q));}
+function queueOfflineChange(change){
+  const q=getOfflineQueue();
+  const key=change.kind+'|'+change.identity;
+  const pos=q.findIndex(x=>(x.kind+'|'+x.identity)===key);
+  const item={...change,queuedAt:new Date().toISOString()};
+  if(pos>=0)q[pos]=item;else q.push(item);
+  setOfflineQueue(q);
+  console.log('📴 Cambio pendiente de sincronizar:',change.kind,change.identity);
+}
+function removeOfflineChange(kind,identity){setOfflineQueue(getOfflineQueue().filter(x=>!(x.kind===kind&&x.identity===identity)));}
+function applyPendingQueueToLocal(){
+  getOfflineQueue().forEach(x=>{
+    if(x.kind==='wishlist'){
+      const i=personalItems.findIndex(v=>v[0]===x.identity);
+      if(i>=0)purchaseData.personal[i]={status:x.payload.status||'Pendiente',price:x.payload.actual_price??''};
+    }else if(x.kind==='gift'){
+      const [person,group]=x.identity.split('|||');
+      const i=gifts.findIndex(v=>v[0]===person&&v[1]===group);
+      if(i>=0)purchaseData.gifts[i]={status:x.payload.status||'Pendiente',price:x.payload.actual_price??''};
+    }else if(x.kind==='place'){
+      const [zone,name]=x.identity.split('|||');
+      const place=places.find(v=>v.zone===zone&&v.name===name);
+      if(place){place.status=x.payload.status||'Pendiente';saveStatus(place);}
+    }
+  });
+  savePurchaseData();
+}
+async function syncOfflineQueue(){
+  if(!navigator.onLine||!supabaseClient)return;
+  const q=getOfflineQueue();
+  if(!q.length)return;
+  console.log('🔄 Sincronizando cambios pendientes:',q.length);
+  for(const x of [...q]){
+    try{
+      let error=null;
+      if(x.kind==='wishlist'){
+        const {data, error:findError}=await supabaseClient.from('wishlist_items').select('id,product').eq('product',x.identity).limit(1);
+        if(findError)throw findError;if(!data?.[0]?.id)throw new Error('No se encontró wishlist: '+x.identity);
+        ({error}=await supabaseClient.from('wishlist_items').update({...x.payload,updated_at:new Date().toISOString()}).eq('id',data[0].id));
+      }else if(x.kind==='gift'){
+        const [person,group]=x.identity.split('|||');
+        const {data,error:findError}=await supabaseClient.from('gifts').select('*');
+        if(findError)throw findError;
+        const row=(data||[]).find(r=>textValue(firstValue(r,['person_name','recipient','name','person']))===person&&textValue(firstValue(r,['group_name','group','family_group','recipient_group']))===group);
+        if(!row?.id)throw new Error('No se encontró regalo: '+person+' / '+group);
+        ({error}=await supabaseClient.from('gifts').update(x.payload).eq('id',row.id));
+      }else if(x.kind==='place'){
+        const [zone,name]=x.identity.split('|||');
+        const {data,error:findError}=await supabaseClient.from('places').select('id,name,zone').eq('name',name).eq('zone',zone).limit(1);
+        if(findError)throw findError;if(!data?.[0]?.id)throw new Error('No se encontró lugar: '+name);
+        ({error}=await supabaseClient.from('places').update(x.payload).eq('id',data[0].id));
+      }
+      if(error)throw error;
+      removeOfflineChange(x.kind,x.identity);
+      console.log('☁️ Cambio offline sincronizado:',x.kind,x.identity);
+    }catch(error){console.error('❌ Sigue pendiente de sincronizar:',x.kind,x.identity,error?.message||error);}
+  }
+}
+window.addEventListener('online',()=>{console.log('🌐 Volvió Internet. Sincronizando...');syncOfflineQueue();});
+
 // Cargar lugares desde Supabase
 async function loadPlacesFromSupabase() {
   if (!supabaseClient) {
@@ -346,19 +412,16 @@ function saveStatus(p){
 }
 function getPlaceById(id){return places.find(p=>p.id===id)}
 async function savePlaceStatusToSupabase(p){
-  if(!supabaseClient || !p?.cloudId)return false;
+  const identity=`${p.zone}|||${p.name}`, payload={status:p.status};
+  if(!navigator.onLine || !supabaseClient){queueOfflineChange({kind:'place',identity,payload});return false;}
   try{
-    const {error}=await supabaseClient.from('places').update({status:p.status}).eq('id',p.cloudId);
-    if(error)throw error;
-    p.cloudStatus=p.status;
-    console.log('☁️ Lugar guardado en Supabase:',p.name,p.status);
-    return true;
-  }catch(error){
-    console.error('❌ Lugar no pudo guardarse en Supabase; quedó guardado localmente.',{
-      code:error?.code || '', message:error?.message || String(error)
-    });
-    return false;
-  }
+    let cloudId=p?.cloudId;
+    if(!cloudId){const {data,error}=await supabaseClient.from('places').select('id').eq('name',p.name).eq('zone',p.zone).limit(1);if(error)throw error;cloudId=data?.[0]?.id;}
+    if(!cloudId)throw new Error('No se encontró el lugar en Supabase.');
+    const {error}=await supabaseClient.from('places').update(payload).eq('id',cloudId);
+    if(error)throw error;p.cloudId=cloudId;p.cloudStatus=p.status;removeOfflineChange('place',identity);
+    console.log('☁️ Lugar guardado en Supabase:',p.name,p.status);return true;
+  }catch(error){queueOfflineChange({kind:'place',identity,payload});console.error('❌ Lugar quedó pendiente de sincronizar.',error?.message||error);return false;}
 }
 function togglePlaceStatus(id){
   const p=getPlaceById(id);
@@ -458,52 +521,31 @@ function applyGiftCloudPurchaseData(){
 }
 
 async function saveGiftToSupabase(index){
-  if(!supabaseClient || !giftCloudRows[index]?.id)return false;
-  const d=getPurchase('gifts',index);
-  const payload={status:d.status || 'Pendiente'};
-
-  // The current gifts reader accepts the common price field names.
-  // We use actual_price first, matching wishlist. If the table lacks it,
-  // the console will show the exact Supabase column error without breaking local save.
-  payload.actual_price=d.price==='' ? null : Number(d.price);
-
+  const d=getPurchase('gifts',index), g=gifts[index];
+  if(!g)return false;
+  const identity=`${g[0]}|||${g[1]}`, payload={status:d.status||'Pendiente',actual_price:d.price===''?null:Number(d.price)};
+  if(!navigator.onLine || !supabaseClient){queueOfflineChange({kind:'gift',identity,payload});return false;}
   try{
-    const {error}=await supabaseClient.from('gifts').update(payload).eq('id',giftCloudRows[index].id);
-    if(error)throw error;
-    giftCloudRows[index].status=payload.status;
-    giftCloudRows[index].price=payload.actual_price ?? '';
-    console.log('☁️ Regalo guardado en Supabase:',gifts[index]?.[0] || index);
-    return true;
-  }catch(error){
-    console.error('❌ Regalo no pudo guardarse en Supabase; quedó guardado localmente.',{
-      code:error?.code || '', message:error?.message || String(error)
-    });
-    return false;
-  }
+    let cloudId=giftCloudRows[index]?.id;
+    if(!cloudId){const {data,error}=await supabaseClient.from('gifts').select('*');if(error)throw error;const row=(data||[]).find(r=>textValue(firstValue(r,['person_name','recipient','name','person']))===g[0]&&textValue(firstValue(r,['group_name','group','family_group','recipient_group']))===g[1]);cloudId=row?.id;}
+    if(!cloudId)throw new Error('No se encontró el regalo en Supabase.');
+    const {error}=await supabaseClient.from('gifts').update(payload).eq('id',cloudId);if(error)throw error;
+    removeOfflineChange('gift',identity);console.log('☁️ Regalo guardado en Supabase:',g[0]);return true;
+  }catch(error){queueOfflineChange({kind:'gift',identity,payload});console.error('❌ Regalo quedó pendiente de sincronizar.',error?.message||error);return false;}
 }
 
 async function saveWishlistItemToSupabase(index){
-  if(!supabaseClient || !wishlistCloudRows[index]?.id)return false;
-  const d=getPurchase('personal',index);
+  const d=getPurchase('personal',index), item=personalItems[index];
+  if(!item)return false;
+  const identity=item[0], payload={status:d.status||'Pendiente',actual_price:d.price===''?null:Number(d.price)};
+  if(!navigator.onLine || !supabaseClient){queueOfflineChange({kind:'wishlist',identity,payload});return false;}
   try{
-    const {error}=await supabaseClient
-      .from('wishlist_items')
-      .update({
-        status:d.status || 'Pendiente',
-        actual_price:d.price==='' ? null : Number(d.price),
-        updated_at:new Date().toISOString()
-      })
-      .eq('id',wishlistCloudRows[index].id);
-    if(error)throw error;
-    console.log('☁️ Wishlist guardada en Supabase:',personalItems[index]?.[0] || index);
-    return true;
-  }catch(error){
-    console.error('❌ No se pudo guardar wishlist en Supabase; quedó guardado localmente.',{
-      code:error?.code || '',
-      message:error?.message || String(error)
-    });
-    return false;
-  }
+    let cloudId=wishlistCloudRows[index]?.id;
+    if(!cloudId){const {data,error}=await supabaseClient.from('wishlist_items').select('id').eq('product',identity).limit(1);if(error)throw error;cloudId=data?.[0]?.id;}
+    if(!cloudId)throw new Error('No se encontró el producto en Supabase.');
+    const {error}=await supabaseClient.from('wishlist_items').update({...payload,updated_at:new Date().toISOString()}).eq('id',cloudId);if(error)throw error;
+    removeOfflineChange('wishlist',identity);console.log('☁️ Wishlist guardada en Supabase:',identity);return true;
+  }catch(error){queueOfflineChange({kind:'wishlist',identity,payload});console.error('❌ Wishlist quedó pendiente de sincronizar.',error?.message||error);return false;}
 }
 
 function savePurchaseData(){localStorage.setItem('japon_purchase_data_v22',JSON.stringify(purchaseData));updateBudgets();}
@@ -606,6 +648,8 @@ document.addEventListener('click',function(e){
   loadPurchaseData();
   applyWishlistCloudPurchaseData();
   applyGiftCloudPurchaseData();
+  // Los cambios pendientes tienen prioridad sobre la copia de la nube hasta sincronizarse.
+  applyPendingQueueToLocal();
   renderPersonal();
   renderGifts();
   renderZones();
@@ -613,6 +657,7 @@ document.addEventListener('click',function(e){
 
   if (cloudLoaded) {
     console.log("☁️ Supabase conectado correctamente.");
+    syncOfflineQueue();
   } else {
     console.log("📱 Usando los datos locales de la aplicación.");
   }
