@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<!-- Versión prueba: wishlist + gifts + places sincronizados con Supabase; respaldo local -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇯🇵 Mi Viaje a Japón — v2.2</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f5f7;color:#222}header{background:#fff;padding:18px 16px;text-align:center;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}header h1{margin:0;font-size:22px}main{max-width:900px;margin:auto;padding:18px}section{display:none}section.active{display:block}.search-box{background:#fff;border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.search-box h2{margin-top:0;font-size:20px}.search-box input{width:100%;padding:15px;border:1px solid #ddd;border-radius:12px;font-size:16px;outline:none}.search-box input:focus{border-color:#888}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.07);cursor:pointer;transition:.15s}.card:hover{transform:translateY(-2px)}.card h3{margin:0 0 8px;font-size:18px}.card p{margin:0;color:#666;font-size:14px}.screen-title{margin-bottom:16px}.screen-title h2{margin-bottom:5px}.screen-title p{color:#666;margin-top:0}.list{display:flex;flex-direction:column;gap:12px}.item{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.item h3{margin:0 0 8px}.item p{margin:4px 0;font-size:14px;color:#555}.tag{display:inline-block;background:#eee;padding:5px 9px;border-radius:8px;margin:3px 3px 3px 0;font-size:12px}.status{margin-top:10px;font-weight:bold}.status-btn{border:none;background:#f1f1f1;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:14px}.purchase-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.price-input{width:150px;padding:9px 10px;border:1px solid #ddd;border-radius:10px;font-size:14px}.save-price{border:none;background:#f1f1f1;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:14px}.back{margin-bottom:16px;border:none;background:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08)}.budget{background:#fff;border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.budget-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.budget-box{background:#f5f5f5;border-radius:12px;padding:12px}.budget-box small{display:block;color:#666;margin-bottom:5px}.empty{background:#fff;padding:20px;border-radius:16px;color:#666;text-align:center}.clickable{cursor:pointer}.clickable:hover{transform:translateY(-1px)}.place-meta{margin-top:8px}.place-meta strong{color:#222}#map{width:100%;height:450px;border-radius:18px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.07)}.map-controls{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.map-controls select{width:100%;padding:13px;border-radius:10px;border:1px solid #ddd;font-size:16px;margin-bottom:10px}.map-button{border:none;background:#f1f1f1;padding:10px 14px;border-radius:10px;cursor:pointer;font-size:14px;margin-right:6px}.maps-link{display:inline-block;margin-top:8px;padding:9px 12px;background:#f1f1f1;border-radius:10px;text-decoration:none;color:#222}.detail-card{background:#fff;border-radius:18px;padding:18px;box-shadow:0 3px 12px rgba(0,0,0,.07);margin-bottom:14px}@media(max-width:600px){main{padding:14px}.grid{grid-template-columns:1fr 1fr}.card{padding:16px}.card h3{font-size:16px}}
+</style>
+</head>
+<body>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2</div></header>
+<main>
+<section id="home" class="active">
+<div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
+<div id="searchResults"></div>
+<div class="grid" id="homeCards">
+<div class="card" onclick="showScreen('paraMi')"><h3>🛍️ Para mí</h3><p>Mis compras y cosas que quiero buscar.</p></div>
+<div class="card" onclick="showScreen('regalos')"><h3>🎁 Regalos</h3><p>Personas, intereses e ideas de regalos.</p></div>
+<div class="card" onclick="showScreen('zonas')"><h3>📍 Por zona</h3><p>Osaka, Kyoto, Tokio y Kamakura.</p></div>
+<div class="card" onclick="showScreen('mapa')"><h3>🗺️ Mapa</h3><p>Ubicar lugares y organizar recorridos.</p></div>
+</div></section>
+
+<section id="paraMi"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget"><h3>💰 Presupuesto personal</h3><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div></section>
+
+<section id="regalos"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Personas, intereses e ideas.</p></div><div class="budget"><h3>💰 Presupuesto de regalos</h3><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="list" id="giftList"></div></section>
+
+<section id="zonas">
+  <button class="back" onclick="showScreen('home')">← Volver</button>
+
+  <div class="screen-title">
+    <h2>📍 Por zona</h2>
+    <p>Organización del viaje.</p>
+  </div>
+
+  <div class="grid" id="zonesList"></div>
+</section>
+
+<section id="zoneDetail"><button class="back" onclick="showScreen('zonas')">← Volver a zonas</button><div class="screen-title"><h2 id="zoneTitle"></h2><p id="zoneDescription"></p></div><div class="grid"><div class="card" onclick="showPlaceType('Visitar')"><h3>📍 Visitar</h3><p id="countVisitar"></p></div><div class="card" onclick="showPlaceType('Compras')"><h3>🛍️ Compras</h3><p id="countCompras"></p></div><div class="card" onclick="showPlaceType('Comer')"><h3>🍜 Comer</h3><p id="countComer"></p></div></div></section>
+
+<section id="placesList"><button class="back" onclick="showScreen('zoneDetail')">← Volver</button><div class="screen-title"><h2 id="placesTitle"></h2><p id="placesDescription"></p></div><div class="list" id="placesContainer"></div></section>
+
+<section id="placeDetail"><button class="back" onclick="showScreen('placesList')">← Volver</button><div id="placeDetailContainer"></div></section>
+
+<section id="personalDetail"><button class="back" onclick="showScreen('paraMi')">← Volver</button><div id="personalDetailContainer"></div></section>
+<section id="giftDetail"><button class="back" onclick="showScreen('regalos')">← Volver</button><div id="giftDetailContainer"></div></section>
+<section id="mapa"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Buscá lugares y explorá lo que tenés cerca.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button><button class="map-button" onclick="detectNearbySavedPlaces()">📍 Detectar lugares del viaje</button><select id="nearbyCategory"><option value="cafe">☕ Café</option><option value="restaurant">🍜 Restaurante</option><option value="shop">🛍️ Compras</option><option value="supermarket">🏪 Supermercado</option><option value="convenience">🏪 Tienda</option><option value="pharmacy">💊 Farmacia</option><option value="bakery">🥐 Panadería</option></select><button class="map-button" onclick="searchNearby()">🔎 Buscar cerca de mí</button></div><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const personalItems=[
+['Nintendo Switch','Electrónica','Cantidad: 1','Presupuesto: ¥15.000–¥65.000','Prioridad: Media–Alta'],['Celular Lu','Electrónica','Cantidad: 1','Presupuesto: ¥32.000–¥65.000','Prioridad: Alta'],['Zapatillas / Sandalias','Calzado','Cantidad: 1–4','Presupuesto: ¥2.000–¥9.000 cada una','Prioridad: Media–Alta'],['Tazas / vasos / platos / tetera / vasija','Hogar / Decoración','Cantidad: varias','','Prioridad: Alta'],['Merch Universal','Merch','','','Prioridad: Media'],['Merch Disney','Merch','','','Prioridad: Media'],['Merch Harry Potter','Merch','','','Prioridad: Media'],['Ropa UNIQLO y demás','Ropa','Cantidad: 1–20','','Prioridad: Alta'],['Micrófono corbatero','Electrónica','Cantidad: 1','','Prioridad: Media–Alta'],['Sellos / plumas / papelería / librería','Papelería','Cantidad: 1–10','','Prioridad: Media'],['Melódica Suzuki Pro-37v3','Música / Instrumentos','Cantidad: 1','Presupuesto: hasta USD 200 / aprox. ¥32.000','Prioridad: Media–Alta'],['Perfumes','Farmacia / Perfumería','Cantidad: 1–3','','Prioridad: Media'],['Cosas en Dubai','Souvenirs','','','Prioridad: Baja']];
+const gifts=[['Pa y Ma','Familia Lu','Hogar / Decoración','Tazas, bowls, decoración'],['Juan / Amparo','Familia Lu','Música / Instrumentos',''],['Sobris','Familia Lu','Fútbol',''],['Dani','Familia Lu','Papelería','Sellos, plumas, cuadernos'],['Pa y Ma','Familia Rodo','Hogar / Decoración','Taza de té, decorativo'],['Marie','Familia Rodo','Papelería','Sellos, libro japonés'],['Mati','Familia Rodo','Música / Instrumentos','Melódica Suzuki Pro-37'],['Vicen','Familia Rodo','Béisbol','Ultraman béisbol'],['Otto','Familia Rodo','Figuras','Caballero del Zodiaco - Scorpion'],['Zulma','Amigos Lu','Farmacia / Perfumería / Papelería',''],['Biz','Amigos Lu','Anime','Full Metal Alchemist, Sakura Card Captor, Slam Dunk'],['Clari','Amigos Lu','Farmacia / Perfumería / Papelería',''],['Flor','Amigos Lu','Farmacia / Perfumería / Dulces',''],['Flor 2','Amigos Lu','Harry Potter','Figura, detalles'],['Noe','Amigos Lu','Farmacia / Perfumería',''],['Andre','Amigos Lu','Repostería','Moldes o recetas'],['Mere','Amigos Rodo','Reloj','Relojes japoneses'],['Poncho','Amigos Rodo','Pokémon','Game Boy / Pokémon'],['Sami','Amigos Rodo','Hogar / Decoración / Rock',''],['Fran','Amigos Rodo','Ciclismo / Hierbas',''],['Lito','Amigos Rodo','Música',''],['Gabi','Amigos Rodo','Fútbol',''],['Negra','Amigos Rodo','Harry Potter / Hogar / Decoración','Figura, detalles'],['Edgar','Amigos Rodo','NBA',''],['Otros','Amigos Rodo','','']];
+const places=[
+{name:'Dotonbori',zone:'Osaka',types:['Visitar','Comer','Compras'],categories:[],interests:[]},{name:'Osaka Castle',zone:'Osaka',types:['Visitar'],categories:[],interests:[]},{name:'Namba Shrine',zone:'Osaka',types:['Visitar'],categories:[],interests:[]},{name:'Universal Studios',zone:'Osaka',types:['Visitar','Compras'],categories:['Merch'],interests:[]},{name:'teamLab',zone:'Osaka',types:['Visitar'],categories:['Merch'],interests:[]},{name:'Acuario Osaka',zone:'Osaka',types:['Visitar'],categories:[],interests:[]},{name:'Don Quijote',zone:'Osaka',types:['Compras'],categories:[],interests:[]},{name:'Outlet Adidas/Nike',zone:'Osaka',types:['Compras'],categories:['Calzado'],interests:['General']},{name:'Pokémon Center Osaka',zone:'Osaka',types:['Compras'],categories:['Merch'],interests:['Pokémon']},{name:'Rikuro Cheesecake',zone:'Osaka',types:['Comer'],categories:[],interests:[]},{name:'Pablo Cheesecake',zone:'Osaka',types:['Comer'],categories:[],interests:[]},
+{name:'Bosque de Bambú',zone:'Kyoto',types:['Visitar'],categories:[],interests:[]},{name:'Evangelion Base',zone:'Kyoto',types:['Visitar','Compras'],categories:['Merch'],interests:['Evangelion']},{name:'Uzumasa Village',zone:'Kyoto',types:['Visitar'],categories:[],interests:[]},{name:'Templos',zone:'Kyoto',types:['Visitar'],categories:[],interests:[]},{name:'Vasijas / bazares',zone:'Kyoto',types:['Compras'],categories:['Hogar / Decoración'],interests:['General']},
+{name:'Sensō-ji',zone:'Tokio',types:['Visitar'],categories:[],interests:[]},{name:'Shibuya',zone:'Tokio',types:['Visitar','Compras','Comer'],categories:[],interests:[]},{name:'teamLab Planets',zone:'Tokio',types:['Visitar'],categories:['Merch'],interests:[]},{name:'Shinjuku',zone:'Tokio',types:['Visitar','Compras','Comer'],categories:['Merch','Electrónica'],interests:[]},{name:'DisneySea',zone:'Tokio',types:['Visitar','Compras'],categories:['Merch'],interests:['Disney']},{name:'Estatua de Hachiko',zone:'Tokio',types:['Visitar'],categories:[],interests:[]},{name:'UNIQLO',zone:'Tokio',types:['Compras'],categories:['Ropa'],interests:['General']},{name:'Outlet Adidas/Nike',zone:'Tokio',types:['Compras'],categories:['Calzado'],interests:['General']},{name:'Pokémon Center Tokio',zone:'Tokio',types:['Compras'],categories:['Merch'],interests:['Pokémon']},
+{name:'Cruce de Slam Dunk',zone:'Kamakura',types:['Visitar'],categories:[],interests:['Slam Dunk']}];
+let currentZone='',currentType='',map=null,currentLocationMarker=null,nearbyMarkers=[];
+let supabaseZones=[];
+let supabaseCategories=[];
+let supabaseInterests=[];
+let cloudBudgets={personal:200000,gifts:25000};
+let wishlistCloudRows=[];
+let giftCloudRows=[];
+
+// ===== SUPABASE =====
+const SUPABASE_URL = "https://ykfaorlnterqtlxsqpnr.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_zHtYT151wmFL6mVApNqFpw_Bd8058Gm";
+
+let supabaseClient = null;
+
+if (
+  SUPABASE_PUBLISHABLE_KEY !== "PEGAR_AQUI_TU_PUBLISHABLE_KEY" &&
+  window.supabase
+) {
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+}
+
+// Cargar lugares desde Supabase
+async function loadPlacesFromSupabase() {
+  if (!supabaseClient) {
+    console.log("Supabase todavía no está configurado.");
+    return false;
+  }
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("places")
+      .select("*")
+      .order("zone", { ascending: true })
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    if (!Array.isArray(data) || !data.length) {
+      console.log("Supabase respondió, pero no hay lugares.");
+      return false;
+    }
+
+    places.length = 0;
+
+    data.forEach(row => {
+      places.push({
+        id: row.id,
+        cloudId: row.id,
+        name: row.name || "",
+        zone: row.zone || "",
+        types: Array.isArray(row.place_types) ? row.place_types : [],
+        categories: Array.isArray(row.categories) ? row.categories : [],
+        interests: Array.isArray(row.interests) ? row.interests : [],
+        status: row.status || "Pendiente",
+        cloudStatus: row.status || "Pendiente",
+        address: row.address || "",
+        maps: row.google_maps_url || "",
+        photo: row.photo_url || "",
+        latitude: row.latitude,
+        longitude: row.longitude
+      });
+    });
+
+    console.log("☁️ Lugares cargados desde Supabase:", places.length);
+    return true;
+
+  } catch (error) {
+    console.error("Error cargando lugares desde Supabase:", error);
+    return false;
+  }
+}
+// Cargar zonas desde Supabase
+async function loadZonesFromSupabase() {
+  if (!supabaseClient) {
+    console.log("Supabase todavía no está configurado.");
+    return false;
+  }
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("zones")
+      .select("id, name")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    if (!Array.isArray(data) || !data.length) {
+      console.log("Supabase respondió, pero no hay zonas.");
+      return false;
+    }
+
+    supabaseZones = data;
+
+    console.log("☁️ Zonas cargadas desde Supabase:", supabaseZones.length);
+
+    return true;
+
+  } catch (error) {
+    console.error("Error cargando zonas desde Supabase:", error);
+    return false;
+  }
+}
+
+// Cargar tablas auxiliares y listas de compras desde Supabase.
+// Cada cargador conserva los datos locales si la tabla falla o no devuelve filas válidas.
+function firstValue(row, keys, fallback='') {
+  for (const key of keys) {
+    if (row && row[key] !== undefined && row[key] !== null && row[key] !== '') return row[key];
+  }
+  return fallback;
+}
+function textValue(value) {
+  if (Array.isArray(value)) return value.filter(Boolean).join(' / ');
+  return value == null ? '' : String(value);
+}
+function prefixed(label, value) {
+  const v=textValue(value).trim();
+  if (!v) return '';
+  return v.toLowerCase().startsWith(label.toLowerCase()) ? v : `${label}: ${v}`;
+}
+async function loadSimpleCatalog(table, target, label) {
+  if (!supabaseClient) return false;
+  try {
+    const {data,error}=await supabaseClient.from(table).select('*');
+    if (error) throw error;
+    if (!Array.isArray(data) || !data.length) return false;
+    target.length=0;
+    data.forEach(row=>target.push(row));
+    console.log(`☁️ ${label} cargados desde Supabase:`,target.length);
+    return true;
+  } catch(error) {
+    console.error(`Error cargando ${table} desde Supabase:`,error);
+    return false;
+  }
+}
+async function loadWishlistFromSupabase() {
+  if (!supabaseClient) return false;
+  try {
+    const {data,error}=await supabaseClient
+      .from('wishlist_items')
+      .select('id, product, category, quantity, budget_min, budget_max, priority, status, actual_price')
+      .order('product',{ascending:true});
+
+    if (error) throw error;
+
+    if (!Array.isArray(data) || !data.length) {
+      console.log('📱 Wishlist: Supabase no devolvió registros; usando respaldo local:', personalItems.length);
+      return false;
+    }
+
+    console.log('☁️ Wishlist recibida desde Supabase:', data.length);
+
+    wishlistCloudRows=data.map(row=>({
+      id:row.id,
+      status:row.status || 'Pendiente',
+      price:row.actual_price ?? ''
+    }));
+
+    const mapped=data.map(row=>{
+      let budget='';
+      if(row.budget_min!=null && row.budget_max!=null) budget=`Presupuesto: ¥${Number(row.budget_min).toLocaleString('es-AR')}–¥${Number(row.budget_max).toLocaleString('es-AR')}`;
+      else if(row.budget_min!=null) budget=`Presupuesto: desde ¥${Number(row.budget_min).toLocaleString('es-AR')}`;
+      else if(row.budget_max!=null) budget=`Presupuesto: hasta ¥${Number(row.budget_max).toLocaleString('es-AR')}`;
+
+      return [
+        row.product || '',
+        row.category || '',
+        row.quantity ? `Cantidad: ${row.quantity}` : '',
+        budget,
+        row.priority ? `Prioridad: ${row.priority}` : 'Prioridad:'
+      ];
+    }).filter(x=>x[0]);
+
+    if (!mapped.length) return false;
+
+    personalItems.length=0;
+    mapped.forEach(x=>personalItems.push(x));
+
+    console.log('☁️ Wishlist cargada desde Supabase:',personalItems.length);
+    return true;
+  } catch(error) {
+    console.error('❌ wishlist_items: no se pudo cargar desde Supabase.', {
+      code:error?.code || '',
+      message:error?.message || String(error),
+      details:error?.details || '',
+      hint:error?.hint || ''
+    });
+    console.log('📱 wishlist_items: usando respaldo local:', personalItems.length);
+    wishlistCloudRows=[];
+    return false;
+  }
+}
+async function loadGiftsFromSupabase() {
+  if (!supabaseClient) return false;
+  try {
+    const {data,error}=await supabaseClient.from('gifts').select('*');
+    if (error) throw error;
+    if (!Array.isArray(data) || !data.length) return false;
+
+    const usable=data.map(row=>({
+      row,
+      item:[
+        textValue(firstValue(row,['person_name','recipient','name','person'])),
+        textValue(firstValue(row,['group_name','group','family_group','recipient_group'])),
+        textValue(firstValue(row,['interest_category','category','interest','theme'])),
+        textValue(firstValue(row,['idea','gift_idea','notes','description']))
+      ]
+    })).filter(x=>x.item[0]);
+
+    if (!usable.length) return false;
+
+    gifts.length=0;
+    giftCloudRows=[];
+    usable.forEach(({row,item})=>{
+      gifts.push(item);
+      giftCloudRows.push({
+        id:row.id,
+        status:row.status || 'Pendiente',
+        price:(row.actual_price ?? row.real_price ?? row.price ?? '')
+      });
+    });
+
+    console.log('☁️ Regalos cargados desde Supabase:',gifts.length);
+    return true;
+  } catch(error) {
+    console.error('❌ gifts: no se pudo cargar desde Supabase.', {
+      code:error?.code || '',
+      message:error?.message || String(error),
+      details:error?.details || '',
+      hint:error?.hint || ''
+    });
+    console.log('📱 gifts: usando respaldo local:', gifts.length);
+    giftCloudRows=[];
+    return false;
+  }
+}
+async function loadBudgetsFromSupabase() {
+  if (!supabaseClient) return false;
+  try {
+    const {data,error}=await supabaseClient.from('budgets').select('*');
+    if (error) throw error;
+    if (!Array.isArray(data) || !data.length) return false;
+    let changed=false;
+    data.forEach(row=>{
+      const label=textValue(firstValue(row,['type','name','category','budget_type','section'])).toLowerCase();
+      const raw=firstValue(row,['amount','budget','total','value','limit_yen','yen']);
+      const amount=Number(String(raw??'').replace(/[^0-9.-]/g,''));
+      if (!Number.isFinite(amount) || amount<=0) return;
+      if (label.includes('gift') || label.includes('regal')) {cloudBudgets.gifts=amount;changed=true;}
+      if (label.includes('personal') || label.includes('wishlist') || label.includes('para mi') || label.includes('para mí')) {cloudBudgets.personal=amount;changed=true;}
+    });
+    if (changed) console.log('☁️ Presupuestos cargados desde Supabase:', data.length);
+    else console.log('📱 budgets: respuesta recibida, pero se mantiene el respaldo local.');
+    return changed;
+  } catch(error) {
+    console.error('Error cargando budgets desde Supabase:',error);
+    return false;
+  }
+}
+
+function showScreen(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(id==='mapa')setTimeout(()=>{initMap();map.invalidateSize()},100)}
+function statusKey(p){return p.id}
+function loadStatuses(){
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem('japon_place_statuses_v21')||'{}')||{};}catch(e){saved={};}
+  places.forEach((p,i)=>{
+    p.id='place-'+i;
+    // Si vino de Supabase, la nube manda; si no, usamos el respaldo local.
+    p.status=p.cloudId ? (p.cloudStatus || 'Pendiente') : (saved[p.id] || 'Pendiente');
+  });
+}
+function saveStatus(p){
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem('japon_place_statuses_v21')||'{}')||{};}catch(e){saved={};}
+  saved[p.id]=p.status;
+  localStorage.setItem('japon_place_statuses_v21',JSON.stringify(saved));
+}
+function getPlaceById(id){return places.find(p=>p.id===id)}
+async function savePlaceStatusToSupabase(p){
+  if(!supabaseClient || !p?.cloudId)return false;
+  try{
+    const {error}=await supabaseClient.from('places').update({status:p.status}).eq('id',p.cloudId);
+    if(error)throw error;
+    p.cloudStatus=p.status;
+    console.log('☁️ Lugar guardado en Supabase:',p.name,p.status);
+    return true;
+  }catch(error){
+    console.error('❌ Lugar no pudo guardarse en Supabase; quedó guardado localmente.',{
+      code:error?.code || '', message:error?.message || String(error)
+    });
+    return false;
+  }
+}
+function togglePlaceStatus(id){
+  const p=getPlaceById(id);
+  if(!p)return;
+  p.status=p.status==='Visitado'?'Pendiente':'Visitado';
+  saveStatus(p);
+  savePlaceStatusToSupabase(p);
+  renderCurrentPlaceView();
+}
+function renderCurrentPlaceView(){
+  if(document.getElementById('placesList')?.classList.contains('active')){
+    renderPlaces(places.filter(p=>p.zone===currentZone&&p.types.includes(currentType)));
+  }
+  if(document.getElementById('placeDetail')?.classList.contains('active') && currentDetailPlaceId){
+    showPlaceDetailById(currentDetailPlaceId);
+  }
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
+function getTypeIcon(t){return t==='Visitar'?'📍':t==='Compras'?'🛍️':t==='Comer'?'🍜':'📌'}
+function showZone(zone){currentZone=zone;document.getElementById('zoneTitle').textContent='📍 '+zone;document.getElementById('zoneDescription').textContent='Lugares y actividades de '+zone+'.';updateCounts();showScreen('zoneDetail')}
+function renderZones(){
+  const container=document.getElementById('zonesList');
+  if(!container)return;
+
+  container.innerHTML='';
+
+  supabaseZones.forEach(zone=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.onclick=()=>showZone(zone.name);
+
+    card.innerHTML=`
+      <h3>📍 ${esc(zone.name)}</h3>
+      <p>Lugares, compras y comida.</p>
+    `;
+
+    container.appendChild(card);
+  });
+}
+function updateCounts(){const z=places.filter(p=>p.zone===currentZone);document.getElementById('countVisitar').textContent=z.filter(p=>p.types.includes('Visitar')).length+' lugar(es)';document.getElementById('countCompras').textContent=z.filter(p=>p.types.includes('Compras')).length+' lugar(es)';document.getElementById('countComer').textContent=z.filter(p=>p.types.includes('Comer')).length+' lugar(es)'}
+function showPlaceType(type){currentType=type;const a=places.filter(p=>p.zone===currentZone&&p.types.includes(type));document.getElementById('placesTitle').textContent=getTypeIcon(type)+' '+type+' — '+currentZone;document.getElementById('placesDescription').textContent=a.length+' lugar(es)';renderPlaces(a);showScreen('placesList')}
+function renderPlaces(arr){
+  const c=document.getElementById('placesContainer');
+  c.innerHTML='';
+  if(!arr.length){c.innerHTML='<div class="empty">No hay lugares cargados todavía.</div>';return;}
+  arr.forEach(p=>{
+    const div=document.createElement('div');
+    div.className='item';
+    const tags=p.types.map(t=>`<span class="tag">${getTypeIcon(t)} ${esc(t)}</span>`).join('');
+    const cats=p.categories.map(x=>`<span class="tag">${esc(x)}</span>`).join('');
+    const ints=p.interests.map(x=>`<span class="tag">${esc(x)}</span>`).join('');
+    div.innerHTML=`<h3>${esc(p.name)}</h3><div class="place-meta">${tags}</div>${cats?`<p><strong>Categoría:</strong><br>${cats}</p>`:''}${ints?`<p><strong>Interés:</strong><br>${ints}</p>`:''}<p><strong>Dirección:</strong> Pendiente</p><p><strong>Google Maps:</strong> Pendiente</p><button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><button type="button" class="status-btn js-open-place" style="margin-left:6px" data-place-id="${esc(p.id)}">Ver ficha →</button>`;
+    c.appendChild(div);
+  });
+}
+let currentDetailPlaceId='';
+function showPlaceDetail(name){
+  const p=places.find(x=>x.zone===currentZone&&x.name===name);
+  if(p)showPlaceDetailById(p.id);
+}
+function showPlaceDetailById(id){
+  const p=getPlaceById(id);
+  if(!p)return;
+  currentZone=p.zone;
+  currentDetailPlaceId=p.id;
+  const relatedPersonal=personalItems.filter(x=>p.categories.some(cat=>x[1]===cat));
+  const relatedGifts=gifts.filter(g=>{
+    const t=(g[2]+' '+g[3]).toLowerCase();
+    return p.interests.some(i=>i!=='General'&&t.includes(i.toLowerCase()))||p.categories.some(cat=>t.includes(cat.toLowerCase()));
+  });
+  document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card"><h2>${esc(p.name)}</h2><p><strong>Zona:</strong> ${esc(p.zone)}</p><p><strong>Tipo:</strong> ${p.types.map(t=>getTypeIcon(t)+' '+esc(t)).join(' / ')}</p>${p.categories.length?`<p><strong>Categoría:</strong> ${p.categories.map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<p><strong>Dirección:</strong> Pendiente</p><p><strong>Google Maps:</strong> Pendiente</p><button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button></div><div class="detail-card"><h3>🛍️ Para mí</h3>${relatedPersonal.length?relatedPersonal.map(x=>`<p>• ${esc(x[0])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div><div class="detail-card"><h3>🎁 Regalos</h3>${relatedGifts.length?relatedGifts.map(x=>`<p>• ${esc(x[0])} — ${esc(x[2])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div>`;
+  showScreen('placeDetail');
+}
+const purchaseStatuses=['Pendiente','Buscando','Encontrado','Comprado'];
+let purchaseData={personal:{},gifts:{}};
+function loadPurchaseData(){try{purchaseData=JSON.parse(localStorage.getItem('japon_purchase_data_v22')||'{}')||{};}catch(e){purchaseData={};}purchaseData.personal=purchaseData.personal||{};purchaseData.gifts=purchaseData.gifts||{};}
+function applyWishlistCloudPurchaseData(){
+  if(!wishlistCloudRows.length)return;
+  wishlistCloudRows.forEach((row,index)=>{
+    purchaseData.personal[index]={
+      status:row.status || 'Pendiente',
+      price:row.price==null ? '' : Number(row.price)
+    };
+  });
+  localStorage.setItem('japon_purchase_data_v22',JSON.stringify(purchaseData));
+}
+
+function applyGiftCloudPurchaseData(){
+  if(!giftCloudRows.length)return;
+  giftCloudRows.forEach((row,index)=>{
+    purchaseData.gifts[index]={
+      status:row.status || 'Pendiente',
+      price:(row.price==null || row.price==='') ? '' : Number(row.price)
+    };
+  });
+  localStorage.setItem('japon_purchase_data_v22',JSON.stringify(purchaseData));
+}
+
+async function saveGiftToSupabase(index){
+  if(!supabaseClient || !giftCloudRows[index]?.id)return false;
+  const d=getPurchase('gifts',index);
+  const payload={status:d.status || 'Pendiente'};
+
+  // The current gifts reader accepts the common price field names.
+  // We use actual_price first, matching wishlist. If the table lacks it,
+  // the console will show the exact Supabase column error without breaking local save.
+  payload.actual_price=d.price==='' ? null : Number(d.price);
+
+  try{
+    const {error}=await supabaseClient.from('gifts').update(payload).eq('id',giftCloudRows[index].id);
+    if(error)throw error;
+    giftCloudRows[index].status=payload.status;
+    giftCloudRows[index].price=payload.actual_price ?? '';
+    console.log('☁️ Regalo guardado en Supabase:',gifts[index]?.[0] || index);
+    return true;
+  }catch(error){
+    console.error('❌ Regalo no pudo guardarse en Supabase; quedó guardado localmente.',{
+      code:error?.code || '', message:error?.message || String(error)
+    });
+    return false;
+  }
+}
+
+async function saveWishlistItemToSupabase(index){
+  if(!supabaseClient || !wishlistCloudRows[index]?.id)return false;
+  const d=getPurchase('personal',index);
+  try{
+    const {error}=await supabaseClient
+      .from('wishlist_items')
+      .update({
+        status:d.status || 'Pendiente',
+        actual_price:d.price==='' ? null : Number(d.price),
+        updated_at:new Date().toISOString()
+      })
+      .eq('id',wishlistCloudRows[index].id);
+    if(error)throw error;
+    console.log('☁️ Wishlist guardada en Supabase:',personalItems[index]?.[0] || index);
+    return true;
+  }catch(error){
+    console.error('❌ No se pudo guardar wishlist en Supabase; quedó guardado localmente.',{
+      code:error?.code || '',
+      message:error?.message || String(error)
+    });
+    return false;
+  }
+}
+
+function savePurchaseData(){localStorage.setItem('japon_purchase_data_v22',JSON.stringify(purchaseData));updateBudgets();}
+function getPurchase(type,index){const group=purchaseData[type];group[index]=group[index]||{status:'Pendiente',price:''};return group[index];}
+function cyclePurchaseStatus(type,index){const d=getPurchase(type,index);const pos=purchaseStatuses.indexOf(d.status);d.status=purchaseStatuses[(pos+1)%purchaseStatuses.length];savePurchaseData();if(type==='personal')saveWishlistItemToSupabase(index);if(type==='gifts')saveGiftToSupabase(index);renderPersonal();renderGifts();if(type==='personal')showPersonalDetail(index);else showGiftDetail(index);}
+function setPurchasePrice(type,index){const input=document.getElementById(`${type}Price_${index}`);if(!input)return;const raw=input.value.replace(/[^0-9]/g,'');getPurchase(type,index).price=raw?Number(raw):'';savePurchaseData();if(type==='personal')saveWishlistItemToSupabase(index);if(type==='gifts')saveGiftToSupabase(index);if(type==='personal')showPersonalDetail(index);else showGiftDetail(index);}
+function statusLabel(status){return status==='Comprado'?'🟢 Comprado':status==='Encontrado'?'🔵 Encontrado':status==='Buscando'?'🟠 Buscando':'🟡 Pendiente';}
+function formatYen(n){return '¥'+Number(n||0).toLocaleString('es-AR');}
+function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);}
+function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item clickable" onclick="showPersonalDetail(${i})"><h3>${esc(x[0])}</h3><span class="tag">${esc(x[1])}</span>${x[2]?`<p>${esc(x[2])}</p>`:''}${x[3]?`<p>${esc(x[3])}</p>`:''}<p>${esc(x[4])}</p><div class="purchase-row"><button type="button" class="status-btn" onclick="event.stopPropagation();cyclePurchaseStatus('personal',${i})">${statusLabel(d.status)}</button>${d.price!==''?`<span class="tag">Precio real: ${formatYen(d.price)}</span>`:''}</div></div>`}).join('');updateBudgets();}
+function renderGifts(){document.getElementById('giftList').innerHTML=gifts.map((g,i)=>{const d=getPurchase('gifts',i);return `<div class="item clickable" onclick="showGiftDetail(${i})"><h3>${esc(g[0])}</h3><span class="tag">${esc(g[1])}</span>${g[2]?`<p><strong>Interés / categoría:</strong> ${esc(g[2])}</p>`:''}${g[3]?`<p><strong>Idea:</strong> ${esc(g[3])}</p>`:''}<div class="purchase-row"><button type="button" class="status-btn" onclick="event.stopPropagation();cyclePurchaseStatus('gifts',${i})">${statusLabel(d.status)}</button>${d.price!==''?`<span class="tag">Precio real: ${formatYen(d.price)}</span>`:''}</div></div>`}).join('');updateBudgets();}
+function showPersonalDetail(index){const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><h2>🛍️ ${esc(x[0])}</h2><p><strong>Categoría:</strong> ${esc(x[1])}</p>${x[2]?`<p>${esc(x[2])}</p>`:''}${x[3]?`<p>${esc(x[3])}</p>`:''}<p><strong>Prioridad:</strong> ${esc(x[4].replace('Prioridad: ','') )}</p><div class="purchase-row"><strong>Estado:</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="purchase-row"><strong>Precio real:</strong><input class="price-input" id="personalPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥" onclick="event.stopPropagation()"><button type="button" class="save-price" onclick="setPurchasePrice('personal',${index})">Guardar</button></div></div>`;updateBudgets();showScreen('personalDetail')}
+function showGiftDetail(index){const g=gifts[index];if(!g)return;const d=getPurchase('gifts',index);document.getElementById('giftDetailContainer').innerHTML=`<div class="detail-card"><h2>🎁 ${esc(g[0])}</h2><p><strong>Grupo:</strong> ${esc(g[1])}</p>${g[2]?`<p><strong>Interés / categoría:</strong> ${esc(g[2])}</p>`:''}${g[3]?`<p><strong>Idea:</strong> ${esc(g[3])}</p>`:''}<div class="purchase-row"><strong>Estado:</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('gifts',${index})">${statusLabel(d.status)}</button></div><div class="purchase-row"><strong>Precio real:</strong><input class="price-input" id="giftsPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥" onclick="event.stopPropagation()"><button type="button" class="save-price" onclick="setPurchasePrice('gifts',${index})">Guardar</button></div></div>`;updateBudgets();showScreen('giftDetail')}
+
+function globalSearch(){
+  const input=document.getElementById('globalSearch'), q=input.value.trim().toLowerCase(), r=document.getElementById('searchResults');
+  if(!q){r.innerHTML='';document.getElementById('homeCards').style.display='grid';return;}
+  document.getElementById('homeCards').style.display='none';
+  let html='';
+  const zoneMatches=[...new Set(places.map(p=>p.zone))].filter(z=>searchMatches(z,q));
+  if(zoneMatches.length) html+=`<div class="screen-title"><h2>📍 Zonas</h2><p>${zoneMatches.length} resultado(s)</p></div><div class="list">${zoneMatches.map(z=>`<div class="item clickable" onclick='showZone(${JSON.stringify(z)})'><h3>📍 ${esc(z)}</h3><p>Ver lugares de esta zona</p><p style="margin-top:10px;font-weight:bold">Ver zona →</p></div>`).join('')}</div>`;
+  const pr=places.map(p=>p).filter(p=>[p.name,p.zone,...p.types,...p.categories,...p.interests].some(x=>searchMatches(x,q)));
+  if(pr.length) html+=`<div class="screen-title"><h2>📍 Lugares</h2><p>${pr.length} resultado(s)</p></div><div class="list">${pr.map(p=>`<div class="item clickable" onclick='showPlaceDetailById(${JSON.stringify(p.id)})'><h3>${esc(p.name)}</h3><p><strong>Zona:</strong> ${esc(p.zone)}</p><p><strong>Tipo:</strong> ${p.types.map(esc).join(' / ')}</p>${p.categories.length?`<p><strong>Categoría:</strong> ${p.categories.map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<p style="margin-top:10px;font-weight:bold">Ver ficha →</p></div>`).join('')}</div>`;
+  const gr=gifts.map((g,i)=>({g,i})).filter(({g})=>g.some(x=>searchMatches(x,q)));
+  if(gr.length) html+=`<div class="screen-title"><h2>🎁 Regalos</h2><p>${gr.length} resultado(s)</p></div><div class="list">${gr.map(({g,i})=>`<div class="item clickable" onclick="showGiftDetail(${i})"><h3>${esc(g[0])}</h3><p><strong>Grupo:</strong> ${esc(g[1])}</p><p><strong>Interés / categoría:</strong> ${esc(g[2])}</p>${g[3]?`<p><strong>Idea:</strong> ${esc(g[3])}</p>`:''}<p style="margin-top:10px;font-weight:bold">Ver ficha →</p></div>`).join('')}</div>`;
+  const per=personalItems.map((x,i)=>({x,i})).filter(({x})=>x.some(v=>searchMatches(v,q)));
+  if(per.length) html+=`<div class="screen-title"><h2>🛍️ Para mí</h2><p>${per.length} resultado(s)</p></div><div class="list">${per.map(({x,i})=>`<div class="item clickable" onclick="showPersonalDetail(${i})"><h3>${esc(x[0])}</h3><span class="tag">${esc(x[1])}</span>${x[2]?`<p>${esc(x[2])}</p>`:''}<p style="margin-top:10px;font-weight:bold">Ver ficha →</p></div>`).join('')}</div>`;
+  r.innerHTML=html||`<div class="empty">No encontramos resultados para <strong>"${esc(input.value)}"</strong>.</div>`;
+}
+function initMap(){if(map)return;map=L.map('map').setView([35.6762,139.6503],5);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map)}
+function getCurrentLocation(){if(!navigator.geolocation){alert('Tu navegador no permite obtener la ubicación.');return}navigator.geolocation.getCurrentPosition(pos=>{initMap();const lat=pos.coords.latitude,lon=pos.coords.longitude;map.setView([lat,lon],15);if(currentLocationMarker)map.removeLayer(currentLocationMarker);currentLocationMarker=L.marker([lat,lon]).addTo(map).bindPopup('📍 Estoy acá').openPopup();detectNearbySavedPlaces(lat,lon)},()=>alert('No pudimos obtener tu ubicación. Revisá que hayas permitido la ubicación en el navegador.'),{enableHighAccuracy:true,timeout:10000,maximumAge:60000})}
+async function detectNearbySavedPlaces(latArg,lonArg){
+  const run=(lat,lon)=>{
+    const q=`[out:json];nwr[\"name\"](around:400,${lat},${lon});out center;`;
+    fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q}).then(r=>r.json()).then(data=>{
+      const normalize=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+      const nearby=data.elements.map(e=>({name:e.tags?.name||'',lat:e.lat??e.center?.lat,lon:e.lon??e.center?.lon})).filter(x=>x.name&&x.lat!=null&&x.lon!=null);
+      const matches=[];
+      places.forEach(p=>{
+        const pn=normalize(p.name);
+        const hit=nearby.find(o=>{const on=normalize(o.name);return on===pn||on.includes(pn)||pn.includes(on)});
+        if(hit){
+          const d=haversine(lat,lon,hit.lat,hit.lon);
+          if(d<=400)matches.push({p,d});
+        }
+      });
+      if(!matches.length){return;}
+      matches.sort((a,b)=>a.d-b.d);
+      const m=matches[0];
+      if(m.p.status==='Visitado')return;
+      const answer=confirm(`📍 Estás cerca de \"${m.p.name}\" (${Math.round(m.d)} m).\n\n¿Marcarlo como Visitado?`);
+      if(answer){currentZone=m.p.zone;m.p.status='Visitado';saveStatus(m.p);if(document.getElementById('placeDetail')?.classList.contains('active'))showPlaceDetail(m.p.name);else if(document.getElementById('placesList')?.classList.contains('active'))renderPlaces(places.filter(x=>x.zone===currentZone&&x.types.includes(currentType)));}
+    }).catch(()=>{});
+  };
+  if(latArg!=null&&lonArg!=null){run(latArg,lonArg);return;}
+  if(!navigator.geolocation){alert('Tu navegador no permite obtener la ubicación.');return;}
+  navigator.geolocation.getCurrentPosition(pos=>run(pos.coords.latitude,pos.coords.longitude),()=>alert('Necesitamos permiso para usar tu ubicación.'),{enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+}
+function haversine(lat1,lon1,lat2,lon2){const R=6371000;const toRad=x=>x*Math.PI/180;const dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1);const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;return 2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+async function searchNearby(){if(!navigator.geolocation){alert('Tu navegador no permite obtener la ubicación.');return}navigator.geolocation.getCurrentPosition(async pos=>{const lat=pos.coords.latitude,lon=pos.coords.longitude;initMap();map.setView([lat,lon],15);if(currentLocationMarker)map.removeLayer(currentLocationMarker);currentLocationMarker=L.marker([lat,lon]).addTo(map).bindPopup('📍 Estoy acá');nearbyMarkers.forEach(m=>map.removeLayer(m));nearbyMarkers=[];const cat=document.getElementById('nearbyCategory').value;const query=`[out:json];(node["amenity"="${cat}"](around:3000,${lat},${lon});way["amenity"="${cat}"](around:3000,${lat},${lon}););out center;`;try{const response=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:query});const data=await response.json();const results=data.elements.map(e=>{const a=e.lat??e.center?.lat,b=e.lon??e.center?.lon;if(a===undefined||b===undefined)return null;return{name:e.tags?.name||'Lugar sin nombre',lat:a,lon:b}}).filter(Boolean).slice(0,3);showNearbyResults(results)}catch(e){alert('No pudimos buscar lugares cercanos. Probá nuevamente.')}},()=>alert('Necesitamos permiso para usar tu ubicación.'),{enableHighAccuracy:true,timeout:10000,maximumAge:60000})}
+function showNearbyResults(results){const c=document.getElementById('nearbyResults');c.innerHTML='';if(!results.length){c.innerHTML='<div class="empty">No encontramos lugares cercanos.</div>';return}results.forEach(p=>{nearbyMarkers.push(L.marker([p.lat,p.lon]).addTo(map).bindPopup(p.name));const url='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(`${p.name} ${p.lat},${p.lon}`);const d=document.createElement('div');d.className='item';d.innerHTML=`<h3>📍 ${esc(p.name)}</h3><p>Lugar cercano a tu ubicación.</p><a class="maps-link" href="${url}" target="_blank">🗺️ Abrir en Google Maps</a>`;c.appendChild(d)})}
+document.addEventListener('click',function(e){
+  const statusBtn=e.target.closest('.js-toggle-status');
+  if(statusBtn){
+    e.preventDefault();
+    e.stopPropagation();
+    togglePlaceStatus(statusBtn.dataset.placeId);
+    return;
+  }
+  const openBtn=e.target.closest('.js-open-place');
+  if(openBtn){
+    e.preventDefault();
+    const p=getPlaceById(openBtn.dataset.placeId);
+    if(p){currentZone=p.zone;showPlaceDetailById(p.id);}
+  }
+});
+(async function initApp(){
+  const results = await Promise.all([
+    loadPlacesFromSupabase(),
+    loadZonesFromSupabase(),
+    loadSimpleCatalog('categories',supabaseCategories,'Categorías'),
+    loadSimpleCatalog('interests',supabaseInterests,'Intereses'),
+    loadWishlistFromSupabase(),
+    loadGiftsFromSupabase(),
+    loadBudgetsFromSupabase()
+  ]);
+  const cloudLoaded = results[0];
+
+  console.table({
+    places:         { origen: results[0] ? 'Supabase' : 'Local', cantidad: places.length },
+    zones:          { origen: results[1] ? 'Supabase' : 'Local', cantidad: results[1] ? supabaseZones.length : 4 },
+    categories:     { origen: results[2] ? 'Supabase' : 'Local', cantidad: results[2] ? supabaseCategories.length : 'respaldo' },
+    interests:      { origen: results[3] ? 'Supabase' : 'Local', cantidad: results[3] ? supabaseInterests.length : 'respaldo' },
+    wishlist_items: { origen: results[4] ? 'Supabase' : 'Local', cantidad: personalItems.length },
+    gifts:          { origen: results[5] ? 'Supabase' : 'Local', cantidad: gifts.length },
+    budgets:        { origen: results[6] ? 'Supabase' : 'Local', cantidad: results[6] ? 2 : 'respaldo' }
+  });
+
+  loadStatuses();
+  loadPurchaseData();
+  applyWishlistCloudPurchaseData();
+  applyGiftCloudPurchaseData();
+  renderPersonal();
+  renderGifts();
+  renderZones();
+  updateBudgets();
+
+  if (cloudLoaded) {
+    console.log("☁️ Supabase conectado correctamente.");
+  } else {
+    console.log("📱 Usando los datos locales de la aplicación.");
+  }
+})();
+</script>
+</body>
+</html>
