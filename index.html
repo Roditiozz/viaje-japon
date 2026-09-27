@@ -13,10 +13,10 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f5f7;color:#222}header{background:#fff;padding:18px 16px;text-align:center;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}header h1{margin:0;font-size:22px}main{max-width:900px;margin:auto;padding:18px}section{display:none}section.active{display:block}.search-box{background:#fff;border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.search-box h2{margin-top:0;font-size:20px}.search-box input{width:100%;padding:15px;border:1px solid #ddd;border-radius:12px;font-size:16px;outline:none}.search-box input:focus{border-color:#888}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.07);cursor:pointer;transition:.15s}.card:hover{transform:translateY(-2px)}.card h3{margin:0 0 8px;font-size:18px}.card p{margin:0;color:#666;font-size:14px}.screen-title{margin-bottom:16px}.screen-title h2{margin-bottom:5px}.screen-title p{color:#666;margin-top:0}.list{display:flex;flex-direction:column;gap:12px}.item{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.item h3{margin:0 0 8px}.item p{margin:4px 0;font-size:14px;color:#555}.tag{display:inline-block;background:#eee;padding:5px 9px;border-radius:8px;margin:3px 3px 3px 0;font-size:12px}.status{margin-top:10px;font-weight:bold}.status-btn{border:none;background:#f1f1f1;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:14px}.purchase-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.price-input{width:150px;padding:9px 10px;border:1px solid #ddd;border-radius:10px;font-size:14px}.save-price{border:none;background:#f1f1f1;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:14px}.back{margin-bottom:16px;border:none;background:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08)}.budget{background:#fff;border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.budget-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.budget-box{background:#f5f5f5;border-radius:12px;padding:12px}.budget-box small{display:block;color:#666;margin-bottom:5px}.empty{background:#fff;padding:20px;border-radius:16px;color:#666;text-align:center}.clickable{cursor:pointer}.clickable:hover{transform:translateY(-1px)}.place-meta{margin-top:8px}.place-meta strong{color:#222}#map{width:100%;height:450px;border-radius:18px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.07)}.map-controls{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.map-controls select{width:100%;padding:13px;border-radius:10px;border:1px solid #ddd;font-size:16px;margin-bottom:10px}.map-button{border:none;background:#f1f1f1;padding:10px 14px;border-radius:10px;cursor:pointer;font-size:14px;margin-right:6px}.maps-link{display:inline-block;margin-top:8px;padding:9px 12px;background:#f1f1f1;border-radius:10px;text-decoration:none;color:#222}.detail-card{background:#fff;border-radius:18px;padding:18px;box-shadow:0 3px 12px rgba(0,0,0,.07);margin-bottom:14px}@media(max-width:600px){main{padding:14px}.grid{grid-template-columns:1fr 1fr}.card{padding:16px}.card h3{font-size:16px}}
-</style>
+.sync-bar{position:fixed;right:12px;bottom:12px;z-index:999;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px}.sync-bar button{border:0;background:#f1f1f1;border-radius:8px;padding:6px 8px;margin-left:6px;cursor:pointer}</style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 2</div></header>
 <main>
 <section id="home" class="active">
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -52,7 +52,7 @@
 <section id="personalDetail"><button class="back" onclick="showScreen('paraMi')">← Volver</button><div id="personalDetailContainer"></div></section>
 <section id="giftDetail"><button class="back" onclick="showScreen('regalos')">← Volver</button><div id="giftDetailContainer"></div></section>
 <section id="mapa"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Buscá lugares y explorá lo que tenés cerca.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button><button class="map-button" onclick="detectNearbySavedPlaces()">📍 Detectar lugares del viaje</button><select id="nearbyCategory"><option value="cafe">☕ Café</option><option value="restaurant">🍜 Restaurante</option><option value="shop">🛍️ Compras</option><option value="supermarket">🏪 Supermercado</option><option value="convenience">🏪 Tienda</option><option value="pharmacy">💊 Farmacia</option><option value="bakery">🥐 Panadería</option></select><button class="map-button" onclick="searchNearby()">🔎 Buscar cerca de mí</button></div><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
-</main>
+</main><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -101,7 +101,7 @@ function queueOfflineChange(change){
   const item={...change,queuedAt:new Date().toISOString()};
   if(pos>=0)q[pos]=item;else q.push(item);
   setOfflineQueue(q);
-  console.log('📴 Cambio pendiente de sincronizar:',change.kind,change.identity);
+  console.log('📴 Cambio pendiente de sincronizar:',change.kind,change.identity);updateSyncState(`📴 ${q.length} pendiente(s)`);
 }
 function removeOfflineChange(kind,identity){setOfflineQueue(getOfflineQueue().filter(x=>!(x.kind===kind&&x.identity===identity)));}
 function applyPendingQueueToLocal(){
@@ -121,11 +121,14 @@ function applyPendingQueueToLocal(){
   });
   savePurchaseData();
 }
-async function syncOfflineQueue(){
-  if(!navigator.onLine||!supabaseClient)return;
+function updateSyncState(message){const el=document.getElementById('syncState');if(el)el.textContent=message;}
+async function syncOfflineQueue(manual=false){
   const q=getOfflineQueue();
-  if(!q.length)return;
+  if(!q.length){updateSyncState('☁️ Sincronizado');return true;}
+  updateSyncState(`📴 ${q.length} pendiente(s)`);
+  if(!navigator.onLine||!supabaseClient){if(manual)console.log('📴 Todavía sin conexión.');return false;}
   console.log('🔄 Sincronizando cambios pendientes:',q.length);
+  updateSyncState(`🔄 Sincronizando ${q.length}...`);
   for(const x of [...q]){
     try{
       let error=null;
@@ -151,8 +154,14 @@ async function syncOfflineQueue(){
       console.log('☁️ Cambio offline sincronizado:',x.kind,x.identity);
     }catch(error){console.error('❌ Sigue pendiente de sincronizar:',x.kind,x.identity,error?.message||error);}
   }
+  const left=getOfflineQueue().length;
+  updateSyncState(left?`📴 ${left} pendiente(s)`:'☁️ Sincronizado');
+  return left===0;
 }
-window.addEventListener('online',()=>{console.log('🌐 Volvió Internet. Sincronizando...');syncOfflineQueue();});
+window.addEventListener('online',()=>{console.log('🌐 Volvió Internet. Sincronizando...');setTimeout(()=>syncOfflineQueue(),800);});
+window.addEventListener('focus',()=>syncOfflineQueue());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncOfflineQueue();});
+setInterval(()=>{if(getOfflineQueue().length)syncOfflineQueue();},15000);
 
 // Cargar lugares desde Supabase
 async function loadPlacesFromSupabase() {
