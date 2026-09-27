@@ -1,0 +1,12 @@
+{
+  "name": "Mi Viaje a Japón",
+  "short_name": "Viaje Japón",
+  "description": "Compras, regalos, lugares y mapa para el viaje a Japón.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f5f7",
+  "theme_color": "#ffffff",
+  "lang": "es",
+  "orientation": "portrait-primary"
+}
