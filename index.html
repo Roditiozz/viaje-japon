@@ -13,10 +13,11 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f5f7;color:#222}header{background:#fff;padding:18px 16px;text-align:center;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}header h1{margin:0;font-size:22px}main{max-width:900px;margin:auto;padding:18px}section{display:none}section.active{display:block}.search-box{background:#fff;border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.search-box h2{margin-top:0;font-size:20px}.search-box input{width:100%;padding:15px;border:1px solid #ddd;border-radius:12px;font-size:16px;outline:none}.search-box input:focus{border-color:#888}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.07);cursor:pointer;transition:.15s}.card:hover{transform:translateY(-2px)}.card h3{margin:0 0 8px;font-size:18px}.card p{margin:0;color:#666;font-size:14px}.screen-title{margin-bottom:16px}.screen-title h2{margin-bottom:5px}.screen-title p{color:#666;margin-top:0}.list{display:flex;flex-direction:column;gap:12px}.item{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.item h3{margin:0 0 8px}.item p{margin:4px 0;font-size:14px;color:#555}.tag{display:inline-block;background:#eee;padding:5px 9px;border-radius:8px;margin:3px 3px 3px 0;font-size:12px}.status{margin-top:10px;font-weight:bold}.status-btn{border:none;background:#f1f1f1;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:14px}.purchase-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.price-input{width:150px;padding:9px 10px;border:1px solid #ddd;border-radius:10px;font-size:14px}.save-price{border:none;background:#f1f1f1;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:14px}.back{margin-bottom:16px;border:none;background:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08)}.budget{background:#fff;border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.budget-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.budget-box{background:#f5f5f5;border-radius:12px;padding:12px}.budget-box small{display:block;color:#666;margin-bottom:5px}.empty{background:#fff;padding:20px;border-radius:16px;color:#666;text-align:center}.clickable{cursor:pointer}.clickable:hover{transform:translateY(-1px)}.place-meta{margin-top:8px}.place-meta strong{color:#222}#map{width:100%;height:450px;border-radius:18px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.07)}.map-controls{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.07)}.map-controls select{width:100%;padding:13px;border-radius:10px;border:1px solid #ddd;font-size:16px;margin-bottom:10px}.map-button{border:none;background:#f1f1f1;padding:10px 14px;border-radius:10px;cursor:pointer;font-size:14px;margin-right:6px}.maps-link{display:inline-block;margin-top:8px;padding:9px 12px;background:#f1f1f1;border-radius:10px;text-decoration:none;color:#222}.detail-card{background:#fff;border-radius:18px;padding:18px;box-shadow:0 3px 12px rgba(0,0,0,.07);margin-bottom:14px}@media(max-width:600px){main{padding:14px}.grid{grid-template-columns:1fr 1fr}.card{padding:16px}.card h3{font-size:16px}}
+.place-search-box{background:#f7f7f7;border-radius:14px;padding:14px;margin-top:14px}.place-search-row{display:flex;gap:8px;flex-wrap:wrap}.place-search-input{flex:1;min-width:220px;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:16px}.place-mini-map{width:100%;height:330px;border-radius:14px;overflow:hidden;margin-top:12px;background:#eee}.place-map-message{margin:10px 0 0;color:#666;font-size:14px}.place-map-actions{margin-top:10px}
 .sync-bar{position:fixed;right:12px;bottom:12px;z-index:999;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px}.sync-bar button{border:0;background:#f1f1f1;border-radius:8px;padding:6px 8px;margin-left:6px;cursor:pointer}</style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 1</div></header>
 <main>
 <section id="home" class="active">
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -65,6 +66,7 @@ const places=[
 {name:'Sensō-ji',zone:'Tokio',types:['Visitar'],categories:[],interests:[]},{name:'Shibuya',zone:'Tokio',types:['Visitar','Compras','Comer'],categories:[],interests:[]},{name:'teamLab Planets',zone:'Tokio',types:['Visitar'],categories:['Merch'],interests:[]},{name:'Shinjuku',zone:'Tokio',types:['Visitar','Compras','Comer'],categories:['Merch','Electrónica'],interests:[]},{name:'DisneySea',zone:'Tokio',types:['Visitar','Compras'],categories:['Merch'],interests:['Disney']},{name:'Estatua de Hachiko',zone:'Tokio',types:['Visitar'],categories:[],interests:[]},{name:'UNIQLO',zone:'Tokio',types:['Compras'],categories:['Ropa'],interests:['General']},{name:'Outlet Adidas/Nike',zone:'Tokio',types:['Compras'],categories:['Calzado'],interests:['General']},{name:'Pokémon Center Tokio',zone:'Tokio',types:['Compras'],categories:['Merch'],interests:['Pokémon']},
 {name:'Cruce de Slam Dunk',zone:'Kamakura',types:['Visitar'],categories:[],interests:['Slam Dunk']}];
 let currentZone='',currentType='',map=null,currentLocationMarker=null,nearbyMarkers=[];
+let placeDetailMap=null,placeDetailMarker=null,currentPlaceMapResult=null;
 let supabaseZones=[];
 let supabaseCategories=[];
 let supabaseInterests=[];
@@ -524,7 +526,7 @@ function renderPlaces(arr){
     const tags=p.types.map(t=>`<span class="tag">${getTypeIcon(t)} ${esc(t)}</span>`).join('');
     const cats=p.categories.map(x=>`<span class="tag">${esc(x)}</span>`).join('');
     const ints=p.interests.map(x=>`<span class="tag">${esc(x)}</span>`).join('');
-    div.innerHTML=`<h3>${esc(p.name)}</h3><div class="place-meta">${tags}</div>${cats?`<p><strong>Categoría:</strong><br>${cats}</p>`:''}${ints?`<p><strong>Interés:</strong><br>${ints}</p>`:''}<p><strong>Dirección:</strong> Pendiente</p><p><strong>Google Maps:</strong> Pendiente</p><button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><button type="button" class="status-btn js-open-place" style="margin-left:6px" data-place-id="${esc(p.id)}">Ver ficha →</button>`;
+    div.innerHTML=`<h3>${esc(p.name)}</h3><div class="place-meta">${tags}</div>${cats?`<p><strong>Categoría:</strong><br>${cats}</p>`:''}${ints?`<p><strong>Interés:</strong><br>${ints}</p>`:''}<button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><button type="button" class="status-btn js-open-place" style="margin-left:6px" data-place-id="${esc(p.id)}">Ver ficha →</button>`;
     c.appendChild(div);
   });
 }
@@ -538,14 +540,61 @@ function showPlaceDetailById(id){
   if(!p)return;
   currentZone=p.zone;
   currentDetailPlaceId=p.id;
+  currentPlaceMapResult=null;
   const relatedPersonal=personalItems.filter(x=>p.categories.some(cat=>x[1]===cat));
   const relatedGifts=gifts.filter(g=>{
     const t=(g[2]+' '+g[3]).toLowerCase();
     return p.interests.some(i=>i!=='General'&&t.includes(i.toLowerCase()))||p.categories.some(cat=>t.includes(cat.toLowerCase()));
   });
-  document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card"><h2>${esc(p.name)}</h2><p><strong>Zona:</strong> ${esc(p.zone)}</p><p><strong>Tipo:</strong> ${p.types.map(t=>getTypeIcon(t)+' '+esc(t)).join(' / ')}</p>${p.categories.length?`<p><strong>Categoría:</strong> ${p.categories.map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<p><strong>Dirección:</strong> Pendiente</p><p><strong>Google Maps:</strong> Pendiente</p><button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button></div><div class="detail-card"><h3>🛍️ Para mí</h3>${relatedPersonal.length?relatedPersonal.map(x=>`<p>• ${esc(x[0])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div><div class="detail-card"><h3>🎁 Regalos</h3>${relatedGifts.length?relatedGifts.map(x=>`<p>• ${esc(x[0])} — ${esc(x[2])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div>`;
+  const initialQuery=`${p.name} ${p.zone} Japan`;
+  document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card"><h2>${esc(p.name)}</h2><p><strong>Zona:</strong> ${esc(p.zone)}</p><p><strong>Tipo:</strong> ${p.types.map(t=>getTypeIcon(t)+' '+esc(t)).join(' / ')}</p>${p.categories.length?`<p><strong>Categoría:</strong> ${p.categories.map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><div class="place-search-box"><h3 style="margin-top:0">🗺️ Buscar en el mapa</h3><div class="place-search-row"><input id="placeMapSearchInput" class="place-search-input" value="${esc(initialQuery)}" placeholder="Buscar lugar..."><button type="button" class="map-button" onclick="searchPlaceInDetailMap()">🔎 Buscar</button></div><div id="placeMiniMap" class="place-mini-map"></div><p id="placeMapMessage" class="place-map-message">Buscá el lugar para verlo acá sin salir de la app.</p><div class="place-map-actions"><button id="openGoogleMapsBtn" type="button" class="map-button" onclick="openCurrentPlaceInGoogleMaps()">🗺️ Abrir en Google Maps ↗</button></div></div></div><div class="detail-card"><h3>🛍️ Para mí</h3>${relatedPersonal.length?relatedPersonal.map(x=>`<p>• ${esc(x[0])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div><div class="detail-card"><h3>🎁 Regalos</h3>${relatedGifts.length?relatedGifts.map(x=>`<p>• ${esc(x[0])} — ${esc(x[2])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div>`;
   showScreen('placeDetail');
+  setTimeout(()=>initPlaceDetailMap(p),120);
 }
+function initPlaceDetailMap(p){
+  const el=document.getElementById('placeMiniMap');
+  if(!el||!window.L)return;
+  if(placeDetailMap){placeDetailMap.remove();placeDetailMap=null;placeDetailMarker=null;}
+  const hasCoords=Number.isFinite(Number(p?.latitude))&&Number.isFinite(Number(p?.longitude));
+  const center=hasCoords?[Number(p.latitude),Number(p.longitude)]:[34.6937,135.5023];
+  placeDetailMap=L.map('placeMiniMap').setView(center,hasCoords?15:11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(placeDetailMap);
+  if(hasCoords){
+    placeDetailMarker=L.marker(center).addTo(placeDetailMap).bindPopup(p.name).openPopup();
+    currentPlaceMapResult={name:p.name,lat:center[0],lon:center[1]};
+    const msg=document.getElementById('placeMapMessage');if(msg)msg.textContent='📍 Ubicación guardada. Podés buscar otra si querés.';
+  }
+  setTimeout(()=>placeDetailMap?.invalidateSize(),100);
+}
+async function searchPlaceInDetailMap(){
+  const input=document.getElementById('placeMapSearchInput');
+  const msg=document.getElementById('placeMapMessage');
+  const query=input?.value.trim();
+  if(!query)return;
+  if(!navigator.onLine){if(msg)msg.textContent='📴 La búsqueda necesita Internet. La ficha sigue disponible offline.';return;}
+  if(msg)msg.textContent='🔎 Buscando...';
+  try{
+    const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=jp&q='+encodeURIComponent(query);
+    const response=await fetch(url,{headers:{'Accept':'application/json'}});
+    if(!response.ok)throw new Error('Búsqueda no disponible');
+    const data=await response.json();
+    if(!Array.isArray(data)||!data.length){if(msg)msg.textContent='No encontramos ese lugar. Probá cambiando el texto de búsqueda.';return;}
+    const r=data[0],lat=Number(r.lat),lon=Number(r.lon);
+    if(!placeDetailMap)initPlaceDetailMap(getPlaceById(currentDetailPlaceId));
+    placeDetailMap.setView([lat,lon],16);
+    if(placeDetailMarker)placeDetailMap.removeLayer(placeDetailMarker);
+    placeDetailMarker=L.marker([lat,lon]).addTo(placeDetailMap).bindPopup(r.display_name||query).openPopup();
+    currentPlaceMapResult={name:query,lat,lon};
+    if(msg)msg.textContent='✅ Resultado encontrado. Podés mover y ampliar el mapa.';
+  }catch(e){if(msg)msg.textContent='No pudimos hacer la búsqueda. Revisá la conexión e intentá nuevamente.';}
+}
+function openCurrentPlaceInGoogleMaps(){
+  const input=document.getElementById('placeMapSearchInput');
+  const query=input?.value.trim()||getPlaceById(currentDetailPlaceId)?.name||'';
+  const target=currentPlaceMapResult?`${currentPlaceMapResult.lat},${currentPlaceMapResult.lon}`:query;
+  window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(target),'_blank','noopener');
+}
+
 const purchaseStatuses=['Pendiente','Buscando','Encontrado','Comprado'];
 let purchaseData={personal:{},gifts:{}};
 function loadPurchaseData(){try{purchaseData=JSON.parse(localStorage.getItem('japon_purchase_data_v22')||'{}')||{};}catch(e){purchaseData={};}purchaseData.personal=purchaseData.personal||{};purchaseData.gifts=purchaseData.gifts||{};}
