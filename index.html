@@ -16,7 +16,7 @@
 .sync-bar{position:fixed;right:12px;bottom:12px;z-index:999;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px}.sync-bar button{border:0;background:#f1f1f1;border-radius:8px;padding:6px 8px;margin-left:6px;cursor:pointer}</style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 2</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 3</div></header>
 <main>
 <section id="home" class="active">
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -676,7 +676,7 @@ document.addEventListener('click',function(e){
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js')
-      .then(() => console.log('📱 PWA lista: Service Worker registrado.'))
+      .then(reg => { reg.update(); console.log('📱 PWA lista: Service Worker registrado.'); })
       .catch(error => console.error('❌ No se pudo registrar el Service Worker:', error));
   });
 }
