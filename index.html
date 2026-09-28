@@ -16,7 +16,7 @@
 .sync-bar{position:fixed;right:12px;bottom:12px;z-index:999;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px}.sync-bar button{border:0;background:#f1f1f1;border-radius:8px;padding:6px 8px;margin-left:6px;cursor:pointer}</style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 3</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4</div></header>
 <main>
 <section id="home" class="active">
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -127,35 +127,77 @@ async function syncOfflineQueue(manual=false){
   if(!q.length){updateSyncState('☁️ Sincronizado');return true;}
   updateSyncState(`📴 ${q.length} pendiente(s)`);
   if(!navigator.onLine||!supabaseClient){if(manual)console.log('📴 Todavía sin conexión.');return false;}
-  console.log('🔄 Sincronizando cambios pendientes:',q.length);
+  console.log('🔄 Sincronizando y verificando cambios pendientes:',q.length);
   updateSyncState(`🔄 Sincronizando ${q.length}...`);
+
   for(const x of [...q]){
     try{
-      let error=null;
+      let table='', id='', expectedStatus=x.payload?.status || 'Pendiente';
+      let expectedPrice=(x.payload && Object.prototype.hasOwnProperty.call(x.payload,'actual_price')) ? x.payload.actual_price : undefined;
+
       if(x.kind==='wishlist'){
-        const {data, error:findError}=await supabaseClient.from('wishlist_items').select('id,product').eq('product',x.identity).limit(1);
-        if(findError)throw findError;if(!data?.[0]?.id)throw new Error('No se encontró wishlist: '+x.identity);
-        ({error}=await supabaseClient.from('wishlist_items').update({...x.payload,updated_at:new Date().toISOString()}).eq('id',data[0].id));
+        table='wishlist_items';
+        const {data,error}=await supabaseClient.from(table).select('id,product').eq('product',x.identity).limit(1);
+        if(error)throw error;
+        id=data?.[0]?.id;
+        if(!id)throw new Error('No se encontró wishlist: '+x.identity);
+        const {data:written,error:writeError}=await supabaseClient.from(table)
+          .update({...x.payload,updated_at:new Date().toISOString()})
+          .eq('id',id)
+          .select('id,status,actual_price')
+          .maybeSingle();
+        if(writeError)throw writeError;
+        if(!written)throw new Error('Supabase no confirmó la actualización de wishlist.');
+        if((written.status||'Pendiente')!==expectedStatus)throw new Error('El estado confirmado no coincide.');
+        if(expectedPrice!==undefined && Number(written.actual_price ?? 0)!==Number(expectedPrice ?? 0))throw new Error('El precio confirmado no coincide.');
+
       }else if(x.kind==='gift'){
+        table='gifts';
         const [person,group]=x.identity.split('|||');
-        const {data,error:findError}=await supabaseClient.from('gifts').select('*');
-        if(findError)throw findError;
+        const {data,error}=await supabaseClient.from(table).select('*');
+        if(error)throw error;
         const row=(data||[]).find(r=>textValue(firstValue(r,['person_name','recipient','name','person']))===person&&textValue(firstValue(r,['group_name','group','family_group','recipient_group']))===group);
-        if(!row?.id)throw new Error('No se encontró regalo: '+person+' / '+group);
-        ({error}=await supabaseClient.from('gifts').update(x.payload).eq('id',row.id));
+        id=row?.id;
+        if(!id)throw new Error('No se encontró regalo: '+person+' / '+group);
+        const {data:written,error:writeError}=await supabaseClient.from(table)
+          .update(x.payload).eq('id',id).select('id,status,actual_price').maybeSingle();
+        if(writeError)throw writeError;
+        if(!written)throw new Error('Supabase no confirmó la actualización del regalo.');
+        if((written.status||'Pendiente')!==expectedStatus)throw new Error('El estado confirmado no coincide.');
+        if(expectedPrice!==undefined && Number(written.actual_price ?? 0)!==Number(expectedPrice ?? 0))throw new Error('El precio confirmado no coincide.');
+
       }else if(x.kind==='place'){
+        table='places';
         const [zone,name]=x.identity.split('|||');
-        const {data,error:findError}=await supabaseClient.from('places').select('id,name,zone').eq('name',name).eq('zone',zone).limit(1);
-        if(findError)throw findError;if(!data?.[0]?.id)throw new Error('No se encontró lugar: '+name);
-        ({error}=await supabaseClient.from('places').update(x.payload).eq('id',data[0].id));
+        const {data,error}=await supabaseClient.from(table).select('id,name,zone').eq('name',name).eq('zone',zone).limit(1);
+        if(error)throw error;
+        id=data?.[0]?.id;
+        if(!id)throw new Error('No se encontró lugar: '+name);
+        const {data:written,error:writeError}=await supabaseClient.from(table)
+          .update(x.payload).eq('id',id).select('id,status').maybeSingle();
+        if(writeError)throw writeError;
+        if(!written)throw new Error('Supabase no confirmó la actualización del lugar.');
+        if((written.status||'Pendiente')!==expectedStatus)throw new Error('El estado confirmado no coincide.');
+      }else{
+        throw new Error('Tipo de cambio offline desconocido: '+x.kind);
       }
-      if(error)throw error;
+
+      // Segunda lectura independiente: sólo quitamos la cola si la nube devuelve el valor esperado.
+      const fields=x.kind==='place'?'id,status':'id,status,actual_price';
+      const {data:check,error:checkError}=await supabaseClient.from(table).select(fields).eq('id',id).maybeSingle();
+      if(checkError)throw checkError;
+      if(!check)throw new Error('No se pudo verificar el cambio en Supabase.');
+      if((check.status||'Pendiente')!==expectedStatus)throw new Error('Verificación fallida: estado distinto en Supabase.');
+      if(expectedPrice!==undefined && Number(check.actual_price ?? 0)!==Number(expectedPrice ?? 0))throw new Error('Verificación fallida: precio distinto en Supabase.');
+
       removeOfflineChange(x.kind,x.identity);
-      console.log('☁️ Cambio offline sincronizado:',x.kind,x.identity);
-    }catch(error){console.error('❌ Sigue pendiente de sincronizar:',x.kind,x.identity,error?.message||error);}
+      console.log('✅ Cambio offline confirmado en Supabase:',x.kind,x.identity);
+    }catch(error){
+      console.error('❌ Sigue pendiente; Supabase no confirmó el cambio:',x.kind,x.identity,error?.message||error);
+    }
   }
   const left=getOfflineQueue().length;
-  updateSyncState(left?`📴 ${left} pendiente(s)`:'☁️ Sincronizado');
+  updateSyncState(left?`⚠️ ${left} pendiente(s)`:'✅ Sincronizado');
   return left===0;
 }
 window.addEventListener('online',()=>{console.log('🌐 Volvió Internet. Sincronizando...');setTimeout(()=>syncOfflineQueue(),800);});

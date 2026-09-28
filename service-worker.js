@@ -1,4 +1,4 @@
-const CACHE_NAME = 'viaje-japon-v3';
+const CACHE_NAME = 'viaje-japon-v4';
 const APP_SHELL = [
   './',
   './index.html',
