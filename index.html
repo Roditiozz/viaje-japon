@@ -17,7 +17,7 @@
 .sync-bar{position:fixed;right:12px;bottom:12px;z-index:999;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px}.sync-bar button{border:0;background:#f1f1f1;border-radius:8px;padding:6px 8px;margin-left:6px;cursor:pointer}</style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1</div></header>
 <main>
 <section id="home" class="active">
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -535,17 +535,28 @@ function showPlaceDetail(name){
   const p=places.find(x=>x.zone===currentZone&&x.name===name);
   if(p)showPlaceDetailById(p.id);
 }
+
+// ===== RELACIONES APROBADAS: LUGARES → PARA MÍ / REGALOS =====
+const placePersonalRelations={
+'Osaka|||Dotonbori':['Tazas / vasos / platos / tetera / vasija'],'Osaka|||Osaka Castle':['Tazas / vasos / platos / tetera / vasija'],'Osaka|||Namba Shrine':['Tazas / vasos / platos / tetera / vasija'],'Osaka|||Universal Studios':['Merch Harry Potter'],'Osaka|||teamLab':[],'Osaka|||Acuario Osaka':[],'Osaka|||Don Quijote':['Tazas / vasos / platos / tetera / vasija','Sellos / plumas / papelería / librería','Perfumes'],'Osaka|||Outlet Adidas/Nike':['Zapatillas / Sandalias','Ropa UNIQLO y demás'],'Osaka|||Pokémon Center Osaka':[],'Osaka|||Rikuro Cheesecake':[],'Osaka|||Pablo Cheesecake':[],
+'Kyoto|||Bosque de Bambú':['Tazas / vasos / platos / tetera / vasija'],'Kyoto|||Evangelion Base':[],'Kyoto|||Uzumasa Village':['Merch Universal'],'Kyoto|||Templos':['Tazas / vasos / platos / tetera / vasija'],'Kyoto|||Vasijas / bazares':['Tazas / vasos / platos / tetera / vasija','Sellos / plumas / papelería / librería'],
+'Tokio|||Sensō-ji':['Tazas / vasos / platos / tetera / vasija'],'Tokio|||Shibuya':['Nintendo Switch','Celular Lu','Zapatillas / Sandalias','Ropa UNIQLO y demás','Micrófono corbatero','Sellos / plumas / papelería / librería','Perfumes'],'Tokio|||teamLab Planets':[],'Tokio|||Shinjuku':['Nintendo Switch','Celular Lu','Ropa UNIQLO y demás','Micrófono corbatero','Perfumes'],'Tokio|||DisneySea':['Merch Disney'],'Tokio|||Estatua de Hachiko':[],'Tokio|||UNIQLO':['Ropa UNIQLO y demás'],'Tokio|||Outlet Adidas/Nike':['Zapatillas / Sandalias','Ropa UNIQLO y demás'],'Tokio|||Pokémon Center Tokio':[],'Kamakura|||Cruce de Slam Dunk':[]};
+const placeGiftRelations={
+'Osaka|||Dotonbori':[['Pa y Ma','Familia Lu'],['Pa y Ma','Familia Rodo'],['Flor','Amigos Lu']], 'Osaka|||Osaka Castle':[['Pa y Ma','Familia Lu'],['Pa y Ma','Familia Rodo'],['Sami','Amigos Rodo'],['Negra','Amigos Rodo']], 'Osaka|||Namba Shrine':[['Pa y Ma','Familia Lu'],['Pa y Ma','Familia Rodo'],['Sami','Amigos Rodo'],['Negra','Amigos Rodo']], 'Osaka|||Universal Studios':[['Flor 2','Amigos Lu'],['Negra','Amigos Rodo']], 'Osaka|||teamLab':[['Otros','Amigos Rodo']], 'Osaka|||Acuario Osaka':[['Otros','Amigos Rodo']], 'Osaka|||Don Quijote':[['Pa y Ma','Familia Lu'],['Dani','Familia Lu'],['Pa y Ma','Familia Rodo'],['Marie','Familia Rodo'],['Zulma','Amigos Lu'],['Clari','Amigos Lu'],['Flor','Amigos Lu'],['Noe','Amigos Lu'],['Sami','Amigos Rodo'],['Negra','Amigos Rodo']], 'Osaka|||Outlet Adidas/Nike':[['Sobris','Familia Lu'],['Gabi','Amigos Rodo']], 'Osaka|||Pokémon Center Osaka':[['Poncho','Amigos Rodo']], 'Osaka|||Rikuro Cheesecake':[['Flor','Amigos Lu']], 'Osaka|||Pablo Cheesecake':[['Flor','Amigos Lu']],
+'Kyoto|||Bosque de Bambú':[['Pa y Ma','Familia Lu'],['Pa y Ma','Familia Rodo'],['Sami','Amigos Rodo'],['Negra','Amigos Rodo']], 'Kyoto|||Evangelion Base':[['Biz','Amigos Lu']], 'Kyoto|||Uzumasa Village':[['Biz','Amigos Lu']], 'Kyoto|||Templos':[['Pa y Ma','Familia Lu'],['Pa y Ma','Familia Rodo'],['Sami','Amigos Rodo'],['Negra','Amigos Rodo']], 'Kyoto|||Vasijas / bazares':[['Pa y Ma','Familia Lu'],['Dani','Familia Lu'],['Pa y Ma','Familia Rodo'],['Marie','Familia Rodo'],['Zulma','Amigos Lu'],['Clari','Amigos Lu'],['Sami','Amigos Rodo'],['Negra','Amigos Rodo']],
+'Tokio|||Sensō-ji':[['Pa y Ma','Familia Lu'],['Pa y Ma','Familia Rodo'],['Sami','Amigos Rodo'],['Negra','Amigos Rodo']], 'Tokio|||Shibuya':[['Dani','Familia Lu'],['Sobris','Familia Lu'],['Zulma','Amigos Lu'],['Biz','Amigos Lu'],['Clari','Amigos Lu'],['Flor','Amigos Lu'],['Noe','Amigos Lu'],['Sami','Amigos Rodo'],['Gabi','Amigos Rodo']], 'Tokio|||teamLab Planets':[['Otros','Amigos Rodo']], 'Tokio|||Shinjuku':[['Zulma','Amigos Lu'],['Biz','Amigos Lu'],['Clari','Amigos Lu'],['Flor','Amigos Lu'],['Noe','Amigos Lu'],['Sami','Amigos Rodo']], 'Tokio|||DisneySea':[['Otros','Amigos Rodo']], 'Tokio|||Estatua de Hachiko':[['Otros','Amigos Rodo']], 'Tokio|||UNIQLO':[], 'Tokio|||Outlet Adidas/Nike':[['Sobris','Familia Lu'],['Gabi','Amigos Rodo']], 'Tokio|||Pokémon Center Tokio':[['Poncho','Amigos Rodo']], 'Kamakura|||Cruce de Slam Dunk':[['Biz','Amigos Lu']]};
+function relationKey(p){return `${p.zone}|||${p.name}`;}
+function getApprovedPersonalRelations(p){return (placePersonalRelations[relationKey(p)]||[]).map(n=>personalItems.find(x=>x[0]===n)).filter(Boolean);}
+function getApprovedGiftRelations(p){return (placeGiftRelations[relationKey(p)]||[]).map(([n,g])=>gifts.find(x=>x[0]===n&&x[1]===g)).filter(Boolean);}
+
 function showPlaceDetailById(id){
   const p=getPlaceById(id);
   if(!p)return;
   currentZone=p.zone;
   currentDetailPlaceId=p.id;
   currentPlaceMapResult=null;
-  const relatedPersonal=personalItems.filter(x=>p.categories.some(cat=>x[1]===cat));
-  const relatedGifts=gifts.filter(g=>{
-    const t=(g[2]+' '+g[3]).toLowerCase();
-    return p.interests.some(i=>i!=='General'&&t.includes(i.toLowerCase()))||p.categories.some(cat=>t.includes(cat.toLowerCase()));
-  });
+  const relatedPersonal=getApprovedPersonalRelations(p);
+  const relatedGifts=getApprovedGiftRelations(p);
   const initialQuery=`${p.name} ${p.zone}`;
   document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card"><h2>${esc(p.name)}</h2><p><strong>Zona:</strong> ${esc(p.zone)}</p><p><strong>Tipo:</strong> ${p.types.map(t=>getTypeIcon(t)+' '+esc(t)).join(' / ')}</p>${p.categories.length?`<p><strong>Categoría:</strong> ${p.categories.map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><div class="place-search-box"><h3 style="margin-top:0">🗺️ Buscar en el mapa</h3><div class="place-search-row"><input id="placeMapSearchInput" class="place-search-input" value="${esc(initialQuery)}" placeholder="Buscar lugar..."><button type="button" class="map-button" onclick="searchPlaceInDetailMap()">🔎 Buscar</button></div><div id="placeMiniMap" class="place-mini-map"></div><p id="placeMapMessage" class="place-map-message">Buscá el lugar para verlo acá sin salir de la app.</p><div class="place-map-actions"><button id="openGoogleMapsBtn" type="button" class="map-button" onclick="openCurrentPlaceInGoogleMaps()">🗺️ Buscar en Google Maps ↗</button></div></div></div><div class="detail-card"><h3>🛍️ Para mí</h3>${relatedPersonal.length?relatedPersonal.map(x=>`<p>• ${esc(x[0])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div><div class="detail-card"><h3>🎁 Regalos</h3>${relatedGifts.length?relatedGifts.map(x=>`<p>• ${esc(x[0])} — ${esc(x[2])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div>`;
   showScreen('placeDetail');
