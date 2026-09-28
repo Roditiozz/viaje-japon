@@ -17,7 +17,7 @@
 .sync-bar{position:fixed;right:12px;bottom:12px;z-index:999;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px}.sync-bar button{border:0;background:#f1f1f1;border-radius:8px;padding:6px 8px;margin-left:6px;cursor:pointer}</style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 1</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 2</div></header>
 <main>
 <section id="home" class="active">
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -546,7 +546,7 @@ function showPlaceDetailById(id){
     const t=(g[2]+' '+g[3]).toLowerCase();
     return p.interests.some(i=>i!=='General'&&t.includes(i.toLowerCase()))||p.categories.some(cat=>t.includes(cat.toLowerCase()));
   });
-  const initialQuery=`${p.name} ${p.zone} Japan`;
+  const initialQuery=`${p.name} ${p.zone}`;
   document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card"><h2>${esc(p.name)}</h2><p><strong>Zona:</strong> ${esc(p.zone)}</p><p><strong>Tipo:</strong> ${p.types.map(t=>getTypeIcon(t)+' '+esc(t)).join(' / ')}</p>${p.categories.length?`<p><strong>Categoría:</strong> ${p.categories.map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><div class="place-search-box"><h3 style="margin-top:0">🗺️ Buscar en el mapa</h3><div class="place-search-row"><input id="placeMapSearchInput" class="place-search-input" value="${esc(initialQuery)}" placeholder="Buscar lugar..."><button type="button" class="map-button" onclick="searchPlaceInDetailMap()">🔎 Buscar</button></div><div id="placeMiniMap" class="place-mini-map"></div><p id="placeMapMessage" class="place-map-message">Buscá el lugar para verlo acá sin salir de la app.</p><div class="place-map-actions"><button id="openGoogleMapsBtn" type="button" class="map-button" onclick="openCurrentPlaceInGoogleMaps()">🗺️ Abrir en Google Maps ↗</button></div></div></div><div class="detail-card"><h3>🛍️ Para mí</h3>${relatedPersonal.length?relatedPersonal.map(x=>`<p>• ${esc(x[0])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div><div class="detail-card"><h3>🎁 Regalos</h3>${relatedGifts.length?relatedGifts.map(x=>`<p>• ${esc(x[0])} — ${esc(x[2])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div>`;
   showScreen('placeDetail');
   setTimeout(()=>initPlaceDetailMap(p),120);
@@ -566,26 +566,55 @@ function initPlaceDetailMap(p){
   }
   setTimeout(()=>placeDetailMap?.invalidateSize(),100);
 }
+function placeSearchVariants(query,p){
+  const zoneAliases={tokio:'Tokyo',tokyo:'Tokyo',kioto:'Kyoto',kyoto:'Kyoto',osaka:'Osaka',kamakura:'Kamakura'};
+  const placeAliases={
+    'acuario osaka':'Osaka Aquarium Kaiyukan',
+    'bosque de bambú':'Arashiyama Bamboo Forest',
+    'bosque de bambu':'Arashiyama Bamboo Forest',
+    'castillo de osaka':'Osaka Castle',
+    'cruce de slam dunk':'Kamakurakokomae Slam Dunk crossing',
+    'estatua de hachiko':'Hachiko Statue Shibuya',
+    'templos':'Kyoto temples'
+  };
+  const clean=v=>String(v||'').trim().replace(/\s+/g,' ');
+  const norm=v=>clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  let translated=clean(query);
+  Object.entries(zoneAliases).forEach(([from,to])=>{translated=translated.replace(new RegExp(`\\b${from}\\b`,'gi'),to);});
+  const zone=zoneAliases[norm(p?.zone)]||clean(p?.zone);
+  const alias=placeAliases[norm(p?.name)]||'';
+  const variants=[translated+' Japan'];
+  if(alias)variants.push(`${alias} ${zone} Japan`);
+  variants.push(`${clean(p?.name)} ${zone} Japan`,`${clean(p?.name)} Japan`,translated);
+  return [...new Set(variants.map(clean).filter(Boolean))];
+}
 async function searchPlaceInDetailMap(){
   const input=document.getElementById('placeMapSearchInput');
   const msg=document.getElementById('placeMapMessage');
   const query=input?.value.trim();
+  const p=getPlaceById(currentDetailPlaceId);
   if(!query)return;
   if(!navigator.onLine){if(msg)msg.textContent='📴 La búsqueda necesita Internet. La ficha sigue disponible offline.';return;}
+  const variants=placeSearchVariants(query,p);
   if(msg)msg.textContent='🔎 Buscando...';
   try{
-    const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=jp&q='+encodeURIComponent(query);
-    const response=await fetch(url,{headers:{'Accept':'application/json'}});
-    if(!response.ok)throw new Error('Búsqueda no disponible');
-    const data=await response.json();
-    if(!Array.isArray(data)||!data.length){if(msg)msg.textContent='No encontramos ese lugar. Probá cambiando el texto de búsqueda.';return;}
-    const r=data[0],lat=Number(r.lat),lon=Number(r.lon);
-    if(!placeDetailMap)initPlaceDetailMap(getPlaceById(currentDetailPlaceId));
+    let r=null,usedQuery='';
+    for(const q of variants){
+      if(msg)msg.textContent=`🔎 Buscando… (${q})`;
+      const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=jp&q='+encodeURIComponent(q);
+      const response=await fetch(url,{headers:{'Accept':'application/json'}});
+      if(!response.ok)continue;
+      const data=await response.json();
+      if(Array.isArray(data)&&data.length){r=data[0];usedQuery=q;break;}
+    }
+    if(!r){if(msg)msg.textContent='No encontramos ese lugar. Probamos varias formas automáticamente; podés editar el texto y volver a buscar.';return;}
+    const lat=Number(r.lat),lon=Number(r.lon);
+    if(!placeDetailMap)initPlaceDetailMap(p);
     placeDetailMap.setView([lat,lon],16);
     if(placeDetailMarker)placeDetailMap.removeLayer(placeDetailMarker);
-    placeDetailMarker=L.marker([lat,lon]).addTo(placeDetailMap).bindPopup(r.display_name||query).openPopup();
+    placeDetailMarker=L.marker([lat,lon]).addTo(placeDetailMap).bindPopup(r.display_name||usedQuery).openPopup();
     currentPlaceMapResult={name:query,lat,lon};
-    if(msg)msg.textContent='✅ Resultado encontrado. Podés mover y ampliar el mapa.';
+    if(msg)msg.textContent='✅ Resultado encontrado. La app adaptó la búsqueda automáticamente si fue necesario.';
   }catch(e){if(msg)msg.textContent='No pudimos hacer la búsqueda. Revisá la conexión e intentá nuevamente.';}
 }
 function openCurrentPlaceInGoogleMaps(){
