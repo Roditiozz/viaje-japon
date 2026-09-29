@@ -191,10 +191,18 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
  #regalos>.back,#paraMi>.back{margin-bottom:8px}
  .compact-budget{margin-top:4px}
 }
+
+/* Fix imágenes: nunca mostrar icono de imagen rota */
+.product-image-wrap,.product-fallback{width:52px;height:52px;border-radius:10px;background:#f7f9fc;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 52px}
+.product-image-wrap img{width:100%;height:100%;object-fit:contain;padding:2px}
+.product-fallback{font-size:29px}
+.detail-image-wrap{width:100%;height:170px;flex-basis:auto;background:#fff}
+.detail-image-wrap img{max-width:88%;max-height:160px;width:auto;height:auto;object-fit:contain}
+.detail-fallback{width:100%;height:170px;font-size:88px;background:#fff;flex-basis:auto}
 </style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes</div></header>
 <main>
 <section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -904,6 +912,12 @@ const personalVisualImages={
  'Perfumes':'https://www.chanel.com/images//t_one///q_auto:good,f_auto,fl_lossy,dpr_1.1/w_1240/n-5-eau-de-parfum-spray-3-4fl-oz--packshot-default-125530-9564914667550.jpg'
 };
 function personalVisualImage(name){return personalVisualImages[name]||'';}
+function personalVisualMarkup(name,detail=false){
+  const url=personalVisualImage(name);
+  const icon=personalVisualIcon(name);
+  if(!url)return `<div class="product-fallback ${detail?'detail-fallback':''}">${icon}</div>`;
+  return `<div class="product-image-wrap ${detail?'detail-image-wrap':''}"><img src="${url}" alt="${esc(name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="product-fallback ${detail?'detail-fallback':''}" style="display:none">${icon}</div></div>`;
+}
 function personalVisualIcon(name){
  const n=normalizedSearchText(name);
  if(n.includes('nintendo'))return '🎮'; if(n.includes('celular'))return '📱'; if(n.includes('zapat'))return '👟';
@@ -911,7 +925,7 @@ function personalVisualIcon(name){
  if(n.includes('microfono'))return '🎙️'; if(n.includes('sellos'))return '✒️'; if(n.includes('melodica'))return '🎹';
  if(n.includes('perfume'))return '🧴'; return '🛍️';
 }
-function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item personal-row clickable" onclick="showPersonalDetail(${i})">${personalVisualImage(x[0])?`<img class="personal-thumb" src="${personalVisualImage(x[0])}" alt="${esc(x[0])}" loading="lazy">`:`<div class="list-icon" style="font-size:30px;background:#f7f9fc">${personalVisualIcon(x[0])}</div>`}<div class="row-copy"><h3>${esc(x[0])}</h3>${x[3]?`<p>${esc(x[3].replace('Presupuesto: ',''))}</p>`:''}${d.price!==''?`<p>Precio real: ${formatYen(d.price)}</p>`:''}</div><div class="row-end"><span class="row-chevron">›</span></div></div>`}).join('');updateBudgets();}
+function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item personal-row clickable" onclick="showPersonalDetail(${i})">${personalVisualMarkup(x[0],false)}<div class="row-copy"><h3>${esc(x[0])}</h3>${x[3]?`<p>${esc(x[3].replace('Presupuesto: ',''))}</p>`:''}${d.price!==''?`<p>Precio real: ${formatYen(d.price)}</p>`:''}</div><div class="row-end"><span class="row-chevron">›</span></div></div>`}).join('');updateBudgets();}
 let currentGiftGroup='';
 function giftGroupFamily(group){
   if(group==='Familia Lu'||group==='Familia Rodo')return 'Familias';
@@ -964,7 +978,7 @@ function renderGiftHome(){
   updateBudgets();
 }
 function renderGifts(){renderGiftHome();}
-function showPersonalDetail(index){const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image">${personalVisualImage(x[0])?`<img src="${personalVisualImage(x[0])}" alt="${esc(x[0])}">`:`<div style="font-size:92px">${personalVisualIcon(x[0])}</div>`}</div><h2>${esc(x[0])}</h2>${x[2]?`<div class="detail-form-row"><strong>Cantidad</strong><span>${esc(x[2].replace('Cantidad: ',''))}</span></div>`:''}${x[3]?`<div class="detail-form-row"><strong>Presupuesto</strong><span>${esc(x[3].replace('Presupuesto: ',''))}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="detail-form-row"><strong>Precio real</strong><span><input class="price-input" id="personalPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥"><button type="button" class="save-price" onclick="setPurchasePrice('personal',${index})">Guardar</button></span></div></div>`;updateBudgets();showScreen('personalDetail')}
+function showPersonalDetail(index){const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image">${personalVisualMarkup(x[0],true)}</div><h2>${esc(x[0])}</h2>${x[2]?`<div class="detail-form-row"><strong>Cantidad</strong><span>${esc(x[2].replace('Cantidad: ',''))}</span></div>`:''}${x[3]?`<div class="detail-form-row"><strong>Presupuesto</strong><span>${esc(x[3].replace('Presupuesto: ',''))}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="detail-form-row"><strong>Precio real</strong><span><input class="price-input" id="personalPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥"><button type="button" class="save-price" onclick="setPurchasePrice('personal',${index})">Guardar</button></span></div></div>`;updateBudgets();showScreen('personalDetail')}
 function showGiftDetail(index){const g=gifts[index];if(!g)return;const d=getPurchase('gifts',index);document.getElementById('giftDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image"><div style="font-size:82px">📝✒️</div></div><h2>${esc(g[0])} <span style="font-size:15px;font-weight:500">(${esc(g[1])})</span></h2>${g[2]?`<div class="detail-form-row"><strong>Interés</strong><span>${esc(g[2])}</span></div>`:''}${g[3]?`<div class="detail-form-row"><strong>Ideas</strong><span>${esc(g[3])}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('gifts',${index})">${statusLabel(d.status)}</button></div><div class="detail-form-row"><strong>Precio real</strong><span><input class="price-input" id="giftsPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥"><button type="button" class="save-price" onclick="setPurchasePrice('gifts',${index})">Guardar</button></span></div></div>`;updateBudgets();showScreen('giftDetail')}
 function normalizedSearchText(v){
   return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
