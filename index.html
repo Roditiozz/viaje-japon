@@ -121,24 +121,66 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
   body{background:#edf1f6}
   main{background:#f7f9fc;min-height:calc(100vh - 60px);box-shadow:0 0 28px rgba(23,32,51,.06)}
 }
+
+/* ===== DISEÑO FINAL 3 — fiel al boceto ===== */
+:root{--app-blue:#087cff;--app-green:#0caf59;--app-red:#ff3b3b;--app-orange:#ff9f0a;--app-purple:#b96ad8}
+.icon-svg{width:30px;height:30px;display:block;margin:auto;fill:none;stroke:currentColor;stroke-width:2.25;stroke-linecap:round;stroke-linejoin:round}
+.home-card-icon{font-size:0}.home-card-icon svg{width:40px;height:40px}
+#homeCards .card:nth-child(1) .home-card-icon{color:#087cff}
+#homeCards .card:nth-child(2) .home-card-icon{color:#ff2f3f}
+#homeCards .card:nth-child(3) .home-card-icon{color:#0b9b4d}
+#homeCards .card:nth-child(4) .home-card-icon{color:#f49a00}
+.bottom-nav button span{font-size:0}.bottom-nav svg{width:22px;height:22px;margin:auto auto 2px}
+.bottom-nav button{font-size:10px}
+.section-topbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.section-topbar .back{margin:0;padding:7px 9px;border:0;background:transparent;font-size:22px}
+.section-topbar h2{font-size:20px;margin:0;flex:1;text-align:center}
+.filter-chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.filter-chips::-webkit-scrollbar{display:none}
+.filter-chip{white-space:nowrap;border:1px solid #dce4ed;background:#fff;border-radius:10px;padding:8px 12px;font-size:13px;color:#23334d;box-shadow:0 1px 3px rgba(20,40,70,.04)}
+.filter-chip.active{background:#45a9f8;color:#fff;border-color:#45a9f8}
+.gift-row,.personal-row{display:grid!important;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;padding:8px 10px!important;min-height:66px;border-radius:13px!important;box-shadow:none!important}
+.list-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.list-icon svg{width:24px;height:24px}
+.gift-row:nth-child(5n+1) .list-icon{background:#e7f7ee;color:#179b5a}.gift-row:nth-child(5n+2) .list-icon{background:#f4e8fb;color:#aa59c8}.gift-row:nth-child(5n+3) .list-icon{background:#fff0d8;color:#e79500}.gift-row:nth-child(5n+4) .list-icon{background:#ffe7e9;color:#ee3c4d}.gift-row:nth-child(5n) .list-icon{background:#e6f0ff;color:#3978d5}
+.row-copy h3{font-size:15px;margin:0 0 3px}.row-copy p{margin:0!important;font-size:13px;color:#63728a}.row-end{display:flex;align-items:center;gap:8px}.count-pill{background:#eef3f8;border-radius:9px;padding:5px 9px;font-size:12px;color:#52657e}.row-chevron{font-size:22px;color:#203650}
+.personal-row{grid-template-columns:56px 1fr auto;min-height:78px}.personal-thumb{width:52px;height:52px;object-fit:contain;border-radius:10px;background:#f7f9fc}.personal-row .row-copy p{margin-top:3px!important}
+.compact-budget{padding:8px 12px!important;border-radius:12px!important}.compact-budget .budget-grid{display:block}.compact-budget .budget-box{display:flex;justify-content:space-between;padding:7px 2px;background:transparent;border:0;border-bottom:1px solid #edf1f5;border-radius:0}.compact-budget .budget-box:last-child{border-bottom:0}.compact-budget .budget-box small{margin:0;color:#23334d}.compact-budget .budget-box strong{font-size:15px}
+.detail-product-image{height:180px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #edf1f5;margin-bottom:12px}.detail-product-image img{max-width:88%;max-height:160px;object-fit:contain}
+.detail-form-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #edf1f5}.detail-form-row:last-child{border-bottom:0}.detail-form-row strong{font-size:14px}
+#mapa .screen-title p{display:none}
+#mapa .map-controls:first-of-type{display:grid;grid-template-columns:1fr 48px;gap:8px}
+#mapa .map-controls:first-of-type:after{content:"⌾";display:flex;align-items:center;justify-content:center;border:1px solid #dce7df;background:#fff;color:#079b4c;border-radius:11px;font-size:25px}
+#mapa .map-controls:first-of-type .map-button{margin:0}
+#mapZoneButtons,#mapTypeFilters{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+#mapZoneButtons .map-button,#mapTypeFilters .map-button{font-size:12px;padding:9px 2px;border-radius:10px}
+#mapZoneButtons .map-button[style*="#dff3e7"]{background:#10b762!important;color:#fff!important;border-color:#10b762!important}
+#mapTypeFilters .map-button[style*="#e2efff"]{background:#42a9f7!important;color:#fff!important;border-color:#42a9f7!important}
+@media(max-width:600px){.sync-bar{display:none}.screen-title h2{font-size:21px}.budget{margin-bottom:10px}}
+
+#regalos #giftGroupNavigation .grid{display:flex;gap:7px;overflow-x:auto}
+#regalos #giftGroupNavigation .card{min-height:auto;padding:9px 12px;border-radius:10px;box-shadow:none;white-space:nowrap;background:#fff!important}
+#regalos #giftGroupNavigation .card h3{font-size:13px;margin:0}
+#regalos #giftGroupNavigation .card p{display:none}
+#regalos #giftGroupNavigation .screen-title{margin:8px 0 5px}
+#regalos #giftGroupNavigation .screen-title h2{font-size:15px}
 </style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 2</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 3</div></header>
 <main>
 <section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
 <div id="searchResults"></div>
 <div class="grid" id="homeCards">
-<div class="card" onclick="showScreen('paraMi')"><div class="home-card-icon">🛍️</div><h3>Para mí</h3><p>Wishlist y compras</p></div>
-<div class="card" onclick="showScreen('regalos')"><div class="home-card-icon">🎁</div><h3>Regalos</h3><p>Para otros</p></div>
-<div class="card" onclick="showScreen('zonas')"><div class="home-card-icon">📍</div><h3>Por zona</h3><p>Visitar · Comer · Compras</p></div>
-<div class="card" onclick="showScreen('mapa')"><div class="home-card-icon">🗺️</div><h3>Mapa</h3><p>Ver todo en el mapa</p></div>
+<div class="card" onclick="showScreen('paraMi')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></div><h3>Para mí</h3><p>Wishlist y compras</p></div>
+<div class="card" onclick="showScreen('regalos')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></div><h3>Regalos</h3><p>Para otros</p></div>
+<div class="card" onclick="showScreen('zonas')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Por zona</h3><p>Visitar · Comer · Compras</p></div>
+<div class="card" onclick="showScreen('mapa')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></div><h3>Mapa</h3><p>Ver todo en el mapa</p></div>
 </div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
 
-<section id="paraMi"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget"><h3>💰 Presupuesto personal</h3><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div></section>
+<section id="paraMi"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div></section>
 
-<section id="regalos"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget"><h3>💰 Presupuesto de regalos</h3><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div></section>
+<section id="regalos"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div></section>
 
 <section id="zonas">
   <button class="back" onclick="showScreen('home')">← Volver</button>
@@ -161,11 +203,11 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 <section id="giftDetail"><button class="back" onclick="showScreen('regalos')">← Volver</button><div id="giftDetailContainer"></div></section>
 <section id="mapa"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" data-map-zone="Osaka" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" data-map-zone="Kyoto" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" data-map-zone="Tokio" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" data-map-zone="Kamakura" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" data-map-type="Todos" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" data-map-type="Visitar" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" data-map-type="Comer" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" data-map-type="Compras" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
 </main><nav class="bottom-nav" id="bottomNav">
-<button data-nav="home" onclick="showScreen('home')"><span>🏠</span>Home</button>
-<button data-nav="zonas" onclick="showScreen('zonas')"><span>📍</span>Zonas</button>
-<button data-nav="mapa" onclick="showScreen('mapa')"><span>🗺️</span>Mapa</button>
-<button data-nav="regalos" onclick="showScreen('regalos')"><span>🎁</span>Regalos</button>
-<button data-nav="paraMi" onclick="showScreen('paraMi')"><span>🛍️</span>Para mí</button>
+<button data-nav="home" onclick="showScreen('home')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v11h14V10M9 21v-7h6v7"/></svg></span>Home</button>
+<button data-nav="zonas" onclick="showScreen('zonas')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>Zonas</button>
+<button data-nav="mapa" onclick="showScreen('mapa')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></span>Mapa</button>
+<button data-nav="regalos" onclick="showScreen('regalos')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></span>Regalos</button>
+<button data-nav="paraMi" onclick="showScreen('paraMi')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></span>Para mí</button>
 </nav><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -824,7 +866,14 @@ function setPurchasePrice(type,index){const input=document.getElementById(`${typ
 function statusLabel(status){return status==='Comprado'?'🟢 Comprado':status==='Encontrado'?'🔵 Encontrado':status==='Buscando'?'🟠 Buscando':'🟡 Pendiente';}
 function formatYen(n){return '¥'+Number(n||0).toLocaleString('es-AR');}
 function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);}
-function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item clickable" onclick="showPersonalDetail(${i})"><h3>${esc(x[0])}</h3>${x[2]?`<p>${esc(x[2])}</p>`:''}${x[3]?`<p>${esc(x[3])}</p>`:''}<div class="purchase-row"><button type="button" class="status-btn" onclick="event.stopPropagation();cyclePurchaseStatus('personal',${i})">${statusLabel(d.status)}</button>${d.price!==''?`<span class="tag">Precio real: ${formatYen(d.price)}</span>`:''}</div></div>`}).join('');updateBudgets();}
+function personalVisualIcon(name){
+ const n=normalizedSearchText(name);
+ if(n.includes('nintendo'))return '🎮'; if(n.includes('celular'))return '📱'; if(n.includes('zapat'))return '👟';
+ if(n.includes('tazas'))return '🍵'; if(n.includes('merch'))return '🎁'; if(n.includes('ropa'))return '👕';
+ if(n.includes('microfono'))return '🎙️'; if(n.includes('sellos'))return '✒️'; if(n.includes('melodica'))return '🎹';
+ if(n.includes('perfume'))return '🧴'; return '🛍️';
+}
+function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item personal-row clickable" onclick="showPersonalDetail(${i})"><div class="list-icon" style="font-size:30px;background:#f7f9fc">${personalVisualIcon(x[0])}</div><div class="row-copy"><h3>${esc(x[0])}</h3>${x[3]?`<p>${esc(x[3].replace('Presupuesto: ',''))}</p>`:''}${d.price!==''?`<p>Precio real: ${formatYen(d.price)}</p>`:''}</div><div class="row-end"><span class="row-chevron">›</span></div></div>`}).join('');updateBudgets();}
 let currentGiftGroup='';
 function giftGroupFamily(group){
   if(group==='Familia Lu'||group==='Familia Rodo')return 'Familias';
@@ -833,8 +882,9 @@ function giftGroupFamily(group){
   return 'Otros';
 }
 function giftCardHtml(g,i){
-  const d=getPurchase('gifts',i);
-  return `<div class="item clickable" onclick="showGiftDetail(${i})"><h3>${esc(g[0])}</h3><span class="tag">${esc(g[1])}</span>${g[2]?`<p><strong>Interés / categoría:</strong> ${esc(g[2])}</p>`:''}${g[3]?`<p><strong>Idea:</strong> ${esc(g[3])}</p>`:''}<div class="purchase-row"><button type="button" class="status-btn" onclick="event.stopPropagation();cyclePurchaseStatus('gifts',${i})">${statusLabel(d.status)}</button>${d.price!==''?`<span class="tag">Precio real: ${formatYen(d.price)}</span>`:''}</div></div>`;
+ const d=getPurchase('gifts',i);
+ const done=d.status==='Comprado';
+ return `<div class="item gift-row clickable" onclick="showGiftDetail(${i})"><div class="list-icon"><svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4 3-6 7-6s6.2 2 7 6"/></svg></div><div class="row-copy"><h3>${esc(g[0])} <span style="font-weight:500">(${esc(g[1])})</span></h3>${g[2]?`<p>${esc(g[2])}</p>`:''}</div><div class="row-end">${done?'<span class="count-pill" style="background:#08a94f;color:white">✓</span>':'<span class="count-pill">0/1</span>'}<span class="row-chevron">›</span></div></div>`;
 }
 function showGiftGroup(group){
   currentGiftGroup=group;
@@ -873,9 +923,8 @@ function renderGiftHome(){
   updateBudgets();
 }
 function renderGifts(){renderGiftHome();}
-function showPersonalDetail(index){const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><h2>🛍️ ${esc(x[0])}</h2>${x[2]?`<p>${esc(x[2])}</p>`:''}${x[3]?`<p>${esc(x[3])}</p>`:''}<div class="purchase-row"><strong>Estado:</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="purchase-row"><strong>Precio real:</strong><input class="price-input" id="personalPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥" onclick="event.stopPropagation()"><button type="button" class="save-price" onclick="setPurchasePrice('personal',${index})">Guardar</button></div></div>`;updateBudgets();showScreen('personalDetail')}
-function showGiftDetail(index){const g=gifts[index];if(!g)return;const d=getPurchase('gifts',index);document.getElementById('giftDetailContainer').innerHTML=`<div class="detail-card"><h2>🎁 ${esc(g[0])}</h2><p><strong>Grupo:</strong> ${esc(g[1])}</p>${g[2]?`<p><strong>Interés / categoría:</strong> ${esc(g[2])}</p>`:''}${g[3]?`<p><strong>Idea:</strong> ${esc(g[3])}</p>`:''}<div class="purchase-row"><strong>Estado:</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('gifts',${index})">${statusLabel(d.status)}</button></div><div class="purchase-row"><strong>Precio real:</strong><input class="price-input" id="giftsPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥" onclick="event.stopPropagation()"><button type="button" class="save-price" onclick="setPurchasePrice('gifts',${index})">Guardar</button></div></div>`;updateBudgets();showScreen('giftDetail')}
-
+function showPersonalDetail(index){const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image"><div style="font-size:92px">${personalVisualIcon(x[0])}</div></div><h2>${esc(x[0])}</h2>${x[2]?`<div class="detail-form-row"><strong>Cantidad</strong><span>${esc(x[2].replace('Cantidad: ',''))}</span></div>`:''}${x[3]?`<div class="detail-form-row"><strong>Presupuesto</strong><span>${esc(x[3].replace('Presupuesto: ',''))}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="detail-form-row"><strong>Precio real</strong><span><input class="price-input" id="personalPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥"><button type="button" class="save-price" onclick="setPurchasePrice('personal',${index})">Guardar</button></span></div></div>`;updateBudgets();showScreen('personalDetail')}
+function showGiftDetail(index){const g=gifts[index];if(!g)return;const d=getPurchase('gifts',index);document.getElementById('giftDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image"><div style="font-size:82px">📝✒️</div></div><h2>${esc(g[0])} <span style="font-size:15px;font-weight:500">(${esc(g[1])})</span></h2>${g[2]?`<div class="detail-form-row"><strong>Interés</strong><span>${esc(g[2])}</span></div>`:''}${g[3]?`<div class="detail-form-row"><strong>Ideas</strong><span>${esc(g[3])}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('gifts',${index})">${statusLabel(d.status)}</button></div><div class="detail-form-row"><strong>Precio real</strong><span><input class="price-input" id="giftsPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥"><button type="button" class="save-price" onclick="setPurchasePrice('gifts',${index})">Guardar</button></span></div></div>`;updateBudgets();showScreen('giftDetail')}
 function normalizedSearchText(v){
   return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
 }
