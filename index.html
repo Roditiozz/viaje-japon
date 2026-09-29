@@ -245,10 +245,16 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
  .home-zone-tile span{position:absolute;left:0;right:0;bottom:0;padding:22px 9px 8px;color:#fff;font-weight:800;background:linear-gradient(transparent,rgba(0,0,0,.65))}
  .bottom-nav{grid-template-columns:repeat(5,1fr)}
 }
+
+.budget-box.budget-editable{cursor:pointer;position:relative}
+.budget-box.budget-editable:after{content:'✎';position:absolute;right:8px;top:7px;font-size:12px;color:#87939f}
+.budget-editor{display:none;position:fixed;inset:0;background:rgba(20,30,40,.42);z-index:4000;align-items:center;justify-content:center;padding:20px}
+.budget-editor.open{display:flex}.budget-editor-card{width:min(360px,100%);background:#fff;border-radius:18px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.25)}
+.budget-editor-card h3{margin:0 0 5px}.budget-editor-card p{margin:0 0 12px;color:#64748b;font-size:13px}.budget-editor-card input{width:100%;box-sizing:border-box;border:1px solid #d9e1e8;border-radius:12px;padding:12px;font:inherit}
 </style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · bloque mejoras 4 · mobile</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · bloque mejoras 5 · mobile</div></header>
 <main>
 <section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -265,12 +271,12 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 <div class="home-zone-tile" onclick="showZone('Kamakura')"><img src="https://asset.gtn.co.jp/magazine/uploads/2025/06/image-151.jpg"><span>Kamakura</span></div>
 </div></div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
 
-<section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div>
+<section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" onclick="openBudgetEditor('personal')"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div>
 <button class="add-button" type="button" onclick="toggleAddPanel('addPersonalPanel')">＋ Agregar compra</button>
 <div class="add-panel" id="addPersonalPanel"><h3>Nueva compra</h3><label>Nombre</label><input id="newPersonalName" placeholder="Ej.: Auriculares"><label>Cantidad (opcional)</label><input id="newPersonalQty" placeholder="Ej.: 1"><label>Presupuesto máximo (opcional)</label><input id="newPersonalBudget" type="number" min="0" placeholder="¥"><div class="add-actions"><button class="add-primary" onclick="addPersonalItem()">Guardar</button><button class="add-secondary" onclick="toggleAddPanel('addPersonalPanel',false)">Cancelar</button></div></div>
 </section>
 
-<section id="regalos"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div>
+<section id="regalos"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" onclick="openBudgetEditor('gifts')"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div>
 <button class="add-button" type="button" onclick="toggleAddPanel('addGiftPanel')">＋ Agregar regalo / persona</button>
 <div class="add-panel" id="addGiftPanel"><h3>Nuevo regalo</h3><label>Persona</label><input id="newGiftPerson" placeholder="Nombre"><label>Grupo</label><select id="newGiftGroup"><option>Familia Lu</option><option>Familia Rodo</option><option>Amigos Lu</option><option>Amigos Rodo</option><option>Trabajo</option></select><label>Interés (opcional)</label><input id="newGiftInterest" placeholder="Ej.: Anime"><label>Idea (opcional)</label><input id="newGiftIdea" placeholder="Ej.: Figura"><div class="add-actions"><button class="add-primary" onclick="addGiftItem()">Guardar</button><button class="add-secondary" onclick="toggleAddPanel('addGiftPanel',false)">Cancelar</button></div></div>
 </section>
@@ -298,7 +304,9 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 <section id="personalDetail"><button class="back" onclick="appBack()">← Volver</button><div id="personalDetailContainer"></div></section>
 <section id="giftDetail"><button class="back" onclick="appBack()">← Volver</button><div id="giftDetailContainer"></div></section>
 <section id="mapa"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" data-map-zone="Osaka" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" data-map-zone="Kyoto" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" data-map-zone="Tokio" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" data-map-zone="Kamakura" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" data-map-type="Todos" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" data-map-type="Visitar" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" data-map-type="Comer" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" data-map-type="Compras" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
-</main><div id="appToast" class="app-toast">✓ Guardado</div><nav class="bottom-nav" id="bottomNav">
+</main><div id="appToast" class="app-toast">✓ Guardado</div>
+<div id="budgetEditor" class="budget-editor" onclick="if(event.target===this)closeBudgetEditor()"><div class="budget-editor-card"><h3 id="budgetEditorTitle">Editar presupuesto</h3><p>Ingresá el presupuesto total en yenes.</p><input id="budgetEditorInput" type="number" min="0" step="1000" inputmode="numeric" placeholder="¥"><div class="add-actions"><button class="add-primary" onclick="saveBudgetEdit()">Guardar</button><button class="add-secondary" onclick="closeBudgetEditor()">Cancelar</button></div></div></div>
+<nav class="bottom-nav" id="bottomNav">
 <button data-nav="home" onclick="showScreen('home')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v11h14V10M9 21v-7h6v7"/></svg></span>Home</button>
 <button data-nav="paraMi" onclick="showScreen('paraMi')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></span>Para mí</button>
 <button data-nav="regalos" onclick="showScreen('regalos')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></span>Regalos</button>
@@ -1054,6 +1062,42 @@ function cyclePurchaseStatus(type,index){const d=getPurchase(type,index);const p
 function setPurchasePrice(type,index){const input=document.getElementById(`${type}Price_${index}`);if(!input)return;const raw=input.value.replace(/[^0-9]/g,'');getPurchase(type,index).price=raw?Number(raw):'';savePurchaseData();if(type==='personal')saveWishlistItemToSupabase(index);if(type==='gifts')saveGiftToSupabase(index);renderPersonal();renderGiftHome();showSavedToast('✓ Precio guardado');if(type==='personal')showPersonalDetail(index);else showGiftDetail(index);}
 function statusLabel(status){return status==='Comprado'?'🟢 Comprado':status==='Encontrado'?'🔵 Encontrado':status==='Buscando'?'🟠 Buscando':'🟡 Pendiente';}
 function formatYen(n){return '¥'+Number(n||0).toLocaleString('es-AR');}
+
+let editingBudgetType='';
+function openBudgetEditor(type){
+ editingBudgetType=type;
+ const el=document.getElementById('budgetEditor'),input=document.getElementById('budgetEditorInput'),title=document.getElementById('budgetEditorTitle');
+ if(title)title.textContent=type==='personal'?'Editar presupuesto — Para mí':'Editar presupuesto — Regalos';
+ if(input)input.value=cloudBudgets[type]||'';
+ if(el)el.classList.add('open');
+ setTimeout(()=>input?.focus(),60);
+}
+function closeBudgetEditor(){document.getElementById('budgetEditor')?.classList.remove('open');editingBudgetType='';}
+async function saveBudgetEdit(){
+ const type=editingBudgetType;if(!type)return;
+ const raw=(document.getElementById('budgetEditorInput')?.value||'').replace(/[^0-9]/g,'');
+ if(raw==='')return showSavedToast('Ingresá un monto');
+ const amount=Number(raw);cloudBudgets[type]=amount;
+ localStorage.setItem('japon_custom_budgets',JSON.stringify(cloudBudgets));
+ updateBudgets();closeBudgetEditor();showSavedToast('✓ Presupuesto guardado');
+ // Guardado en nube si la tabla permite identificar la fila; si no, el valor local sigue vigente.
+ try{
+  if(supabaseClient&&navigator.onLine){
+   const {data,error}=await supabaseClient.from('budgets').select('*');
+   if(error)throw error;
+   const row=(data||[]).find(r=>{
+    const label=String(r.type??r.name??r.category??r.budget_type??r.section??'').toLowerCase();
+    return type==='gifts'?(label.includes('gift')||label.includes('regal')):(label.includes('personal')||label.includes('para'));
+   });
+   if(row?.id){
+    const amountKey=['amount','budget','total','value','limit_yen','yen'].find(k=>Object.prototype.hasOwnProperty.call(row,k))||'amount';
+    const payload={};payload[amountKey]=amount;
+    const {error:upErr}=await supabaseClient.from('budgets').update(payload).eq('id',row.id);
+    if(upErr)throw upErr;
+   }
+  }
+ }catch(e){console.warn('Presupuesto guardado localmente; nube pendiente/no compatible:',e?.message||e);}
+}
 function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);}
 
 const personalVisualImages={
@@ -1390,6 +1434,10 @@ document.addEventListener('click',function(e){
   applyGiftCloudPurchaseData();
   // Los cambios pendientes tienen prioridad sobre la copia de la nube hasta sincronizarse.
   applyPendingQueueToLocal();
+  try{
+    const savedBudgets=JSON.parse(localStorage.getItem('japon_custom_budgets')||'null');
+    if(savedBudgets){if(Number.isFinite(Number(savedBudgets.personal)))cloudBudgets.personal=Number(savedBudgets.personal);if(Number.isFinite(Number(savedBudgets.gifts)))cloudBudgets.gifts=Number(savedBudgets.gifts);}
+  }catch(e){}
   renderPersonal();
   renderGifts();
   renderZones();
