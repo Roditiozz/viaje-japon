@@ -103,17 +103,35 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
  .zone-card{grid-template-columns:96px 1fr 22px}.zone-card img{width:96px;height:108px}
  .detail-hero{height:210px}
 }
+
+/* ===== AJUSTES DISEÑO FINAL 2 ===== */
+#homeCards .card:nth-child(1){background:linear-gradient(145deg,#e5f2ff,#cfe5ff)}
+#homeCards .card:nth-child(2){background:linear-gradient(145deg,#fff0f1,#ffdfe3)}
+/* Mapa: botones exactamente en la línea visual del boceto */
+#mapa .map-controls{background:transparent;border:0;box-shadow:none;padding:0;margin-bottom:10px}
+#mapa .map-button{background:#fff;border:1px solid #dfe6ee;border-radius:11px;padding:10px 14px;box-shadow:0 2px 6px rgba(23,32,51,.05);font-weight:600;color:#23334d}
+#mapa .map-controls:first-of-type .map-button{width:100%;background:#dcf7e6;border-color:#c4edd2;color:#138044;font-size:15px}
+#mapZoneButtons{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;overflow:visible}
+#mapTypeFilters{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;overflow:visible}
+#mapZoneButtons .map-button,#mapTypeFilters .map-button{padding:10px 4px;margin:0;font-size:13px}
+#mapZoneButtons .map-button[style*="background"],#mapTypeFilters .map-button[style*="background"]{box-shadow:none}
+#mapZoneButtons .map-button.map-selected-zone{background:#22b96b!important;color:#fff!important;border-color:#22b96b!important}
+#mapTypeFilters .map-button.map-selected-type{background:#42a5f5!important;color:#fff!important;border-color:#42a5f5!important}
+@media(min-width:760px){
+  body{background:#edf1f6}
+  main{background:#f7f9fc;min-height:calc(100vh - 60px);box-shadow:0 0 28px rgba(23,32,51,.06)}
+}
 </style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño boceto 1</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 2</div></header>
 <main>
 <section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
 <div id="searchResults"></div>
 <div class="grid" id="homeCards">
-<div class="card" onclick="showScreen('regalos')"><div class="home-card-icon">🎁</div><h3>Regalos</h3><p>Para otros</p></div>
 <div class="card" onclick="showScreen('paraMi')"><div class="home-card-icon">🛍️</div><h3>Para mí</h3><p>Wishlist y compras</p></div>
+<div class="card" onclick="showScreen('regalos')"><div class="home-card-icon">🎁</div><h3>Regalos</h3><p>Para otros</p></div>
 <div class="card" onclick="showScreen('zonas')"><div class="home-card-icon">📍</div><h3>Por zona</h3><p>Visitar · Comer · Compras</p></div>
 <div class="card" onclick="showScreen('mapa')"><div class="home-card-icon">🗺️</div><h3>Mapa</h3><p>Ver todo en el mapa</p></div>
 </div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
