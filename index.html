@@ -199,10 +199,22 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 .detail-image-wrap{width:100%;height:170px;flex-basis:auto;background:#fff}
 .detail-image-wrap img{max-width:88%;max-height:160px;width:auto;height:auto;object-fit:contain}
 .detail-fallback{width:100%;height:170px;font-size:88px;background:#fff;flex-basis:auto}
+
+/* ===== FUNCIONALIDAD 1 ===== */
+.app-toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,18px);background:#183429;color:#fff;padding:10px 15px;border-radius:999px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;z-index:3000;transition:.22s;box-shadow:0 5px 18px rgba(0,0,0,.18)}
+.app-toast.show{opacity:1;transform:translate(-50%,0)}
+.personal-row.is-bought,.gift-row.is-bought{background:#e9f8ee!important}
+.personal-row.is-bought .row-copy h3,.gift-row.is-bought .row-copy h3{color:#176b3a}
+.gift-group-vertical{display:flex;flex-direction:column;gap:9px}
+.gift-group-card{display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:11px;background:#fff;border:1px solid #e5eaf0;border-radius:15px;padding:12px;cursor:pointer}
+.gift-group-card .group-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.gift-group-card:nth-child(4n+1) .group-icon{background:#e7f7ee}.gift-group-card:nth-child(4n+2) .group-icon{background:#f4e8fb}.gift-group-card:nth-child(4n+3) .group-icon{background:#fff0d8}.gift-group-card:nth-child(4n) .group-icon{background:#e6f0ff}
+.gift-group-card h3{margin:0 0 3px;font-size:16px}.gift-group-card p{margin:0;color:#64748b;font-size:13px}
+#regalos>.search-box{display:none!important}
 </style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · funcionalidad 1</div></header>
 <main>
 <section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -214,12 +226,12 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 <div class="card" onclick="showScreen('mapa')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></div><h3>Mapa</h3><p>Ver todo en el mapa</p></div>
 </div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
 
-<section id="paraMi"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div></section>
+<section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div></section>
 
-<section id="regalos"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div></section>
+<section id="regalos"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div></section>
 
 <section id="zonas">
-  <button class="back" onclick="showScreen('home')">← Volver</button>
+  <button class="back" onclick="appBack()">← Volver</button>
 
   <div class="screen-title">
     <h2>📍 Por zona</h2>
@@ -229,16 +241,16 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
   <div class="grid" id="zonesList"></div>
 </section>
 
-<section id="zoneDetail"><button class="back" onclick="showScreen('zonas')">← Volver a zonas</button><div class="screen-title"><h2 id="zoneTitle"></h2><p id="zoneDescription"></p></div><div class="grid"><div class="card" onclick="showPlaceType('Visitar')"><h3>📍 Visitar</h3><p id="countVisitar"></p></div><div class="card" onclick="showPlaceType('Compras')"><h3>🛍️ Compras</h3><p id="countCompras"></p></div><div class="card" onclick="showPlaceType('Comer')"><h3>🍜 Comer</h3><p id="countComer"></p></div></div></section>
+<section id="zoneDetail"><button class="back" onclick="appBack()">← Volver a zonas</button><div class="screen-title"><h2 id="zoneTitle"></h2><p id="zoneDescription"></p></div><div class="grid"><div class="card" onclick="showPlaceType('Visitar')"><h3>📍 Visitar</h3><p id="countVisitar"></p></div><div class="card" onclick="showPlaceType('Compras')"><h3>🛍️ Compras</h3><p id="countCompras"></p></div><div class="card" onclick="showPlaceType('Comer')"><h3>🍜 Comer</h3><p id="countComer"></p></div></div></section>
 
-<section id="placesList"><button class="back" onclick="showScreen('zoneDetail')">← Volver</button><div class="screen-title"><h2 id="placesTitle"></h2><p id="placesDescription"></p></div><div class="list" id="placesContainer"></div></section>
+<section id="placesList"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2 id="placesTitle"></h2><p id="placesDescription"></p></div><div class="list" id="placesContainer"></div></section>
 
-<section id="placeDetail"><button class="back" onclick="showScreen('placesList')">← Volver</button><div id="placeDetailContainer"></div></section>
+<section id="placeDetail"><button class="back" onclick="appBack()">← Volver</button><div id="placeDetailContainer"></div></section>
 
-<section id="personalDetail"><button class="back" onclick="showScreen('paraMi')">← Volver</button><div id="personalDetailContainer"></div></section>
-<section id="giftDetail"><button class="back" onclick="showScreen('regalos')">← Volver</button><div id="giftDetailContainer"></div></section>
-<section id="mapa"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" data-map-zone="Osaka" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" data-map-zone="Kyoto" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" data-map-zone="Tokio" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" data-map-zone="Kamakura" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" data-map-type="Todos" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" data-map-type="Visitar" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" data-map-type="Comer" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" data-map-type="Compras" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
-</main><nav class="bottom-nav" id="bottomNav">
+<section id="personalDetail"><button class="back" onclick="appBack()">← Volver</button><div id="personalDetailContainer"></div></section>
+<section id="giftDetail"><button class="back" onclick="appBack()">← Volver</button><div id="giftDetailContainer"></div></section>
+<section id="mapa"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" data-map-zone="Osaka" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" data-map-zone="Kyoto" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" data-map-zone="Tokio" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" data-map-zone="Kamakura" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" data-map-type="Todos" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" data-map-type="Visitar" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" data-map-type="Comer" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" data-map-type="Compras" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
+</main><div id="appToast" class="app-toast">✓ Guardado</div><nav class="bottom-nav" id="bottomNav">
 <button data-nav="home" onclick="showScreen('home')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v11h14V10M9 21v-7h6v7"/></svg></span>Home</button>
 <button data-nav="zonas" onclick="showScreen('zonas')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>Zonas</button>
 <button data-nav="mapa" onclick="showScreen('mapa')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></span>Mapa</button>
@@ -637,14 +649,25 @@ async function loadBudgetsFromSupabase() {
   }
 }
 
-function showScreen(id){
-  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.nav===id||(id==='zoneDetail'||id==='placesList'||id==='placeDetail')&&b.dataset.nav==='zonas'||id==='personalDetail'&&b.dataset.nav==='paraMi'||id==='giftDetail'&&b.dataset.nav==='regalos'));
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(id==='regalos'){setTimeout(()=>renderGiftHome(),0);}
-  if(id==='mapa')setTimeout(()=>{initMap();map.invalidateSize()},100)
+let appNavStack=['home'];
+function currentScreenId(){return document.querySelector('section.active')?.id||'home';}
+function setScreenOnly(id){
+ document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+ const el=document.getElementById(id);if(!el)return;el.classList.add('active');
+ document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.nav===id||(id==='zoneDetail'||id==='placesList'||id==='placeDetail')&&b.dataset.nav==='zonas'||id==='personalDetail'&&b.dataset.nav==='paraMi'||id==='giftDetail'&&b.dataset.nav==='regalos'));
+ window.scrollTo({top:0,behavior:'smooth'});
+ if(id==='regalos')setTimeout(()=>renderGiftHome(),0);
+ if(id==='mapa')setTimeout(()=>{initMap();map.invalidateSize()},100);
 }
+function showScreen(id,opts={}){
+ const from=currentScreenId();
+ if(!opts.noHistory&&from!==id){appNavStack.push(id);history.pushState({appScreen:id},'',location.href);}
+ setScreenOnly(id);
+}
+function appBack(){if(appNavStack.length>1)history.back();else setScreenOnly('home');}
+window.addEventListener('popstate',()=>{if(appNavStack.length>1)appNavStack.pop();setScreenOnly(appNavStack[appNavStack.length-1]||'home');});
+history.replaceState({appScreen:'home'},'',location.href);
+function showSavedToast(message='✓ Guardado'){const el=document.getElementById('appToast');if(!el)return;el.textContent=message;el.classList.add('show');clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>el.classList.remove('show'),1300);}
 function statusKey(p){return p.id}
 function loadStatuses(){
   let saved={};
@@ -897,8 +920,8 @@ async function saveWishlistItemToSupabase(index){
 
 function savePurchaseData(){localStorage.setItem('japon_purchase_data_v22',JSON.stringify(purchaseData));updateBudgets();}
 function getPurchase(type,index){const group=purchaseData[type];group[index]=group[index]||{status:'Pendiente',price:''};return group[index];}
-function cyclePurchaseStatus(type,index){const d=getPurchase(type,index);const pos=purchaseStatuses.indexOf(d.status);d.status=purchaseStatuses[(pos+1)%purchaseStatuses.length];savePurchaseData();if(type==='personal')saveWishlistItemToSupabase(index);if(type==='gifts')saveGiftToSupabase(index);renderPersonal();renderGifts();if(type==='personal')showPersonalDetail(index);else showGiftDetail(index);}
-function setPurchasePrice(type,index){const input=document.getElementById(`${type}Price_${index}`);if(!input)return;const raw=input.value.replace(/[^0-9]/g,'');getPurchase(type,index).price=raw?Number(raw):'';savePurchaseData();if(type==='personal')saveWishlistItemToSupabase(index);if(type==='gifts')saveGiftToSupabase(index);if(type==='personal')showPersonalDetail(index);else showGiftDetail(index);}
+function cyclePurchaseStatus(type,index){const d=getPurchase(type,index);const pos=purchaseStatuses.indexOf(d.status);d.status=purchaseStatuses[(pos+1)%purchaseStatuses.length];savePurchaseData();if(type==='personal')saveWishlistItemToSupabase(index);if(type==='gifts')saveGiftToSupabase(index);renderPersonal();renderGiftHome();showSavedToast('✓ Estado guardado');if(type==='personal')showPersonalDetail(index);else showGiftDetail(index);}
+function setPurchasePrice(type,index){const input=document.getElementById(`${type}Price_${index}`);if(!input)return;const raw=input.value.replace(/[^0-9]/g,'');getPurchase(type,index).price=raw?Number(raw):'';savePurchaseData();if(type==='personal')saveWishlistItemToSupabase(index);if(type==='gifts')saveGiftToSupabase(index);renderPersonal();renderGiftHome();showSavedToast('✓ Precio guardado');if(type==='personal')showPersonalDetail(index);else showGiftDetail(index);}
 function statusLabel(status){return status==='Comprado'?'🟢 Comprado':status==='Encontrado'?'🔵 Encontrado':status==='Buscando'?'🟠 Buscando':'🟡 Pendiente';}
 function formatYen(n){return '¥'+Number(n||0).toLocaleString('es-AR');}
 function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);}
@@ -925,7 +948,7 @@ function personalVisualIcon(name){
  if(n.includes('microfono'))return '🎙️'; if(n.includes('sellos'))return '✒️'; if(n.includes('melodica'))return '🎹';
  if(n.includes('perfume'))return '🧴'; return '🛍️';
 }
-function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item personal-row clickable" onclick="showPersonalDetail(${i})">${personalVisualMarkup(x[0],false)}<div class="row-copy"><h3>${esc(x[0])}</h3>${x[3]?`<p>${esc(x[3].replace('Presupuesto: ',''))}</p>`:''}${d.price!==''?`<p>Precio real: ${formatYen(d.price)}</p>`:''}</div><div class="row-end"><span class="row-chevron">›</span></div></div>`}).join('');updateBudgets();}
+function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item personal-row clickable ${d.status==='Comprado'?'is-bought':''}" onclick="showPersonalDetail(${i})">${personalVisualMarkup(x[0],false)}<div class="row-copy"><h3>${esc(x[0])}</h3>${x[3]?`<p>${esc(x[3].replace('Presupuesto: ',''))}</p>`:''}${d.price!==''?`<p>Precio real: ${formatYen(d.price)}</p>`:''}</div><div class="row-end"><span class="row-chevron">›</span></div></div>`}).join('');updateBudgets();}
 let currentGiftGroup='';
 function giftGroupFamily(group){
   if(group==='Familia Lu'||group==='Familia Rodo')return 'Familias';
@@ -936,7 +959,7 @@ function giftGroupFamily(group){
 function giftCardHtml(g,i){
  const d=getPurchase('gifts',i);
  const done=d.status==='Comprado';
- return `<div class="item gift-row clickable" onclick="showGiftDetail(${i})"><div class="list-icon"><svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4 3-6 7-6s6.2 2 7 6"/></svg></div><div class="row-copy"><h3>${esc(g[0])} <span style="font-weight:500">(${esc(g[1])})</span></h3>${g[2]?`<p>${esc(g[2])}</p>`:''}</div><div class="row-end">${done?'<span class="count-pill" style="background:#08a94f;color:white">✓</span>':'<span class="count-pill">0/1</span>'}<span class="row-chevron">›</span></div></div>`;
+ return `<div class="item gift-row clickable ${done?'is-bought':''}" onclick="showGiftDetail(${i})"><div class="list-icon"><svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4 3-6 7-6s6.2 2 7 6"/></svg></div><div class="row-copy"><h3>${esc(g[0])} <span style="font-weight:500">(${esc(g[1])})</span></h3>${g[2]?`<p>${esc(g[2])}</p>`:''}</div><div class="row-end">${done?'<span class="count-pill" style="background:#08a94f;color:white">✓</span>':'<span class="count-pill">0/1</span>'}<span class="row-chevron">›</span></div></div>`;
 }
 function showGiftGroup(group){
   currentGiftGroup=group;
@@ -948,34 +971,18 @@ function backToGiftGroups(){
   renderGiftHome();
 }
 function renderGiftHome(){
-  const nav=document.getElementById('giftGroupNavigation'), list=document.getElementById('giftList');
-  if(!nav||!list)return;
-  const input=document.getElementById('giftSearch');
-  const q=(input?.value||'').trim().toLowerCase();
-  const quickGroups=['Todos','Familia Lu','Familia Rodo','Amigos Lu','Amigos Rodo'];
-  const quickHtml=`<div class="filter-chips gift-quick">${quickGroups.map(g=>`<button class="filter-chip ${(g==='Todos'&&!currentGiftGroup)||g===currentGiftGroup?'active':''}" onclick="${g==='Todos'?'backToGiftGroups()':`showGiftGroup('${g}')`}">${g}</button>`).join('')}</div>`;
-
-  if(q){
-    currentGiftGroup='';
-    nav.innerHTML=quickHtml+`<div class="screen-title"><h2>🔎 Resultados</h2><p>Coincidencias en persona, grupo, interés o idea.</p></div>`;
-    const matches=gifts.map((g,i)=>({g,i})).filter(({g})=>g.some(v=>searchMatches(v,q)));
-    list.innerHTML=matches.length?matches.map(({g,i})=>giftCardHtml(g,i)).join(''):'<div class="empty">No encontramos regalos con esa búsqueda.</div>';
-    updateBudgets();return;
-  }
-  if(currentGiftGroup){
-    nav.innerHTML=quickHtml+`<button class="back" type="button" onclick="backToGiftGroups()">← Volver a grupos</button><div class="screen-title"><h2>🎁 ${esc(currentGiftGroup)}</h2><p>${gifts.filter(g=>g[1]===currentGiftGroup).length} persona(s)</p></div>`;
-    const matches=gifts.map((g,i)=>({g,i})).filter(({g})=>g[1]===currentGiftGroup);
-    list.innerHTML=matches.length?matches.map(({g,i})=>giftCardHtml(g,i)).join(''):'<div class="empty">Todavía no hay personas cargadas en este grupo.</div>';
-    updateBudgets();return;
-  }
-  const groups=[...new Set(gifts.map(g=>g[1]).filter(Boolean))];
-  const families=groups.filter(g=>giftGroupFamily(g)==='Familias');
-  const friends=groups.filter(g=>giftGroupFamily(g)==='Amigos');
-  const work=groups.filter(g=>giftGroupFamily(g)==='Trabajo');
-  const section=(title,icon,arr)=>arr.length?`<div class="screen-title" style="margin-top:18px"><h2>${icon} ${title}</h2></div><div class="grid">${arr.map(g=>`<div class="card" onclick='showGiftGroup(${JSON.stringify(g)})'><h3>${esc(g)}</h3><p>${gifts.filter(x=>x[1]===g).length} persona(s)</p></div>`).join('')}</div>`:'';
-  nav.innerHTML=quickHtml+section('Familias','👨‍👩‍👧',families)+section('Amigos','👥',friends)+section('Trabajo','💼',work)+(work.length?'':`<div class="screen-title" style="margin-top:18px"><h2>💼 Trabajo</h2><p>Sin personas cargadas todavía.</p></div>`);
-  list.innerHTML='';
-  updateBudgets();
+ const nav=document.getElementById('giftGroupNavigation'),list=document.getElementById('giftList');if(!nav||!list)return;
+ if(currentGiftGroup){
+   nav.innerHTML=`<button class="back" type="button" onclick="backToGiftGroups()">← Volver a grupos</button><div class="screen-title"><h2>${esc(currentGiftGroup)}</h2><p>${gifts.filter(g=>g[1]===currentGiftGroup).length} persona(s)</p></div>`;
+   const matches=gifts.map((g,i)=>({g,i})).filter(({g})=>g[1]===currentGiftGroup);
+   list.innerHTML=matches.length?matches.map(({g,i})=>giftCardHtml(g,i)).join(''):'<div class="empty">Todavía no hay personas cargadas en este grupo.</div>';
+ }else{
+   const groups=[...new Set(gifts.map(g=>g[1]).filter(Boolean))];
+   const icon=g=>giftGroupFamily(g)==='Familias'?'👨‍👩‍👧‍👦':giftGroupFamily(g)==='Amigos'?'👥':'💼';
+   nav.innerHTML=`<div class="gift-group-vertical">${groups.map(g=>`<div class="gift-group-card" onclick='showGiftGroup(${JSON.stringify(g)})'><div class="group-icon">${icon(g)}</div><div><h3>${esc(g)}</h3><p>${gifts.filter(x=>x[1]===g).length} persona(s)</p></div><div class="row-chevron">›</div></div>`).join('')}</div>`;
+   list.innerHTML='';
+ }
+ updateBudgets();
 }
 function renderGifts(){renderGiftHome();}
 function showPersonalDetail(index){const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image">${personalVisualMarkup(x[0],true)}</div><h2>${esc(x[0])}</h2>${x[2]?`<div class="detail-form-row"><strong>Cantidad</strong><span>${esc(x[2].replace('Cantidad: ',''))}</span></div>`:''}${x[3]?`<div class="detail-form-row"><strong>Presupuesto</strong><span>${esc(x[3].replace('Presupuesto: ',''))}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="detail-form-row"><strong>Precio real</strong><span><input class="price-input" id="personalPrice_${index}" type="number" min="0" step="1" value="${d.price!==''?d.price:''}" placeholder="¥"><button type="button" class="save-price" onclick="setPurchasePrice('personal',${index})">Guardar</button></span></div></div>`;updateBudgets();showScreen('personalDetail')}
