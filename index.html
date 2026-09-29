@@ -17,7 +17,7 @@
 .sync-bar{position:fixed;right:12px;bottom:12px;z-index:999;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px}.sync-bar button{border:0;background:#f1f1f1;border-radius:8px;padding:6px 8px;margin-left:6px;cursor:pointer}</style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 1</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3</div></header>
 <main>
 <section id="home" class="active">
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -52,7 +52,7 @@
 
 <section id="personalDetail"><button class="back" onclick="showScreen('paraMi')">← Volver</button><div id="personalDetailContainer"></div></section>
 <section id="giftDetail"><button class="back" onclick="showScreen('regalos')">← Volver</button><div id="giftDetailContainer"></div></section>
-<section id="mapa"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
+<section id="mapa"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" data-map-zone="Osaka" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" data-map-zone="Kyoto" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" data-map-zone="Tokio" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" data-map-zone="Kamakura" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" data-map-type="Todos" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" data-map-type="Visitar" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" data-map-type="Comer" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" data-map-type="Compras" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
 </main><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -807,6 +807,53 @@ const mapZoneCenters={
   Tokio:[35.6762,139.6503],
   Kamakura:[35.3192,139.5467]
 };
+const fixedTripCoords={
+  'Osaka|Dotonbori':[34.6687,135.5013],
+  'Osaka|Osaka Castle':[34.6873,135.5262],
+  'Osaka|Namba Shrine':[34.6615,135.4966],
+  'Osaka|Universal Studios':[34.6654,135.4323],
+  'Osaka|teamLab':[34.6081,135.4930],
+  'Osaka|Acuario Osaka':[34.6545,135.4289],
+  'Osaka|Don Quijote':[34.6693,135.5019],
+  'Osaka|Outlet Adidas/Nike':[34.4066,135.2972],
+  'Osaka|Pokémon Center Osaka':[34.7026,135.4959],
+  'Osaka|Rikuro Cheesecake':[34.6659,135.5013],
+  'Osaka|Pablo Cheesecake':[34.6685,135.5015],
+
+  'Kyoto|Bosque de Bambú':[35.0170,135.6713],
+  'Kyoto|Evangelion Base':[35.0166,135.7077],
+  'Kyoto|Uzumasa Village':[35.0166,135.7077],
+  'Kyoto|Templos':[35.0116,135.7681],
+  'Kyoto|Vasijas / bazares':[35.0037,135.7788],
+
+  'Tokio|Sensō-ji':[35.71345,139.79595],
+  'Tokio|Sensō-ji Temple':[35.71345,139.79595],
+  'Tokio|Sensgi Temple':[35.71345,139.79595],
+  'Tokio|Shibuya':[35.6595,139.7005],
+  'Tokio|teamLab Planets':[35.64938,139.78973],
+  'Tokio|Shinjuku':[35.6938,139.7034],
+  'Tokio|DisneySea':[35.62667,139.88806],
+  'Tokio|Estatua de Hachiko':[35.65906,139.70063],
+  'Tokio|Hachikō Statue':[35.65906,139.70063],
+  'Tokio|UNIQLO':[35.6718,139.7649],
+  'Tokio|Outlet Adidas/Nike':[35.6251,139.7755],
+  'Tokio|Pokémon Center Tokio':[35.6814,139.7740],
+  'Tokio|Pokémon Center':[35.6814,139.7740],
+
+  'Kamakura|Cruce de Slam Dunk':[35.3067,139.5008]
+};
+function setMapButtonStates(){
+  document.querySelectorAll('[data-map-zone]').forEach(b=>{
+    const on=b.dataset.mapZone===currentMapZone;
+    b.style.background=on?'#dff3e7':'';
+    b.style.boxShadow=on?'inset 0 0 0 2px #6dbb8a':'';
+  });
+  document.querySelectorAll('[data-map-type]').forEach(b=>{
+    const on=currentMapZone && b.dataset.mapType===currentMapType;
+    b.style.background=on?'#e2efff':'';
+    b.style.boxShadow=on?'inset 0 0 0 2px #7aa9df':'';
+  });
+}
 function clearTripMapMarkers(){
   tripMapMarkers.forEach(m=>{try{map.removeLayer(m)}catch(e){}});
   tripMapMarkers=[];
@@ -820,6 +867,8 @@ function tripMarkerIcon(status){
   });
 }
 async function resolveTripPlaceCoords(p){
+  const fixed=fixedTripCoords[`${p.zone}|${p.name}`];
+  if(fixed)return fixed;
   const lat=Number(p.latitude),lon=Number(p.longitude);
   if(Number.isFinite(lat)&&Number.isFinite(lon))return [lat,lon];
   const aliases={
@@ -845,15 +894,27 @@ async function resolveTripPlaceCoords(p){
 }
 async function showTripZoneOnMap(zone){
   initMap();
+  if(currentMapZone===zone){
+    currentMapZone='';
+    currentMapType='Todos';
+    clearTripMapMarkers();
+    document.getElementById('mapTypeFilters').style.display='none';
+    document.getElementById('mapTripMessage').textContent='Elegí una zona para mostrar sus lugares.';
+    map.setView([36.2,138.25],5);
+    setMapButtonStates();
+    return;
+  }
   currentMapZone=zone;
   currentMapType='Todos';
   document.getElementById('mapTypeFilters').style.display='flex';
-  const c=mapZoneCenters[zone]||[36.2,138.25];
-  map.setView(c,11);
+  map.setView(mapZoneCenters[zone]||[36.2,138.25],11);
+  setMapButtonStates();
   await renderTripMapMarkers();
 }
 async function filterTripMap(type){
-  currentMapType=type;
+  if(!currentMapZone)return;
+  currentMapType=(currentMapType===type && type!=='Todos')?'Todos':type;
+  setMapButtonStates();
   await renderTripMapMarkers();
 }
 async function renderTripMapMarkers(){
@@ -867,6 +928,8 @@ async function renderTripMapMarkers(){
   for(const p of selected){
     const coords=await resolveTripPlaceCoords(p);
     if(!coords)continue;
+    const center=mapZoneCenters[currentMapZone];
+    if(center && (Math.abs(coords[0]-center[0])>1.2 || Math.abs(coords[1]-center[1])>1.2))continue;
     const marker=L.marker(coords,{icon:tripMarkerIcon(p.status)}).addTo(map);
     const id=JSON.stringify(p.id);
     const gmaps='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(`${p.name} ${p.zone} Japan`);
@@ -877,6 +940,7 @@ async function renderTripMapMarkers(){
   else if(bounds.length>1)map.fitBounds(bounds,{padding:[25,25],maxZoom:14});
   else map.setView(mapZoneCenters[currentMapZone]||[36.2,138.25],11);
   msg.innerHTML=`<strong>${esc(currentMapZone)}</strong> · ${esc(currentMapType)} · ${shown} punto(s) en el mapa &nbsp; <span style="white-space:nowrap">🔴 Pendiente &nbsp; 🟢 Visitado</span>`;
+  setMapButtonStates();
 }
 async function detectNearbySavedPlaces(latArg,lonArg){
   const run=(lat,lon)=>{
