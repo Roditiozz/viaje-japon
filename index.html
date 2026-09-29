@@ -211,20 +211,59 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 .gift-group-card:nth-child(4n+1) .group-icon{background:#e7f7ee}.gift-group-card:nth-child(4n+2) .group-icon{background:#f4e8fb}.gift-group-card:nth-child(4n+3) .group-icon{background:#fff0d8}.gift-group-card:nth-child(4n) .group-icon{background:#e6f0ff}
 .gift-group-card h3{margin:0 0 3px;font-size:16px}.gift-group-card p{margin:0;color:#64748b;font-size:13px}
 #regalos>.search-box{display:none!important}
+
+/* ===== BLOQUE MEJORAS 1: HOME MÓVIL + ALTAS EN ZONAS ===== */
+.add-panel{display:none;background:#fff;border:1px solid #e5eaf0;border-radius:16px;padding:14px;margin:12px 0}
+.add-panel.open{display:block}.add-panel label{display:block;font-size:12px;font-weight:700;margin:9px 0 4px;color:#52606d}
+.add-panel input,.add-panel select{width:100%;box-sizing:border-box;border:1px solid #d9e1e8;border-radius:11px;padding:11px;font:inherit;background:#fff}
+.add-actions{display:flex;gap:8px;margin-top:12px}.add-primary{border:0;border-radius:12px;padding:11px 14px;background:#dff4e7;font-weight:800;cursor:pointer}.add-secondary{border:0;border-radius:12px;padding:11px 14px;background:#f1f3f5;font-weight:700;cursor:pointer}
+.add-button{width:100%;margin-top:12px;border:1px dashed #aebcc8;background:rgba(255,255,255,.82);border-radius:15px;padding:13px;font-weight:800;cursor:pointer}
+.home-zones-mobile{display:none}
+@media(max-width:700px){
+ body{background:#f6f7f8}
+ header{display:none}
+ main{padding-top:0}
+ #home{min-height:calc(100vh - 64px);margin:-1px -14px -20px;padding:28px 16px 120px;background:
+ linear-gradient(rgba(20,25,35,.10),rgba(20,25,35,.22)),
+ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v1772697600/dealsaway/994/trip/994/product_photo/shutterstock_24560084331729728808185_lusz2u.jpg') center/cover fixed}
+ #home .home-hero{background:none!important;min-height:auto;padding:8px 0 10px;box-shadow:none}
+ #home .home-hero:before{display:none}
+ #home .home-hero-title{font-size:34px;line-height:1.02;text-shadow:0 2px 10px rgba(0,0,0,.28)}
+ #home .hero-search{margin-top:18px;background:rgba(255,255,255,.93);backdrop-filter:blur(8px)}
+ #home>.search-box{display:none}
+ #home #searchBackWrap{background:rgba(255,255,255,.9);border-radius:12px;padding:6px}
+ #home #searchResults{background:rgba(255,255,255,.93);border-radius:16px}
+ #home #homeCards{display:grid!important;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+ #home #homeCards .card:nth-child(n+3){display:none!important}
+ #home #homeCards .card{background:rgba(255,255,255,.90);backdrop-filter:blur(8px);min-height:105px}
+ #home .welcome-strip{display:none}
+ .home-zones-mobile{display:block;margin-top:16px;background:rgba(255,255,255,.90);backdrop-filter:blur(8px);border-radius:18px;padding:14px}
+ .home-zones-mobile h2{margin:0 0 10px;font-size:18px}
+ .home-zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ .home-zone-tile{height:92px;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;background:#ddd}
+ .home-zone-tile img{width:100%;height:100%;object-fit:cover}
+ .home-zone-tile span{position:absolute;left:0;right:0;bottom:0;padding:22px 9px 8px;color:#fff;font-weight:800;background:linear-gradient(transparent,rgba(0,0,0,.65))}
+ .bottom-nav{grid-template-columns:repeat(5,1fr)}
+}
 </style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · funcionalidad 1</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · bloque mejoras 1</div></header>
 <main>
 <section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
-<div id="searchResults"></div>
+<div id="searchBackWrap" style="display:none;margin:10px 0"><button class="back" type="button" onclick="clearGlobalSearch()">← Volver</button></div><div id="searchResults"></div>
 <div class="grid" id="homeCards">
 <div class="card" onclick="showScreen('paraMi')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></div><h3>Para mí</h3><p>Wishlist y compras</p></div>
 <div class="card" onclick="showScreen('regalos')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></div><h3>Regalos</h3><p>Para otros</p></div>
 <div class="card" onclick="showScreen('zonas')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Por zona</h3><p>Visitar · Comer · Compras</p></div>
 <div class="card" onclick="showScreen('mapa')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></div><h3>Mapa</h3><p>Ver todo en el mapa</p></div>
-</div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
+</div><div class="home-zones-mobile"><h2>Zonas</h2><div class="home-zone-grid">
+<div class="home-zone-tile" onclick="showZone('Tokio')"><img src="https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v1772697600/dealsaway/994/trip/994/product_photo/shutterstock_24560084331729728808185_lusz2u.jpg"><span>Tokio</span></div>
+<div class="home-zone-tile" onclick="showZone('Osaka')"><img src="https://imgcp.aacdn.jp/img-a/1200/900/aa_news/article/2023/03/08/640821c1bc890.jpg"><span>Osaka</span></div>
+<div class="home-zone-tile" onclick="showZone('Kyoto')"><img src="https://www.travelchinaguide.com/images/photogallery/2023/1114113925.jpg"><span>Kyoto</span></div>
+<div class="home-zone-tile" onclick="showZone('Kamakura')"><img src="https://asset.gtn.co.jp/magazine/uploads/2025/06/image-151.jpg"><span>Kamakura</span></div>
+</div></div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
 
 <section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div></section>
 
@@ -239,9 +278,12 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
   </div>
 
   <div class="grid" id="zonesList"></div>
+<button class="add-button" type="button" onclick="toggleAddPanel('addZonePanel')">＋ Agregar zona</button>
+<div class="add-panel" id="addZonePanel"><h3>Nueva zona</h3><label>Nombre</label><input id="newZoneName" placeholder="Ej.: Nara"><div class="add-actions"><button class="add-primary" onclick="addZone()">Guardar zona</button><button class="add-secondary" onclick="toggleAddPanel('addZonePanel',false)">Cancelar</button></div></div>
 </section>
 
-<section id="zoneDetail"><button class="back" onclick="appBack()">← Volver a zonas</button><div class="screen-title"><h2 id="zoneTitle"></h2><p id="zoneDescription"></p></div><div class="grid"><div class="card" onclick="showPlaceType('Visitar')"><h3>📍 Visitar</h3><p id="countVisitar"></p></div><div class="card" onclick="showPlaceType('Compras')"><h3>🛍️ Compras</h3><p id="countCompras"></p></div><div class="card" onclick="showPlaceType('Comer')"><h3>🍜 Comer</h3><p id="countComer"></p></div></div></section>
+<section id="zoneDetail"><button class="back" onclick="appBack()">← Volver a zonas</button><div class="screen-title"><h2 id="zoneTitle"></h2><p id="zoneDescription"></p></div><div class="grid"><div class="card" onclick="showPlaceType('Visitar')"><h3>📍 Visitar</h3><p id="countVisitar"></p></div><div class="card" onclick="showPlaceType('Compras')"><h3>🛍️ Compras</h3><p id="countCompras"></p></div><div class="card" onclick="showPlaceType('Comer')"><h3>🍜 Comer</h3><p id="countComer"></p></div></div><button class="add-button" type="button" onclick="toggleAddPanel('addPlacePanel')">＋ Agregar lugar en esta zona</button>
+<div class="add-panel" id="addPlacePanel"><h3>Nuevo lugar</h3><label>Nombre</label><input id="newPlaceName" placeholder="Ej.: Parque de Nara"><label>Tipo</label><select id="newPlaceType"><option>Visitar</option><option>Comer</option><option>Compras</option></select><label>Dirección (opcional)</label><input id="newPlaceAddress" placeholder="Dirección o referencia"><div class="add-actions"><button class="add-primary" onclick="addPlace()">Guardar lugar</button><button class="add-secondary" onclick="toggleAddPanel('addPlacePanel',false)">Cancelar</button></div></div></section>
 
 <section id="placesList"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2 id="placesTitle"></h2><p id="placesDescription"></p></div><div class="list" id="placesContainer"></div></section>
 
@@ -252,10 +294,10 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 <section id="mapa"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" data-map-zone="Osaka" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" data-map-zone="Kyoto" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" data-map-zone="Tokio" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" data-map-zone="Kamakura" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" data-map-type="Todos" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" data-map-type="Visitar" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" data-map-type="Comer" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" data-map-type="Compras" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
 </main><div id="appToast" class="app-toast">✓ Guardado</div><nav class="bottom-nav" id="bottomNav">
 <button data-nav="home" onclick="showScreen('home')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v11h14V10M9 21v-7h6v7"/></svg></span>Home</button>
+<button data-nav="paraMi" onclick="showScreen('paraMi')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></span>Para mí</button>
+<button data-nav="regalos" onclick="showScreen('regalos')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></span>Regalos</button>
 <button data-nav="zonas" onclick="showScreen('zonas')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>Zonas</button>
 <button data-nav="mapa" onclick="showScreen('mapa')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></span>Mapa</button>
-<button data-nav="regalos" onclick="showScreen('regalos')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></span>Regalos</button>
-<button data-nav="paraMi" onclick="showScreen('paraMi')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></span>Para mí</button>
 </nav><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -738,6 +780,45 @@ const visualImages={
   }
 };
 function visualPlaceImage(p){return visualImages.places[p.name]||visualImages.zones[p.zone]||'';}
+
+function toggleAddPanel(id,force){
+ const el=document.getElementById(id);if(!el)return;
+ const open=force===undefined?!el.classList.contains('open'):force;
+ el.classList.toggle('open',open);
+ if(open)setTimeout(()=>el.querySelector('input')?.focus(),50);
+}
+async function addZone(){
+ const input=document.getElementById('newZoneName');const name=(input?.value||'').trim();
+ if(!name)return showSavedToast('Escribí un nombre');
+ if(supabaseZones.some(z=>normalizedSearchText(z.name)===normalizedSearchText(name)))return showSavedToast('Esa zona ya existe');
+ const local={id:'local-zone-'+Date.now(),name};supabaseZones.push(local);
+ try{
+   if(supabaseClient&&navigator.onLine){
+     const {data,error}=await supabaseClient.from('zones').insert({name}).select('id,name').single();
+     if(error)throw error;Object.assign(local,data);
+   }
+ }catch(e){console.warn('Zona guardada localmente; falta nube:',e?.message||e);}
+ localStorage.setItem('japon_custom_zones',JSON.stringify(supabaseZones.filter(z=>String(z.id).startsWith('local-zone-'))));
+ input.value='';toggleAddPanel('addZonePanel',false);renderZones();showSavedToast('✓ Zona agregada');
+}
+async function addPlace(){
+ const name=(document.getElementById('newPlaceName')?.value||'').trim();
+ const type=document.getElementById('newPlaceType')?.value||'Visitar';
+ const address=(document.getElementById('newPlaceAddress')?.value||'').trim();
+ if(!name)return showSavedToast('Escribí un nombre');
+ const p={id:'local-place-'+Date.now(),name,zone:currentZone,types:[type],categories:[],interests:[],status:'Pendiente',address,maps:'',photo:'',latitude:null,longitude:null};
+ places.push(p);
+ try{
+   if(supabaseClient&&navigator.onLine){
+     const payload={name,zone:currentZone,place_types:[type],categories:[],interests:[],status:'Pendiente',address};
+     const {data,error}=await supabaseClient.from('places').insert(payload).select('*').single();
+     if(error)throw error;p.id=data.id;p.cloudId=data.id;
+   }
+ }catch(e){console.warn('Lugar guardado localmente; falta nube:',e?.message||e);}
+ localStorage.setItem('japon_custom_places',JSON.stringify(places.filter(x=>String(x.id).startsWith('local-place-'))));
+ document.getElementById('newPlaceName').value='';document.getElementById('newPlaceAddress').value='';
+ toggleAddPanel('addPlacePanel',false);updateCounts();renderZones();showSavedToast('✓ Lugar agregado');
+}
 function renderZones(){
   const container=document.getElementById('zonesList');if(!container)return;container.innerHTML='';
   supabaseZones.forEach(zone=>{
@@ -996,10 +1077,16 @@ function searchMatches(value,q){
 function personalRelatedPlaces(productName){
   return places.filter(p=>(placePersonalRelations[relationKey(p)]||[]).includes(productName));
 }
+function clearGlobalSearch(){
+  const input=document.getElementById('globalSearch'),hero=document.getElementById('heroGlobalSearch');
+  if(input)input.value=''; if(hero)hero.value='';
+  globalSearch();
+  if(input)input.blur();
+}
 function globalSearch(){
   const input=document.getElementById('globalSearch'), q=input.value.trim(), r=document.getElementById('searchResults');
-  if(!q){r.innerHTML='';document.getElementById('homeCards').style.display='grid';const h=document.getElementById('heroGlobalSearch');if(h&&h.value)h.value='';return;}
-  document.getElementById('homeCards').style.display='none';
+  if(!q){r.innerHTML='';document.getElementById('homeCards').style.display='grid';const bw=document.getElementById('searchBackWrap');if(bw)bw.style.display='none';const h=document.getElementById('heroGlobalSearch');if(h&&h.value)h.value='';return;}
+  document.getElementById('homeCards').style.display='none';const bw=document.getElementById('searchBackWrap');if(bw)bw.style.display='block';
   let html='';
 
   const zoneMatches=[...new Set(places.map(p=>p.zone))].filter(z=>searchMatches(z,q));
