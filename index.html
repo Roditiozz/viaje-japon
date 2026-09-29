@@ -54,20 +54,69 @@ main{max-width:820px;padding:14px 16px 28px}
   #map{height:52vh;min-height:350px}.place-mini-map{height:300px}
   .detail-card{padding:16px}.sync-bar{font-size:10px;padding:6px 8px}
 }
+
+/* ===== DISEÑO BOCETO: réplica visual del mockup ===== */
+body{background:#f3f6fa;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#12213a}
+header{background:#fff;padding:12px 14px 10px;border-bottom:1px solid #e8edf3}
+header h1{font-size:21px;font-weight:800}
+main{max-width:760px}
+#home{margin-top:-10px}
+.home-hero{position:relative;height:220px;border-radius:0 0 26px 26px;margin:0 -12px 14px;overflow:hidden;background:
+linear-gradient(180deg,rgba(20,40,70,.08),rgba(20,40,70,.52)),
+url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v1772697600/dealsaway/994/trip/994/product_photo/shutterstock_24560084331729728808185_lusz2u.jpg') center 42%/cover}
+.home-hero-title{position:absolute;left:22px;bottom:74px;color:#fff;font-size:34px;font-weight:900;line-height:.98;text-shadow:0 2px 8px rgba(0,0,0,.35);max-width:260px}
+.home-hero .hero-search{position:absolute;left:16px;right:16px;bottom:14px;background:#fff;border-radius:18px;padding:12px 14px;display:flex;gap:10px;align-items:center;box-shadow:0 5px 18px rgba(0,0,0,.18)}
+.home-hero .hero-search input{border:0;outline:0;width:100%;font-size:15px;background:transparent}
+#home>.search-box{display:none}
+#homeCards .card{min-height:132px;align-items:center;text-align:center;padding:16px 10px;border:0}
+#homeCards .card h3{font-size:18px;margin-top:4px}
+#homeCards .card p{font-size:12px;max-width:145px}
+.home-card-icon{font-size:34px;line-height:1}
+#homeCards .card:nth-child(1){background:linear-gradient(145deg,#e5f2ff,#cfe5ff)}
+#homeCards .card:nth-child(2){background:linear-gradient(145deg,#fff0f1,#ffdfe3)}
+#homeCards .card:nth-child(3){background:linear-gradient(145deg,#e8f8ed,#d3f1dc)}
+#homeCards .card:nth-child(4){background:linear-gradient(145deg,#fff5dc,#ffe9b5)}
+.welcome-strip{margin-top:12px;background:#fff;border:1px solid #e5ebf2;border-radius:18px;padding:13px 15px;display:flex;gap:12px;align-items:center}
+.welcome-strip .torii{font-size:28px}.welcome-strip strong{display:block}.welcome-strip small{color:#64748b}
+.zone-card{min-height:112px!important;display:grid!important;grid-template-columns:104px 1fr 22px;align-items:center;padding:0!important;overflow:hidden;text-align:left!important;background:#fff!important}
+.zone-card img{width:104px;height:112px;object-fit:cover}.zone-card .zone-copy{padding:12px}.zone-card .zone-copy h3{font-size:20px}.zone-card .zone-arrow{font-size:25px}
+#zonesList{grid-template-columns:1fr!important}
+.place-row{display:grid!important;grid-template-columns:76px 1fr auto;gap:12px;align-items:center;padding:8px!important;min-height:90px}
+.place-thumb{width:76px;height:74px;object-fit:cover;border-radius:13px;background:#edf2f7}
+.place-row-main h3{margin:0 0 5px;font-size:16px}.place-row-main p{margin:2px 0}.place-row .status-btn{padding:5px 9px;font-size:12px}
+.place-chevron{font-size:25px;color:#243a58;padding-right:4px}
+.detail-hero{height:230px;margin:-18px -18px 14px;border-radius:18px 18px 0 0;overflow:hidden}
+.detail-hero img{width:100%;height:100%;object-fit:cover}
+.detail-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.detail-head h2{margin:0;font-size:25px}
+.status-pill{display:inline-block;border-radius:999px;padding:7px 11px;font-size:13px;font-weight:700}
+.status-pill.pending{background:#ffe2e2;color:#c93c3c}.status-pill.visited{background:#daf4df;color:#198548}
+.type-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.type-tile{border:1px solid #e5eaf0;border-radius:14px;padding:12px 5px;text-align:center;background:#fff;font-size:13px}.type-tile b{display:block;font-size:22px;margin-bottom:4px}
+.maps-link{display:block;text-align:center;background:#1677ee;color:#fff;border-radius:14px;padding:13px 14px}
+#map{border-radius:20px}
+.bottom-nav{height:72px}.bottom-nav button span{font-size:19px}.bottom-nav button.active{background:transparent;color:#0875ed}.bottom-nav button.active span{transform:scale(1.08)}
+.screen-title{margin-bottom:12px}.screen-title h2{font-size:24px}
+#zoneDetail .grid{grid-template-columns:repeat(3,1fr)}#zoneDetail .card{min-height:86px;text-align:center;padding:12px}
+#zoneDetail .card h3{font-size:15px}
+@media(max-width:600px){
+ .home-hero{height:230px}.home-hero-title{font-size:32px}
+ #homeCards .card{min-height:126px}
+ .zone-card{grid-template-columns:96px 1fr 22px}.zone-card img{width:96px;height:108px}
+ .detail-hero{height:210px}
+}
 </style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño 1</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño boceto 1</div></header>
 <main>
-<section id="home" class="active">
+<section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
 <div id="searchResults"></div>
 <div class="grid" id="homeCards">
-<div class="card" onclick="showScreen('paraMi')"><h3>🛍️ Para mí</h3><p>Mis compras y cosas que quiero buscar.</p></div>
-<div class="card" onclick="showScreen('regalos')"><h3>🎁 Regalos</h3><p>Personas, intereses e ideas de regalos.</p></div>
-<div class="card" onclick="showScreen('zonas')"><h3>📍 Por zona</h3><p>Osaka, Kyoto, Tokio y Kamakura.</p></div>
-<div class="card" onclick="showScreen('mapa')"><h3>🗺️ Mapa</h3><p>Ubicar lugares y organizar recorridos.</p></div>
-</div></section>
+<div class="card" onclick="showScreen('regalos')"><div class="home-card-icon">🎁</div><h3>Regalos</h3><p>Para otros</p></div>
+<div class="card" onclick="showScreen('paraMi')"><div class="home-card-icon">🛍️</div><h3>Para mí</h3><p>Wishlist y compras</p></div>
+<div class="card" onclick="showScreen('zonas')"><div class="home-card-icon">📍</div><h3>Por zona</h3><p>Visitar · Comer · Compras</p></div>
+<div class="card" onclick="showScreen('mapa')"><div class="home-card-icon">🗺️</div><h3>Mapa</h3><p>Ver todo en el mapa</p></div>
+</div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
 
 <section id="paraMi"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget"><h3>💰 Presupuesto personal</h3><div class="budget-grid"><div class="budget-box"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div></section>
 
@@ -548,38 +597,46 @@ function renderCurrentPlaceView(){
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
 function getTypeIcon(t){return t==='Visitar'?'📍':t==='Compras'?'🛍️':t==='Comer'?'🍜':'📌'}
 function showZone(zone){currentZone=zone;document.getElementById('zoneTitle').textContent='📍 '+zone;document.getElementById('zoneDescription').textContent='Lugares y actividades de '+zone+'.';updateCounts();showScreen('zoneDetail')}
+const visualImages={
+  zones:{
+    Osaka:'https://imgcp.aacdn.jp/img-a/1200/900/aa_news/article/2023/03/08/640821c1bc890.jpg',
+    Kyoto:'https://www.travelchinaguide.com/images/photogallery/2023/1114113925.jpg',
+    Tokio:'https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v1772697600/dealsaway/994/trip/994/product_photo/shutterstock_24560084331729728808185_lusz2u.jpg',
+    Kamakura:'https://asset.gtn.co.jp/magazine/uploads/2025/06/image-151.jpg'
+  },
+  places:{
+    'Dotonbori':'https://a-us.storyblok.com/f/1018357/1920x1277/d37c3f5205/3141175_m.jpg',
+    'Osaka Castle':'https://imgcp.aacdn.jp/img-a/1200/900/aa_news/article/2023/03/08/640821c1bc890.jpg',
+    'Universal Studios':'https://www.japonalternativo.com/wp-content/uploads/2024/12/atracciones-turisticas-en-japon-universal-studios-japan.jpg',
+    'teamLab':'https://image.co-trip.jp/content/14renewal_images_l/610996/sectionImage_11_1_20230404154902366.jpg',
+    'Acuario Osaka':'https://www.kintetsu-re.co.jp/zzzzhotel/osaka-namba/data/sightseeing/%E6%B5%B7%E9%81%8A%E9%A4%A8%E5%A4%96%E8%A6%B3.jpg',
+    'Pokémon Center Osaka':'https://img.wongnai.com/p/1920x0/2019/10/22/6f5a6a649c8946179ddc19e475024c49.jpg',
+    'Sensō-ji':'https://media.odynovotours.com/thumbnail/tour/78000/02845026420896299885/a-main-gate-of-sensoji-temple-in-asakusa-tokyo-daytime_76791-950w.jpg',
+    'Shibuya':'https://res.cloudinary.com/jnto/image/upload/w_600%2Cfl_lossy%2Cf_auto%2Cq_auto%2Cc_scale/v1/media/filer_public/e6/77/e677316d-2fc9-424c-8b75-90ccb38ba3fe/ij8xtxmq_srovvl',
+    'teamLab Planets':'https://www.japanmanifest.com/static/image/Colorful_rainbow_lighting_at_teamLab_Planets.jpg',
+    'DisneySea':'https://thepointsguy.global.ssl.fastly.net/us/originals/2024/05/20240522_Disneyland-Tokyo_SHull_58.jpg?width=640',
+    'Cruce de Slam Dunk':'https://asset.gtn.co.jp/magazine/uploads/2025/06/image-151.jpg'
+  }
+};
+function visualPlaceImage(p){return visualImages.places[p.name]||visualImages.zones[p.zone]||'';}
 function renderZones(){
-  const container=document.getElementById('zonesList');
-  if(!container)return;
-
-  container.innerHTML='';
-
+  const container=document.getElementById('zonesList');if(!container)return;container.innerHTML='';
   supabaseZones.forEach(zone=>{
-    const card=document.createElement('div');
-    card.className='card';
-    card.onclick=()=>showZone(zone.name);
-
-    card.innerHTML=`
-      <h3>📍 ${esc(zone.name)}</h3>
-      <p>Lugares, compras y comida.</p>
-    `;
-
+    const count=places.filter(p=>p.zone===zone.name).length;
+    const card=document.createElement('div');card.className='card zone-card';card.onclick=()=>showZone(zone.name);
+    card.innerHTML=`<img src="${visualImages.zones[zone.name]||''}" alt="${esc(zone.name)}" loading="lazy"><div class="zone-copy"><h3>${esc(zone.name)}</h3><p>${count} lugar${count===1?'':'es'}</p></div><div class="zone-arrow">›</div>`;
     container.appendChild(card);
   });
 }
 function updateCounts(){const z=places.filter(p=>p.zone===currentZone);document.getElementById('countVisitar').textContent=z.filter(p=>p.types.includes('Visitar')).length+' lugar(es)';document.getElementById('countCompras').textContent=z.filter(p=>p.types.includes('Compras')).length+' lugar(es)';document.getElementById('countComer').textContent=z.filter(p=>p.types.includes('Comer')).length+' lugar(es)'}
 function showPlaceType(type){currentType=type;const a=places.filter(p=>p.zone===currentZone&&p.types.includes(type));document.getElementById('placesTitle').textContent=getTypeIcon(type)+' '+type+' — '+currentZone;document.getElementById('placesDescription').textContent=a.length+' lugar(es)';renderPlaces(a);showScreen('placesList')}
 function renderPlaces(arr){
-  const c=document.getElementById('placesContainer');
-  c.innerHTML='';
+  const c=document.getElementById('placesContainer');c.innerHTML='';
   if(!arr.length){c.innerHTML='<div class="empty">No hay lugares cargados todavía.</div>';return;}
   arr.forEach(p=>{
-    const div=document.createElement('div');
-    div.className='item';
-    const tags=p.types.map(t=>`<span class="tag">${getTypeIcon(t)} ${esc(t)}</span>`).join('');
-    const cats=p.categories.map(x=>`<span class="tag">${esc(x)}</span>`).join('');
-    const ints=p.interests.map(x=>`<span class="tag">${esc(x)}</span>`).join('');
-    div.innerHTML=`<h3>${esc(p.name)}</h3><div class="place-meta">${tags}</div>${cats?`<p><strong>Categoría:</strong><br>${cats}</p>`:''}${ints?`<p><strong>Interés:</strong><br>${ints}</p>`:''}<button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><button type="button" class="status-btn js-open-place" style="margin-left:6px" data-place-id="${esc(p.id)}">Ver ficha →</button>`;
+    const div=document.createElement('div');div.className='item place-row clickable';div.onclick=()=>showPlaceDetailById(p.id);
+    const types=p.types.map(t=>`${getTypeIcon(t)} ${esc(t)}`).join(' · ');
+    div.innerHTML=`<img class="place-thumb" src="${visualPlaceImage(p)}" alt="${esc(p.name)}" loading="lazy"><div class="place-row-main"><h3>${esc(p.name)}</h3><p>${types}</p><span class="status-pill ${p.status==='Visitado'?'visited':'pending'}">${p.status==='Visitado'?'Visitado':'Pendiente'}</span></div><div class="place-chevron">›</div>`;
     c.appendChild(div);
   });
 }
@@ -611,7 +668,7 @@ function showPlaceDetailById(id){
   const relatedPersonal=getApprovedPersonalRelations(p);
   const relatedGifts=getApprovedGiftRelations(p);
   const initialQuery=`${p.name} ${p.zone}`;
-  document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card"><h2>${esc(p.name)}</h2><p><strong>Zona:</strong> ${esc(p.zone)}</p><p><strong>Tipo:</strong> ${p.types.map(t=>getTypeIcon(t)+' '+esc(t)).join(' / ')}</p>${p.categories.length?`<p><strong>Categoría:</strong> ${p.categories.map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><div class="place-search-box"><h3 style="margin-top:0">🗺️ Buscar en el mapa</h3><div class="place-search-row"><input id="placeMapSearchInput" class="place-search-input" value="${esc(initialQuery)}" placeholder="Buscar lugar..."><button type="button" class="map-button" onclick="searchPlaceInDetailMap()">🔎 Buscar</button></div><div id="placeMiniMap" class="place-mini-map"></div><p id="placeMapMessage" class="place-map-message">Buscá el lugar para verlo acá sin salir de la app.</p><div class="place-map-actions"><button id="openGoogleMapsBtn" type="button" class="map-button" onclick="openCurrentPlaceInGoogleMaps()">🗺️ Buscar en Google Maps ↗</button></div></div></div><div class="detail-card"><h3>🛍️ Para mí</h3>${relatedPersonal.length?relatedPersonal.map(x=>`<p>• ${esc(x[0])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div><div class="detail-card"><h3>🎁 Regalos</h3>${relatedGifts.length?relatedGifts.map(x=>`<p>• ${esc(x[0])} — ${esc(x[2])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div>`;
+  document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-hero"><img src="${visualPlaceImage(p)}" alt="${esc(p.name)}"></div><div class="detail-head"><div><h2>${esc(p.name)}</h2><p style="margin:4px 0;color:#64748b">${esc(p.zone)}</p></div><span class="status-pill ${p.status==='Visitado'?'visited':'pending'}">${p.status==='Visitado'?'Visitado':'Pendiente'}</span></div><div class="type-tiles">${['Visitar','Comer','Compras'].map(t=>p.types.includes(t)?`<div class="type-tile"><b>${getTypeIcon(t)}</b>${t}</div>`:'').join('')}</div><p><strong>Zona:</strong> ${esc(p.zone)}</p><p><strong>Tipo:</strong> ${p.types.map(t=>getTypeIcon(t)+' '+esc(t)).join(' / ')}</p>${p.categories.length?`<p><strong>Categoría:</strong> ${p.categories.map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><div class="place-search-box"><h3 style="margin-top:0">🗺️ Buscar en el mapa</h3><div class="place-search-row"><input id="placeMapSearchInput" class="place-search-input" value="${esc(initialQuery)}" placeholder="Buscar lugar..."><button type="button" class="map-button" onclick="searchPlaceInDetailMap()">🔎 Buscar</button></div><div id="placeMiniMap" class="place-mini-map"></div><p id="placeMapMessage" class="place-map-message">Buscá el lugar para verlo acá sin salir de la app.</p><div class="place-map-actions"><button id="openGoogleMapsBtn" type="button" class="map-button" onclick="openCurrentPlaceInGoogleMaps()">🗺️ Buscar en Google Maps ↗</button></div></div></div><div class="detail-card"><h3>🛍️ Para mí</h3>${relatedPersonal.length?relatedPersonal.map(x=>`<p>• ${esc(x[0])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div><div class="detail-card"><h3>🎁 Regalos</h3>${relatedGifts.length?relatedGifts.map(x=>`<p>• ${esc(x[0])} — ${esc(x[2])}</p>`).join(''):'<p>No hay relación cargada todavía.</p>'}</div>`;
   showScreen('placeDetail');
   setTimeout(()=>initPlaceDetailMap(p),120);
 }
@@ -812,7 +869,7 @@ function personalRelatedPlaces(productName){
 }
 function globalSearch(){
   const input=document.getElementById('globalSearch'), q=input.value.trim(), r=document.getElementById('searchResults');
-  if(!q){r.innerHTML='';document.getElementById('homeCards').style.display='grid';return;}
+  if(!q){r.innerHTML='';document.getElementById('homeCards').style.display='grid';const h=document.getElementById('heroGlobalSearch');if(h&&h.value)h.value='';return;}
   document.getElementById('homeCards').style.display='none';
   let html='';
 
