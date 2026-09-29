@@ -17,7 +17,7 @@
 .sync-bar{position:fixed;right:12px;bottom:12px;z-index:999;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:12px}.sync-bar button{border:0;background:#f1f1f1;border-radius:8px;padding:6px 8px;margin-left:6px;cursor:pointer}</style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 1</div></header>
 <main>
 <section id="home" class="active">
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -52,7 +52,7 @@
 
 <section id="personalDetail"><button class="back" onclick="showScreen('paraMi')">← Volver</button><div id="personalDetailContainer"></div></section>
 <section id="giftDetail"><button class="back" onclick="showScreen('regalos')">← Volver</button><div id="giftDetailContainer"></div></section>
-<section id="mapa"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Buscá lugares y explorá lo que tenés cerca.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button><button class="map-button" onclick="detectNearbySavedPlaces()">📍 Detectar lugares del viaje</button><select id="nearbyCategory"><option value="cafe">☕ Café</option><option value="restaurant">🍜 Restaurante</option><option value="shop">🛍️ Compras</option><option value="supermarket">🏪 Supermercado</option><option value="convenience">🏪 Tienda</option><option value="pharmacy">💊 Farmacia</option><option value="bakery">🥐 Panadería</option></select><button class="map-button" onclick="searchNearby()">🔎 Buscar cerca de mí</button></div><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
+<section id="mapa"><button class="back" onclick="showScreen('home')">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
 </main><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -65,7 +65,7 @@ const places=[
 {name:'Bosque de Bambú',zone:'Kyoto',types:['Visitar'],categories:[],interests:[]},{name:'Evangelion Base',zone:'Kyoto',types:['Visitar','Compras'],categories:['Merch'],interests:['Evangelion']},{name:'Uzumasa Village',zone:'Kyoto',types:['Visitar'],categories:[],interests:[]},{name:'Templos',zone:'Kyoto',types:['Visitar'],categories:[],interests:[]},{name:'Vasijas / bazares',zone:'Kyoto',types:['Compras'],categories:['Hogar / Decoración'],interests:['General']},
 {name:'Sensō-ji',zone:'Tokio',types:['Visitar'],categories:[],interests:[]},{name:'Shibuya',zone:'Tokio',types:['Visitar','Compras','Comer'],categories:[],interests:[]},{name:'teamLab Planets',zone:'Tokio',types:['Visitar'],categories:['Merch'],interests:[]},{name:'Shinjuku',zone:'Tokio',types:['Visitar','Compras','Comer'],categories:['Merch','Electrónica'],interests:[]},{name:'DisneySea',zone:'Tokio',types:['Visitar','Compras'],categories:['Merch'],interests:['Disney']},{name:'Estatua de Hachiko',zone:'Tokio',types:['Visitar'],categories:[],interests:[]},{name:'UNIQLO',zone:'Tokio',types:['Compras'],categories:['Ropa'],interests:['General']},{name:'Outlet Adidas/Nike',zone:'Tokio',types:['Compras'],categories:['Calzado'],interests:['General']},{name:'Pokémon Center Tokio',zone:'Tokio',types:['Compras'],categories:['Merch'],interests:['Pokémon']},
 {name:'Cruce de Slam Dunk',zone:'Kamakura',types:['Visitar'],categories:[],interests:['Slam Dunk']}];
-let currentZone='',currentType='',map=null,currentLocationMarker=null,nearbyMarkers=[];
+let currentZone='',currentType='',map=null,currentLocationMarker=null,nearbyMarkers=[],tripMapMarkers=[],currentMapZone='',currentMapType='Todos';
 let placeDetailMap=null,placeDetailMarker=null,currentPlaceMapResult=null;
 let supabaseZones=[];
 let supabaseCategories=[];
@@ -786,8 +786,98 @@ function globalSearch(){
   r.innerHTML=html||`<div class="empty">No encontramos resultados para <strong>"${esc(input.value)}"</strong>.</div>`;
 }
 
-function initMap(){if(map)return;map=L.map('map').setView([35.6762,139.6503],5);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map)}
-function getCurrentLocation(){if(!navigator.geolocation){alert('Tu navegador no permite obtener la ubicación.');return}navigator.geolocation.getCurrentPosition(pos=>{initMap();const lat=pos.coords.latitude,lon=pos.coords.longitude;map.setView([lat,lon],15);if(currentLocationMarker)map.removeLayer(currentLocationMarker);currentLocationMarker=L.marker([lat,lon]).addTo(map).bindPopup('📍 Estoy acá').openPopup();detectNearbySavedPlaces(lat,lon)},()=>alert('No pudimos obtener tu ubicación. Revisá que hayas permitido la ubicación en el navegador.'),{enableHighAccuracy:true,timeout:10000,maximumAge:60000})}
+function initMap(){
+  if(map)return;
+  map=L.map('map').setView([36.2,138.25],5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+}
+function getCurrentLocation(){
+  if(!navigator.geolocation){alert('Tu navegador no permite obtener la ubicación.');return}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    initMap();
+    const lat=pos.coords.latitude,lon=pos.coords.longitude;
+    map.setView([lat,lon],15);
+    if(currentLocationMarker)map.removeLayer(currentLocationMarker);
+    currentLocationMarker=L.marker([lat,lon]).addTo(map).bindPopup('📍 Estoy acá').openPopup();
+  },()=>alert('No pudimos obtener tu ubicación. Revisá que hayas permitido la ubicación en el navegador.'),{enableHighAccuracy:true,timeout:10000,maximumAge:60000})
+}
+const mapZoneCenters={
+  Osaka:[34.6937,135.5023],
+  Kyoto:[35.0116,135.7681],
+  Tokio:[35.6762,139.6503],
+  Kamakura:[35.3192,139.5467]
+};
+function clearTripMapMarkers(){
+  tripMapMarkers.forEach(m=>{try{map.removeLayer(m)}catch(e){}});
+  tripMapMarkers=[];
+}
+function tripMarkerIcon(status){
+  const visited=status==='Visitado';
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:24px;height:24px;border-radius:50%;background:${visited?'#2e9d62':'#e05252'};border:3px solid white;box-shadow:0 1px 5px rgba(0,0,0,.45)"></div>`,
+    iconSize:[24,24],iconAnchor:[12,12],popupAnchor:[0,-12]
+  });
+}
+async function resolveTripPlaceCoords(p){
+  const lat=Number(p.latitude),lon=Number(p.longitude);
+  if(Number.isFinite(lat)&&Number.isFinite(lon))return [lat,lon];
+  const aliases={
+    'Acuario Osaka':'Osaka Aquarium Kaiyukan',
+    'Outlet Adidas/Nike':'Adidas Nike outlet',
+    'Bosque de Bambú':'Arashiyama Bamboo Forest',
+    'Templos':'Kyoto temples',
+    'Vasijas / bazares':'Kyoto pottery shops',
+    'Estatua de Hachiko':'Hachiko Statue Shibuya',
+    'Cruce de Slam Dunk':'Kamakurakoko-Mae Station'
+  };
+  const query=`${aliases[p.name]||p.name} ${p.zone} Japan`;
+  try{
+    const url='https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(query);
+    const res=await fetch(url,{headers:{'Accept-Language':'es,en'}});
+    const data=await res.json();
+    if(data&&data[0]){
+      p.latitude=Number(data[0].lat);p.longitude=Number(data[0].lon);
+      return [p.latitude,p.longitude];
+    }
+  }catch(e){}
+  return null;
+}
+async function showTripZoneOnMap(zone){
+  initMap();
+  currentMapZone=zone;
+  currentMapType='Todos';
+  document.getElementById('mapTypeFilters').style.display='flex';
+  const c=mapZoneCenters[zone]||[36.2,138.25];
+  map.setView(c,11);
+  await renderTripMapMarkers();
+}
+async function filterTripMap(type){
+  currentMapType=type;
+  await renderTripMapMarkers();
+}
+async function renderTripMapMarkers(){
+  if(!currentMapZone)return;
+  initMap();clearTripMapMarkers();
+  const msg=document.getElementById('mapTripMessage');
+  const selected=places.filter(p=>p.zone===currentMapZone&&(currentMapType==='Todos'||p.types.includes(currentMapType)));
+  msg.textContent=`${currentMapZone} · ${currentMapType} · cargando ${selected.length} lugar(es)...`;
+  const bounds=[];
+  let shown=0;
+  for(const p of selected){
+    const coords=await resolveTripPlaceCoords(p);
+    if(!coords)continue;
+    const marker=L.marker(coords,{icon:tripMarkerIcon(p.status)}).addTo(map);
+    const id=JSON.stringify(p.id);
+    const gmaps='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(`${p.name} ${p.zone} Japan`);
+    marker.bindPopup(`<div style="min-width:180px"><strong>${esc(p.name)}</strong><br>${p.types.map(esc).join(' / ')}<br><strong>${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</strong><br><button type="button" style="margin-top:8px" onclick='showPlaceDetailById(${id})'>Ver ficha</button><br><a href="${gmaps}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px">🧭 Cómo llegar ↗</a></div>`);
+    tripMapMarkers.push(marker);bounds.push(coords);shown++;
+  }
+  if(bounds.length===1)map.setView(bounds[0],14);
+  else if(bounds.length>1)map.fitBounds(bounds,{padding:[25,25],maxZoom:14});
+  else map.setView(mapZoneCenters[currentMapZone]||[36.2,138.25],11);
+  msg.innerHTML=`<strong>${esc(currentMapZone)}</strong> · ${esc(currentMapType)} · ${shown} punto(s) en el mapa &nbsp; <span style="white-space:nowrap">🔴 Pendiente &nbsp; 🟢 Visitado</span>`;
+}
 async function detectNearbySavedPlaces(latArg,lonArg){
   const run=(lat,lon)=>{
     const q=`[out:json];nwr[\"name\"](around:400,${lat},${lon});out center;`;
