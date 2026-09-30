@@ -1,5 +1,5 @@
-const CACHE_NAME='viaje-japon-v9';
-const RUNTIME_CACHE='viaje-japon-runtime-v9';
+const CACHE_NAME='viaje-japon-fotos-test-1';
+const RUNTIME_CACHE='viaje-japon-runtime-fotos-test-1';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./icon-192.png','./icon-512.png',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
