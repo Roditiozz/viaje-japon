@@ -258,7 +258,7 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 </style>
 </head>
 <body>
-<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · bloque mejoras 8 · sync CRUD</div></header>
+<header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · bloque mejoras 9 · viaje offline</div></header>
 <main>
 <section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
@@ -807,6 +807,35 @@ function visualPlaceImage(p){return visualImages.places[p.name]||visualImages.zo
 
 
 
+
+
+const OFFLINE_SNAPSHOT_KEY='japon_offline_snapshot_v1';
+function saveOfflineSnapshot(){
+ try{
+  localStorage.setItem(OFFLINE_SNAPSHOT_KEY,JSON.stringify({
+   savedAt:new Date().toISOString(),
+   zones:supabaseZones,
+   places:places,
+   personal:personalItems,
+   gifts:gifts,
+   wishlistCloudRows,
+   giftCloudRows,
+   budgets:cloudBudgets
+  }));
+ }catch(e){console.warn('No se pudo guardar snapshot offline',e);}
+}
+function restoreOfflineSnapshot(results){
+ try{
+  const s=JSON.parse(localStorage.getItem(OFFLINE_SNAPSHOT_KEY)||'null');if(!s)return false;
+  if(!results[0]&&Array.isArray(s.places)&&s.places.length){places.length=0;s.places.forEach(x=>places.push(x));}
+  if(!results[1]&&Array.isArray(s.zones)&&s.zones.length){supabaseZones=s.zones;}
+  if(!results[4]&&Array.isArray(s.personal)&&s.personal.length){personalItems.length=0;s.personal.forEach(x=>personalItems.push(x));wishlistCloudRows=Array.isArray(s.wishlistCloudRows)?s.wishlistCloudRows:[];}
+  if(!results[5]&&Array.isArray(s.gifts)&&s.gifts.length){gifts.length=0;s.gifts.forEach(x=>gifts.push(x));giftCloudRows=Array.isArray(s.giftCloudRows)?s.giftCloudRows:[];}
+  if(!results[6]&&s.budgets){cloudBudgets={...cloudBudgets,...s.budgets};}
+  console.log('📦 Última copia local restaurada para uso offline:',s.savedAt||'');
+  return true;
+ }catch(e){console.warn('Snapshot offline inválido',e);return false;}
+}
 
 const CRUD_QUEUE_KEY='japon_crud_queue_v1';
 function getCrudQueue(){try{return JSON.parse(localStorage.getItem(CRUD_QUEUE_KEY)||'[]')||[];}catch(e){return [];}}
@@ -1530,6 +1559,7 @@ document.addEventListener('click',function(e){
     loadBudgetsFromSupabase()
   ]);
   const cloudLoaded = results[0];
+  restoreOfflineSnapshot(results);
 
   console.table({
     places:         { origen: results[0] ? 'Supabase' : 'Local', cantidad: places.length },
@@ -1556,6 +1586,7 @@ document.addEventListener('click',function(e){
   renderGifts();
   renderZones();
   updateBudgets();
+  if(navigator.onLine && results.some(Boolean)) saveOfflineSnapshot();
 
   if (cloudLoaded) {
     console.log("☁️ Supabase conectado correctamente.");
@@ -1567,7 +1598,7 @@ document.addEventListener('click',function(e){
 })();
 </script>
 <script>
-window.addEventListener('online',async()=>{try{await syncCrudQueue();await syncOfflineQueue();}catch(e){console.warn(e);}});
+window.addEventListener('online',async()=>{try{await syncCrudQueue();await syncOfflineQueue();saveOfflineSnapshot();}catch(e){console.warn(e);}});
 </script>
 <script>
 if ('serviceWorker' in navigator) {
