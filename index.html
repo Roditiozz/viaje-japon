@@ -314,7 +314,7 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 <section id="placeAction"><button class="back" onclick="appBack()">← Volver</button><div id="placeActionContainer"></div></section>
 
 <section id="photoAlbum"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>📷 Fotos del viaje</h2><p id="photoAlbumDescription">Todas las fotos.</p></div><div id="photoZoneFilters" class="photo-filter-row"></div><div id="photoPlaceFilters" class="photo-filter-row"></div><div id="photoAlbumGrid" class="photo-grid"></div></section>
-<input id="cameraPhotoInput" type="file" accept="image/*" capture="environment" hidden><input id="galleryPhotoInput" type="file" accept="image/*" hidden>
+<input id="cameraPhotoInput" type="file" accept="image/*" capture="environment" hidden><input id="galleryPhotoInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" hidden>
 
 <div id="photoViewer" class="photo-viewer" onclick="if(event.target===this)closePhotoViewer()"><button class="photo-viewer-close" onclick="closePhotoViewer()">×</button><button class="photo-viewer-nav photo-viewer-prev" onclick="movePhotoViewer(-1)" aria-label="Foto anterior">‹</button><img id="photoViewerImg" alt="Foto"><button class="photo-viewer-nav photo-viewer-next" onclick="movePhotoViewer(1)" aria-label="Foto siguiente">›</button><div id="photoViewerMeta" class="photo-viewer-meta"></div><div class="photo-viewer-actions"><button id="photoViewerDelete" class="photo-viewer-delete" onclick="deleteCurrentPhoto()">🗑️ Eliminar foto</button></div></div>
 <section id="personalDetail"><button class="back" onclick="appBack()">← Volver</button><div id="personalDetailContainer"></div></section>
@@ -1027,7 +1027,7 @@ function openPlaceAction(kind){
   }else if(kind==='shopping'){
     currentPurchaseTab='personal';renderPlaceShoppingAction(p);
   }else if(kind==='camera'){
-    box.innerHTML=`<div class="place-subview-card"><div class="place-subview-head"><div><h2>📷 Cámara</h2><p style="margin:4px 0;color:#64748b">${esc(p.name)} · ${esc(p.zone)}</p></div></div><div class="photo-actions"><button class="photo-action primary" onclick="takePlacePhoto()">📸 Sacar foto</button><button class="photo-action" onclick="addPlacePhoto()">＋ Agregar foto</button></div><p style="margin:8px 0 0;color:#64748b;font-size:13px">Al agregar, Android te deja elegir desde Fotos/Galería o Archivos.</p><h3 style="margin-top:18px">Fotos de ${esc(p.name)}</h3><div id="placeActionPhotoGrid" class="photo-grid"></div><div class="photo-actions"><button class="photo-action" onclick="openCurrentPlacePhotoAlbum()">Ver todas</button></div><div id="placeActionPhotoStatus" class="photo-upload-status"></div></div>`;
+    box.innerHTML=`<div class="place-subview-card"><div class="place-subview-head"><div><h2>📷 Cámara</h2><p style="margin:4px 0;color:#64748b">${esc(p.name)} · ${esc(p.zone)}</p></div></div><div class="photo-actions"><button class="photo-action primary" onclick="takePlacePhoto()">📸 Sacar foto</button><button class="photo-action" onclick="addPlacePhoto()">＋ Agregar foto</button></div><h3 style="margin-top:18px">Fotos de ${esc(p.name)}</h3><div id="placeActionPhotoGrid" class="photo-grid"></div><div class="photo-actions"><button class="photo-action" onclick="openCurrentPlacePhotoAlbum()">Ver todas</button></div><div id="placeActionPhotoStatus" class="photo-upload-status"></div></div>`;
     setTimeout(()=>renderPlaceActionPhotos(p),0);
   }
   showScreen('placeAction');
