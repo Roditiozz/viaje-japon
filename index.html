@@ -264,9 +264,16 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 @media(max-width:600px){.photo-grid{grid-template-columns:repeat(4,1fr)}.photo-action{flex:1;min-width:125px}}
 
 .gift-group-card.is-complete{background:#e9f8ef;border-color:#b9e7c9}.gift-group-card.is-complete h3,.gift-group-card.is-complete p{color:#157a3c}.gift-complete-check{width:32px;height:32px;border-radius:50%;background:#18a957;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px}.gift-total-box{display:flex;align-items:center;justify-content:space-between;background:#edf5ff;border-radius:14px;padding:14px 16px;margin:12px 0;font-weight:800}.gift-total-box strong{font-size:20px}.gift-items-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 10px}.gift-items-head h3{margin:0}.gift-add-item{border:0;border-radius:12px;background:#eaf3ff;color:#0879d9;font-weight:800;padding:11px 14px;font:inherit}.gift-item-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;border:1px solid #e6ebf0;border-radius:13px;padding:11px 12px;margin:8px 0;background:#fff}.gift-item-row b{display:block}.gift-item-row small{display:block;color:#64748b;margin-top:2px}.gift-item-delete{border:0;background:#fff1f1;color:#c62828;border-radius:9px;padding:8px;font-weight:800}.gift-empty-items{text-align:center;color:#64748b;padding:24px 8px}.gift-empty-items .bag{font-size:38px;opacity:.6}.gift-add-modal-fields label{display:block;font-weight:700;font-size:13px;margin:10px 0 5px}.gift-add-modal-fields input{width:100%;box-sizing:border-box;border:1px solid #d9e1e8;border-radius:12px;padding:12px;font:inherit}
+
+/* ===== SPLASH PERSONALIZADO VIAJE JAPON ===== */
+#customAppSplash{position:fixed;inset:0;z-index:20000;background:#fff;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .28s ease;pointer-events:none}
+#customAppSplash.hide{opacity:0}
+#customAppSplash img{width:100%;height:100%;object-fit:contain;display:block;background:#fff}
+@media (min-width:700px){#customAppSplash img{max-width:520px}}
 </style>
 </head>
 <body>
+<div id="customAppSplash" aria-hidden="true"><img src="./splash-viaje-japon.png" alt=""></div>
 <header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · bloque mejoras 9 · viaje offline</div></header>
 <main>
 <section id="home" class="active"><div class="home-hero"><div class="home-hero-title">Mi Viaje a<br>Japón 🇯🇵</div><div class="hero-search"><span>🔎</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, tiendas, comidas..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
@@ -316,7 +323,7 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 <section id="placeAction"><button class="back" onclick="appBack()">← Volver</button><div id="placeActionContainer"></div></section>
 
 <section id="photoAlbum"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>📷 Fotos del viaje</h2><p id="photoAlbumDescription">Todas las fotos.</p></div><div id="photoZoneFilters" class="photo-filter-row"></div><div id="photoPlaceFilters" class="photo-filter-row"></div><div id="photoAlbumGrid" class="photo-grid"></div></section>
-<input id="cameraPhotoInput" type="file" accept="image/*" capture="environment" hidden><input id="galleryPhotoInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" hidden>
+<input id="cameraPhotoInput" type="file" accept="image/*" capture="environment" hidden><input id="galleryPhotoInput" type="file" accept="image/*" hidden>
 
 <div id="photoViewer" class="photo-viewer" onclick="if(event.target===this)closePhotoViewer()"><button class="photo-viewer-close" onclick="closePhotoViewer()">×</button><button class="photo-viewer-nav photo-viewer-prev" onclick="movePhotoViewer(-1)" aria-label="Foto anterior">‹</button><img id="photoViewerImg" alt="Foto"><button class="photo-viewer-nav photo-viewer-next" onclick="movePhotoViewer(1)" aria-label="Foto siguiente">›</button><div id="photoViewerMeta" class="photo-viewer-meta"></div><div class="photo-viewer-actions"><button id="photoViewerDelete" class="photo-viewer-delete" onclick="deleteCurrentPhoto()">🗑️ Eliminar foto</button></div></div>
 <section id="personalDetail"><button class="back" onclick="appBack()">← Volver</button><div id="personalDetailContainer"></div></section>
@@ -1750,6 +1757,17 @@ if ('serviceWorker' in navigator) {
       .catch(error => console.error('❌ No se pudo registrar el Service Worker:', error));
   });
 }
+</script>
+
+<script>
+(function(){
+  const splash=document.getElementById('customAppSplash');
+  if(!splash)return;
+  const closeSplash=()=>{splash.classList.add('hide');setTimeout(()=>splash.remove(),320);};
+  if(document.readyState==='complete')setTimeout(closeSplash,650);
+  else window.addEventListener('load',()=>setTimeout(closeSplash,650),{once:true});
+  setTimeout(closeSplash,1800);
+})();
 </script>
 </body>
 </html>
