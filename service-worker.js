@@ -1,5 +1,5 @@
-const CACHE_NAME='viaje-japon-v22-r2';
-const RUNTIME_CACHE='viaje-japon-runtime-v22-r2';
+const CACHE_NAME='viaje-japon-v23-guest';
+const RUNTIME_CACHE='viaje-japon-runtime-v23-guest';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
