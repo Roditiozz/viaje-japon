@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prueba R2 - Viaje Japón</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:650px;margin:30px auto;padding:0 18px}
+label{display:block;margin-top:14px;font-weight:600}
+input,button{font:inherit;padding:12px;margin-top:6px;width:100%;box-sizing:border-box}
+button{cursor:pointer}
+#status{white-space:pre-wrap;background:#f4f4f4;padding:14px;border-radius:10px;margin-top:18px}
+img{max-width:100%;margin-top:16px;border-radius:12px}
+</style>
+</head>
+<body>
+<h1>Prueba fotos R2</h1>
+<p>Esta página es solo para probar Cloudflare R2. No modifica la app Viaje Japón.</p>
+
+<label>Zona</label>
+<input id="zone" value="Osaka">
+
+<label>Lugar</label>
+<input id="place" value="Dotonbori">
+
+<label>Foto</label>
+<input id="file" type="file" accept="image/*">
+
+<button id="upload">Subir foto a R2</button>
+<button id="view" disabled>Ver foto subida</button>
+<button id="del" disabled>Eliminar foto de R2</button>
+
+<div id="status">Esperando una foto…</div>
+<img id="preview" hidden>
+
+<script>
+const WORKER="https://viaje-japon.rodolfocoronel07.workers.dev";
+let currentKey="";
+const status=document.getElementById("status");
+const preview=document.getElementById("preview");
+
+document.getElementById("upload").onclick=async()=>{
+ const file=document.getElementById("file").files[0];
+ if(!file){status.textContent="Elegí una foto primero.";return;}
+ status.textContent="Subiendo…";
+ try{
+  const r=await fetch(WORKER+"/upload",{
+   method:"POST",
+   headers:{
+    "Content-Type":file.type||"image/jpeg",
+    "X-Zone":document.getElementById("zone").value,
+    "X-Place":document.getElementById("place").value,
+    "X-Filename":file.name
+   },
+   body:file
+  });
+  const data=await r.json();
+  if(!r.ok) throw new Error(JSON.stringify(data));
+  currentKey=data.key;
+  status.textContent="SUBIDA OK\n\n"+JSON.stringify(data,null,2);
+  document.getElementById("view").disabled=false;
+  document.getElementById("del").disabled=false;
+ }catch(e){status.textContent="ERROR\n"+e.message;}
+};
+
+document.getElementById("view").onclick=()=>{
+ if(!currentKey)return;
+ preview.src=WORKER+"/photo?key="+encodeURIComponent(currentKey)+"&t="+Date.now();
+ preview.hidden=false;
+ status.textContent="Mostrando:\n"+currentKey;
+};
+
+document.getElementById("del").onclick=async()=>{
+ if(!currentKey)return;
+ status.textContent="Eliminando…";
+ try{
+  const r=await fetch(WORKER+"/delete?key="+encodeURIComponent(currentKey),{method:"DELETE"});
+  const data=await r.json();
+  if(!r.ok) throw new Error(JSON.stringify(data));
+  status.textContent="ELIMINADA OK\n\n"+JSON.stringify(data,null,2);
+  preview.hidden=true; preview.removeAttribute("src");
+  currentKey="";
+  document.getElementById("view").disabled=true;
+  document.getElementById("del").disabled=true;
+ }catch(e){status.textContent="ERROR\n"+e.message;}
+};
+</script>
+</body>
+</html>
