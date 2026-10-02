@@ -8,7 +8,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Viaje Japón">
-<link rel="manifest" href="./manifest.json">
+<script>
+(function(){
+  const m=new URLSearchParams(location.search).get('modo');
+  const href=m==='rcoronel'?'./manifest-rcoronel.json':(m==='ldambra'?'./manifest-ldambra.json':'./manifest.json');
+  document.write('<link rel="manifest" href="'+href+'">');
+})();
+</script>
 <title>🇯🇵 Mi Viaje a Japón — v2.2</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
@@ -302,6 +308,16 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 }
 </style>
 
+<style id="guest-install-css">
+.guest-install-overlay{position:fixed;inset:0;z-index:10050;background:rgba(15,23,42,.52);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.guest-install-card{width:min(100%,430px);background:#fff;border-radius:24px;padding:22px 20px calc(20px + env(safe-area-inset-bottom));box-shadow:0 18px 60px rgba(15,23,42,.28);text-align:center}
+.guest-install-icon{width:72px;height:72px;border-radius:18px;display:block;margin:0 auto 12px}
+.guest-install-card h2{margin:0 0 8px;font-size:24px;color:#172033}.guest-install-card p{margin:0 auto 16px;color:#64748b;line-height:1.45;max-width:340px}
+.guest-install-primary,.guest-install-secondary{width:100%;border:0;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:700;cursor:pointer}
+.guest-install-primary{background:#2878d7;color:#fff}.guest-install-secondary{background:transparent;color:#526070;margin-top:5px}
+.guest-ios-steps{background:#f5f7fb;border-radius:14px;padding:12px 14px;text-align:left;color:#334155;font-size:14px;line-height:1.5;margin:12px 0 4px}
+@media(min-width:700px){.guest-install-overlay{align-items:center}}
+</style>
 <style id="guest-mode-css">
 html.guest-mode .bottom-nav{grid-template-columns:repeat(3,1fr)!important}
 html.guest-mode .bottom-nav button[data-nav="paraMi"],
@@ -1855,6 +1871,51 @@ document.addEventListener('click',function(e){
 <script>
 window.addEventListener('online',async()=>{try{await syncCrudQueue();await syncOfflineQueue();await syncPendingPhotos();saveOfflineSnapshot();}catch(e){console.warn(e);}});
 </script>
+<script>
+(function(){
+  if(!['rcoronel','ldambra'].includes(APP_MODE))return;
+  const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  if(standalone||sessionStorage.getItem('guest-install-dismissed')==='1')return;
+  let installPrompt=null;
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  function closeGuestInstall(){
+    document.getElementById('guestInstallOverlay')?.remove();
+    sessionStorage.setItem('guest-install-dismissed','1');
+  }
+  window.closeGuestInstall=closeGuestInstall;
+
+  function showGuestInstall(){
+    if(document.getElementById('guestInstallOverlay'))return;
+    const overlay=document.createElement('div');
+    overlay.id='guestInstallOverlay';overlay.className='guest-install-overlay';
+    const body=isIOS
+      ? `<p>Agregá Viaje Japón a tu pantalla de inicio para entrar directo desde el ícono.</p>
+         <div class="guest-ios-steps"><b>En iPhone:</b><br>1. Tocá <b>Compartir</b> en Safari.<br>2. Elegí <b>Agregar a pantalla de inicio</b>.<br>3. Tocá <b>Agregar</b>.</div>
+         <button class="guest-install-primary" onclick="closeGuestInstall()">Entendido</button>`
+      : `<p>Instalá Viaje Japón en tu celular para entrar más rápido durante el viaje.</p>
+         <button id="guestInstallButton" class="guest-install-primary">Instalar aplicación</button>`;
+    overlay.innerHTML=`<div class="guest-install-card"><img class="guest-install-icon" src="./icon-192.png" alt="Viaje Japón"><h2>Viaje Japón</h2>${body}<button class="guest-install-secondary" onclick="closeGuestInstall()">Ahora no</button></div>`;
+    document.body.appendChild(overlay);
+    const btn=document.getElementById('guestInstallButton');
+    if(btn)btn.onclick=async()=>{
+      if(!installPrompt){btn.textContent='Usá “Instalar app” desde el menú del navegador';btn.disabled=true;return;}
+      installPrompt.prompt();
+      const choice=await installPrompt.userChoice;
+      if(choice.outcome==='accepted')closeGuestInstall();
+      installPrompt=null;
+    };
+  }
+
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;showGuestInstall();});
+  window.addEventListener('appinstalled',closeGuestInstall);
+  window.addEventListener('load',()=>setTimeout(()=>{
+    if(isIOS)showGuestInstall();
+    else if(installPrompt)showGuestInstall();
+  },2500),{once:true});
+})();
+</script>
+
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

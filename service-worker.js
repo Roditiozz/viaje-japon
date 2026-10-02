@@ -1,7 +1,7 @@
-const CACHE_NAME='viaje-japon-v28-message-icon';
-const RUNTIME_CACHE='viaje-japon-runtime-v28-message-icon';
+const CACHE_NAME='viaje-japon-v29-guest-install';
+const RUNTIME_CACHE='viaje-japon-runtime-v29-guest-install';
 const APP_SHELL=[
- './','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png',
+ './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
