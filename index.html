@@ -333,7 +333,14 @@ html.guest-mode .bottom-nav button[data-nav="mensaje"] .nav-icon{font-size:21px!
 .request-photo-picked{font-size:13px;color:#64748b;margin:8px 2px 0}
 @media(max-width:420px){.request-photo-actions{grid-template-columns:1fr 1fr}}
 </style>
-</head>
+<style id="p27-owner-nav">
+html:not(.guest-mode) .bottom-nav button[data-nav="mensaje"]{display:none!important}
+</style><style id="p28-message-nav">
+html.guest-mode .bottom-nav button[data-nav="mensaje"]{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+html.guest-mode .bottom-nav button[data-nav="mensaje"] .nav-icon{display:flex!important;align-items:center;justify-content:center;width:28px;height:28px}
+html.guest-mode .bottom-nav button[data-nav="mensaje"] .icon-svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+html.guest-mode .bottom-nav button[data-nav="mensaje"] .nav-label{display:block!important;font-size:12px!important;line-height:1.1!important;font-weight:700!important}
+</style></head>
 <body>
 <script>
 const urlMode=new URLSearchParams(window.location.search).get('modo');
@@ -432,7 +439,7 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 <button data-nav="regalos" onclick="showScreen('regalos')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></span>Regalos</button>
 <button data-nav="zonas" onclick="showScreen('zonas')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>Zonas</button>
 <button data-nav="mapa" onclick="showScreen('mapa')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></span>Mapa</button>
-<button data-nav="mensaje" onclick="openRequestScreen()"><span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-5A8 8 0 1 1 21 15Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></svg></span><span>Mensaje</span></button></nav><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
+<button data-nav="mensaje" onclick="openRequestScreen()"><span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-5.5 4v-4.8A2.5 2.5 0 0 1 4 13.5z"/><path d="M8 8h8M8 12h5"/></svg></span><span class="nav-label">Mensaje</span></button></nav><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -1878,7 +1885,7 @@ function openRequestScreen(){
 }
 async function uploadRequestPhoto(file,target){
   if(!file)return null;
-  const blob=await compressImage(file,2400,.9);
+  const blob=await compressPhoto(file);
   const rr=await fetch(PHOTO_R2_WORKER+'/upload',{method:'POST',headers:{
     'Content-Type':'image/jpeg','X-Zone':'Pedidos','X-Place':target==='rodo'?'Rodo':'Lucia','X-Filename':file.name||'pedido.jpg'
   },body:blob});
