@@ -301,8 +301,24 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
   }
 }
 </style>
+
+<style id="guest-mode-css">
+html.guest-mode .bottom-nav{grid-template-columns:repeat(2,1fr)!important}
+html.guest-mode .bottom-nav button[data-nav="paraMi"],
+html.guest-mode .bottom-nav button[data-nav="regalos"],
+html.guest-mode .bottom-nav button[data-nav="mapa"]{display:none!important}
+html.guest-mode #home .home-action-card[onclick*="paraMi"],
+html.guest-mode #home .home-action-card[onclick*="regalos"]{display:none!important}
+</style>
 </head>
 <body>
+<script>
+const urlMode=new URLSearchParams(window.location.search).get('modo');
+const APP_MODE=(urlMode==='rodolu')?'rodolu':'invitado';
+const IS_GUEST=APP_MODE==='invitado';
+if(IS_GUEST) document.documentElement.classList.add('guest-mode');
+</script>
+
 <div id="customAppSplash" aria-hidden="true"><img src="./splash-viaje-japon.png" alt=""></div>
 <header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · bloque mejoras 9 · viaje offline</div></header>
 <main>
@@ -774,6 +790,7 @@ function setScreenOnly(id){
  if(id==='mapa')setTimeout(()=>{initMap();map.invalidateSize()},100);
 }
 function showScreen(id,opts={}){
+  if(IS_GUEST&&!['home','zonas','placesList','placeDetail','photoAlbum'].includes(id))id='home';
  const from=currentScreenId();
  if(!opts.noHistory&&from!==id){appNavStack.push(id);history.pushState({appScreen:id},'',location.href);}
  setScreenOnly(id);
@@ -834,7 +851,7 @@ function renderCurrentPlaceView(){
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
 function getTypeIcon(t){return t==='Visitar'?'📍':t==='Compras'?'🛍️':t==='Comer'?'🍜':'📌'}
-function showZone(zone){currentZone=zone;document.getElementById('zoneTitle').textContent='📍 '+zone;document.getElementById('zoneDescription').textContent='Lugares y actividades de '+zone+'.';document.getElementById('zonePhotosTitle').textContent=zone;updateCounts();showScreen('zoneDetail');renderZonePhotos(zone)}
+function showZone(zone){currentZone=zone;if(IS_GUEST){const a=places.filter(p=>p.zone===currentZone);document.getElementById('placesTitle').textContent=zone;document.getElementById('placesDescription').textContent=a.length+' lugar(es)';renderPlaces(a);showScreen('placesList');return;}document.getElementById('zoneTitle').textContent='📍 '+zone;document.getElementById('zoneDescription').textContent='Lugares y actividades de '+zone+'.';document.getElementById('zonePhotosTitle').textContent=zone;updateCounts();showScreen('zoneDetail');renderZonePhotos(zone)}
 const visualImages={
   zones:{
     Osaka:'https://imgcp.aacdn.jp/img-a/1200/900/aa_news/article/2023/03/08/640821c1bc890.jpg',
@@ -1025,7 +1042,7 @@ function renderPlaces(arr){
     const div=document.createElement('div');div.className='item place-row clickable';div.onclick=()=>showPlaceDetailById(p.id);
     const types=p.types.map(t=>`${getTypeIcon(t)} ${esc(t)}`).join(' · ');
     const pi=visualPlaceImage(p);
-    div.innerHTML=`${pi?`<img class="place-thumb" src="${pi}" alt="${esc(p.name)}" loading="lazy" onerror="this.outerHTML='<div class=\'place-placeholder\'>📍</div>'">`:`<div class="place-placeholder">📍</div>`}<div class="place-row-main"><h3>${esc(p.name)}</h3><p>${types}</p><span class="status-pill ${p.status==='Visitado'?'visited':'pending'}">${p.status==='Visitado'?'Visitado':'Pendiente'}</span></div><div class="place-chevron">›</div>`;
+    div.innerHTML=`${pi?`<img class="place-thumb" src="${pi}" alt="${esc(p.name)}" loading="lazy" onerror="this.outerHTML='<div class=\'place-placeholder\'>📍</div>'">`:`<div class="place-placeholder">📍</div>`}<div class="place-row-main"><h3>${esc(p.name)}</h3>${IS_GUEST?'':`<p>${types}</p>`}<span class="status-pill ${p.status==='Visitado'?'visited':'pending'}">${p.status==='Visitado'?'Visitado':'Pendiente'}</span></div><div class="place-chevron">›</div>`;
     c.appendChild(div);
   });
 }
@@ -1055,6 +1072,11 @@ function showPlaceDetailById(id){
   currentDetailPlaceId=p.id;
   currentPlaceMapResult={name:p.name,lat:Number(p.latitude)||null,lon:Number(p.longitude)||null};
   const visibleTypes=p.types.filter(t=>t!=='Visitar');
+  if(IS_GUEST){
+    const hero=visualPlaceImage(p);
+    document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card">${hero?`<div class="detail-hero"><img src="${hero}" alt="${esc(p.name)}"></div>`:''}<div class="detail-head"><div><h2>${esc(p.name)}</h2><p style="margin:4px 0;color:#64748b">${esc(p.zone)}</p></div><span class="status-pill ${p.status==='Visitado'?'visited':'pending'}">${p.status==='Visitado'?'Visitado':'Pendiente'}</span></div></div><div class="photo-card compact-place-photos"><div class="home-photos-head"><h3>📷 Fotos de ${esc(p.name)}</h3><button class="photo-link" onclick="openCurrentPlacePhotoAlbum()">Ver todas</button></div><div id="placePhotoGrid" class="photo-grid"></div></div>`;
+    showScreen('placeDetail');renderPlacePhotos(p);return;
+  }
   document.getElementById('placeDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-hero"><img src="${visualPlaceImage(p)}" alt="${esc(p.name)}"></div><div class="detail-head"><div><h2>${esc(p.name)}</h2><p style="margin:4px 0;color:#64748b">${esc(p.zone)}</p></div><span class="status-pill ${p.status==='Visitado'?'visited':'pending'}">${p.status==='Visitado'?'Visitado':'Pendiente'}</span></div><div class="type-tiles"><button class="type-tile action" onclick="openPlaceAction('food')"><b>🍜</b>Comer</button><button class="type-tile action" onclick="openPlaceAction('shopping')"><b>🛍️</b>Compras</button><button class="type-tile action" onclick="openPlaceAction('camera')"><b>📷</b>Cámara</button></div><p><strong>Zona:</strong> ${esc(p.zone)}</p>${visibleTypes.length?`<p><strong>Tipo:</strong> ${visibleTypes.map(t=>getTypeIcon(t)+' '+esc(t)).join(' / ')}</p>`:''}${p.categories.filter(c=>!String(c).startsWith('__parent__')).length?`<p><strong>Categoría:</strong> ${p.categories.filter(c=>!String(c).startsWith('__parent__')).map(esc).join(', ')}</p>`:''}${p.interests.length?`<p><strong>Interés:</strong> ${p.interests.map(esc).join(', ')}</p>`:''}<button type="button" class="status-btn js-toggle-status" data-place-id="${esc(p.id)}">${p.status==='Visitado'?'✅ Visitado':'⬜ Pendiente'}</button><div class="place-google-only"><button type="button" class="map-button" onclick="openCurrentPlaceInGoogleMaps()">🗺️ Buscar en Google Maps ↗</button></div><div class="manage-actions"><button class="edit-btn" onclick="openItemEditor('place',currentDetailPlaceId)">✎ Editar lugar</button><button class="delete-btn" onclick="deleteItem('place',currentDetailPlaceId)">Eliminar lugar</button></div></div><div class="photo-card compact-place-photos"><h3>📷 Fotos de ${esc(p.name)}</h3><div id="placePhotoGrid" class="photo-grid"></div><div class="photo-actions"><button class="photo-action" onclick="openCurrentPlacePhotoAlbum()">Ver todas</button></div><div id="placePhotoStatus" class="photo-upload-status"></div></div>`;
   showScreen('placeDetail');
   renderPlacePhotos(p);
