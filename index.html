@@ -303,19 +303,27 @@ url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v177269
 </style>
 
 <style id="guest-mode-css">
-html.guest-mode .bottom-nav{grid-template-columns:repeat(2,1fr)!important}
+html.guest-mode .bottom-nav{grid-template-columns:repeat(3,1fr)!important}
 html.guest-mode .bottom-nav button[data-nav="paraMi"],
 html.guest-mode .bottom-nav button[data-nav="regalos"],
 html.guest-mode .bottom-nav button[data-nav="mapa"]{display:none!important}
 html.guest-mode #home .home-action-card[onclick*="paraMi"],
 html.guest-mode #home .home-action-card[onclick*="regalos"]{display:none!important}
 </style>
-</head>
+<style>
+html.guest-mode .bottom-nav button:not([data-nav="home"]):not([data-nav="zonas"]):not([data-nav="mensaje"]){display:none!important}
+.request-card{background:#fff;border-radius:22px;padding:18px;margin:16px 0;box-shadow:0 4px 18px #00000010}
+.request-card h3{margin:0 0 8px}.request-count{display:inline-flex;min-width:26px;height:26px;padding:0 7px;border-radius:14px;background:#ef4444;color:white;align-items:center;justify-content:center;font-weight:800}
+.request-form label{display:block;font-weight:800;margin:14px 0 6px}.request-form input,.request-form textarea{width:100%;box-sizing:border-box;padding:13px;border:1px solid #d7dce3;border-radius:14px;font:inherit}.request-form textarea{min-height:120px;resize:vertical}
+.request-send{width:100%;padding:14px;border:0;border-radius:14px;background:#0b84f3;color:#fff;font-weight:800;font-size:16px;margin-top:14px}
+.request-item{background:#fff;border-radius:18px;padding:14px;margin:10px 0;border:1px solid #e5e7eb}.request-item img{width:100%;max-height:260px;object-fit:cover;border-radius:14px;margin-top:10px}
+</style></head>
 <body>
 <script>
 const urlMode=new URLSearchParams(window.location.search).get('modo');
-const APP_MODE=(urlMode==='rodolu')?'rodolu':'invitado';
-const IS_GUEST=APP_MODE==='invitado';
+const APP_MODE=(urlMode==='rodo'||urlMode==='lu'||urlMode==='rcoronel'||urlMode==='ldambra')?urlMode:'invitado';
+const IS_GUEST=!['rodo','lu'].includes(APP_MODE);
+const REQUEST_TARGET=APP_MODE==='rcoronel'?'rodo':(APP_MODE==='ldambra'?'lu':null);
 if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 </script>
 
@@ -380,13 +388,28 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 <div id="giftItemEditor" class="budget-editor" onclick="if(event.target===this)closeGiftItemEditor()"><div class="budget-editor-card"><h3>Agregar compra</h3><p>Agregá lo que compraste para este regalo.</p><div class="gift-add-modal-fields"><label>Nombre</label><input id="giftItemName" type="text" placeholder="Ej. Jarrón"><label>Precio</label><input id="giftItemPrice" type="number" min="0" step="1" inputmode="numeric" placeholder="¥"></div><div class="add-actions"><button class="add-primary" onclick="saveGiftItem()">Agregar</button><button class="add-secondary" onclick="closeGiftItemEditor()">Cancelar</button></div></div></div>
 <div id="personalItemEditor" class="budget-editor" onclick="if(event.target===this)closePersonalItemEditor()"><div class="budget-editor-card"><h3>Agregar compra</h3><p>Agregá una compra para este producto.</p><div class="gift-add-modal-fields"><label>Nombre</label><input id="personalItemName" type="text" placeholder="Ej. Remera"><label>Precio</label><input id="personalItemPrice" type="number" min="0" step="1" inputmode="numeric" placeholder="¥"><label>Dónde</label><input id="personalItemWhere" type="text" placeholder="Ej. UNIQLO Shibuya o dirección"></div><div class="add-actions"><button class="add-primary" onclick="savePersonalItem()">Agregar</button><button class="add-secondary" onclick="closePersonalItemEditor()">Cancelar</button></div></div></div>
 <div id="budgetEditor" class="budget-editor" onclick="if(event.target===this)closeBudgetEditor()"><div class="budget-editor-card"><h3 id="budgetEditorTitle">Editar presupuesto</h3><p>Ingresá el presupuesto total en yenes.</p><input id="budgetEditorInput" type="number" min="0" step="1000" inputmode="numeric" placeholder="¥"><div class="add-actions"><button class="add-primary" onclick="saveBudgetEdit()">Guardar</button><button class="add-secondary" onclick="closeBudgetEditor()">Cancelar</button></div></div></div>
+
+<section id="mensaje" class="screen">
+  <div class="screen-title"><h2>💬 Enviar mensaje</h2><p>Mandá un pedido o una idea.</p></div>
+  <div class="request-card request-form">
+    <label>Tu nombre</label><input id="requestName" maxlength="60" placeholder="Ej: Juan">
+    <label>¿Qué querés decir?</label><textarea id="requestMessage" maxlength="1000" placeholder="Escribí tu mensaje..."></textarea>
+    <label>📷 Foto (opcional)</label><input id="requestPhoto" type="file" accept="image/*" capture="environment">
+    <button class="request-send" onclick="sendGuestRequest()">Enviar mensaje</button>
+    <p id="requestStatus" style="text-align:center;font-weight:700"></p>
+  </div>
+</section>
+<section id="misPedidos" class="screen">
+  <div class="screen-title"><h2>💬 Mis pedidos</h2><p id="myRequestsSubtitle"></p></div>
+  <div id="myRequestsList"></div>
+</section>
 <nav class="bottom-nav" id="bottomNav">
 <button data-nav="home" onclick="showScreen('home')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v11h14V10M9 21v-7h6v7"/></svg></span>Home</button>
 <button data-nav="paraMi" onclick="showScreen('paraMi')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></span>Para mí</button>
 <button data-nav="regalos" onclick="showScreen('regalos')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></span>Regalos</button>
 <button data-nav="zonas" onclick="showScreen('zonas')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>Zonas</button>
 <button data-nav="mapa" onclick="showScreen('mapa')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></span>Mapa</button>
-</nav><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
+<button data-nav="mensaje" onclick="openRequestScreen()"><span class="nav-icon">💬</span><span>Mensaje</span></button></nav><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -790,7 +813,7 @@ function setScreenOnly(id){
  if(id==='mapa')setTimeout(()=>{initMap();map.invalidateSize()},100);
 }
 function showScreen(id,opts={}){
-  if(IS_GUEST&&!['home','zonas','placesList','placeDetail','photoAlbum'].includes(id))id='home';
+  if(IS_GUEST&&!['home','zonas','placesList','placeDetail','photoAlbum','mensaje'].includes(id))id='home';
  const from=currentScreenId();
  if(!opts.noHistory&&from!==id){appNavStack.push(id);history.pushState({appScreen:id},'',location.href);}
  setScreenOnly(id);
@@ -1821,6 +1844,64 @@ if ('serviceWorker' in navigator) {
   else window.addEventListener('load',()=>setTimeout(closeSplash,2100),{once:true});
   setTimeout(closeSplash,3200);
 })();
+
+async function ensureRequestsTable(){
+  // Table is created in Supabase separately; this just keeps UI errors friendly.
+  return true;
+}
+function openRequestScreen(){
+  if(!IS_GUEST||!REQUEST_TARGET)return;
+  showScreen('mensaje');
+}
+async function uploadRequestPhoto(file,target){
+  if(!file)return null;
+  const blob=await compressImage(file,2400,.9);
+  const rr=await fetch(PHOTO_R2_WORKER+'/upload',{method:'POST',headers:{
+    'Content-Type':'image/jpeg','X-Zone':'Pedidos','X-Place':target==='rodo'?'Rodo':'Lucia','X-Filename':file.name||'pedido.jpg'
+  },body:blob});
+  if(!rr.ok)throw new Error('No se pudo subir la foto');
+  const up=await rr.json(); return up.key;
+}
+async function sendGuestRequest(){
+  const st=document.getElementById('requestStatus'),name=document.getElementById('requestName').value.trim(),
+        message=document.getElementById('requestMessage').value.trim(),file=document.getElementById('requestPhoto').files[0];
+  if(!name||!message){st.textContent='Completá tu nombre y el mensaje.';return;}
+  if(!navigator.onLine){st.textContent='Necesitás Internet para enviar el mensaje.';return;}
+  st.textContent='Enviando...';
+  try{
+    const photo_path=await uploadRequestPhoto(file,REQUEST_TARGET);
+    const {error}=await supabaseClient.from('requests').insert({recipient:REQUEST_TARGET,sender_name:name,message,photo_path,status:'Pendiente'});
+    if(error)throw error;
+    document.getElementById('requestMessage').value='';document.getElementById('requestPhoto').value='';
+    st.textContent='✓ Mensaje enviado';
+  }catch(e){console.error(e);st.textContent='❌ No se pudo enviar: '+(e.message||'error');}
+}
+function requestPhotoUrl(path){return path?PHOTO_R2_WORKER+'/photo?key='+encodeURIComponent(path):''}
+async function loadMyRequests(){
+  if(!['rodo','lu'].includes(APP_MODE))return;
+  const {data,error}=await supabaseClient.from('requests').select('*').eq('recipient',APP_MODE).order('created_at',{ascending:false});
+  if(error){console.error(error);return;}
+  window.myRequests=data||[];
+  const pending=window.myRequests.filter(x=>x.status!=='Visto').length;
+  document.querySelectorAll('[data-my-request-count]').forEach(el=>{el.textContent=pending;el.style.display=pending?'inline-flex':'none'});
+  const box=document.getElementById('myRequestsList');if(!box)return;
+  document.getElementById('myRequestsSubtitle').textContent=(APP_MODE==='rodo'?'Pedidos para Rodo':'Pedidos para Lucía');
+  box.innerHTML=window.myRequests.length?window.myRequests.map(x=>`<div class="request-item"><b>${esc(x.sender_name)}</b><p>${esc(x.message)}</p>${x.photo_path?`<img src="${requestPhotoUrl(x.photo_path)}" alt="Foto del pedido">`:''}<p><span class="status-pill ${x.status==='Visto'?'visited':'pending'}">${esc(x.status||'Pendiente')}</span></p><button onclick="markRequestSeen(${x.id})">Marcar visto</button> <button onclick="deleteRequest(${x.id},'${(x.photo_path||'').replace(/'/g,"")}')">Eliminar</button></div>`).join(''):'<div class="empty">No hay pedidos todavía.</div>';
+}
+async function markRequestSeen(id){await supabaseClient.from('requests').update({status:'Visto'}).eq('id',id);await loadMyRequests()}
+async function deleteRequest(id,path){if(!confirm('¿Eliminar este pedido?'))return;await supabaseClient.from('requests').delete().eq('id',id);if(path)try{await fetch(PHOTO_R2_WORKER+'/delete?key='+encodeURIComponent(path),{method:'DELETE'})}catch(_){}await loadMyRequests()}
+function openMyRequests(){showScreen('misPedidos');loadMyRequests()}
+function injectMyRequestsCard(){
+  if(!['rodo','lu'].includes(APP_MODE))return;
+  const home=document.getElementById('home'); if(!home||document.getElementById('myRequestsHomeCard'))return;
+  const zones=home.querySelector('.zones-card,.home-zones,.zone-grid')?.parentElement;
+  const card=document.createElement('div');card.id='myRequestsHomeCard';card.className='request-card clickable';
+  card.onclick=openMyRequests;card.innerHTML=`<h3>💬 Mis pedidos <span data-my-request-count class="request-count" style="display:none">0</span></h3><p style="margin:4px 0;color:#64748b">Mensajes de familiares y amigos</p>`;
+  const photos=[...home.querySelectorAll('h2,h3')].find(x=>x.textContent.includes('Fotos recientes'))?.closest('.photo-card,.home-photos-card,section,div');
+  if(photos&&photos.parentNode)photos.parentNode.insertBefore(card,photos);else home.appendChild(card);
+  loadMyRequests();
+}
+setTimeout(injectMyRequestsCard,1200);
 </script>
 </body>
 </html>
