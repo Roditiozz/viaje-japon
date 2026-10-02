@@ -317,7 +317,23 @@ html.guest-mode .bottom-nav button:not([data-nav="home"]):not([data-nav="zonas"]
 .request-form label{display:block;font-weight:800;margin:14px 0 6px}.request-form input,.request-form textarea{width:100%;box-sizing:border-box;padding:13px;border:1px solid #d7dce3;border-radius:14px;font:inherit}.request-form textarea{min-height:120px;resize:vertical}
 .request-send{width:100%;padding:14px;border:0;border-radius:14px;background:#0b84f3;color:#fff;font-weight:800;font-size:16px;margin-top:14px}
 .request-item{background:#fff;border-radius:18px;padding:14px;margin:10px 0;border:1px solid #e5e7eb}.request-item img{width:100%;max-height:260px;object-fit:cover;border-radius:14px;margin-top:10px}
-</style></head>
+</style>
+<style id="guest-p26-fixes">
+html.guest-mode #home .home-hero .hero-search,
+html.guest-mode #home>.search-box,
+html.guest-mode #home #searchBackWrap,
+html.guest-mode #home #searchResults,
+html.guest-mode #home #homeCards,
+html.guest-mode #home .welcome-strip{display:none!important}
+html.guest-mode #home .home-hero{min-height:150px!important}
+html.guest-mode #home .home-hero-title{padding-bottom:14px}
+html.guest-mode .bottom-nav button[data-nav="mensaje"] .nav-icon{font-size:21px!important;line-height:23px!important}
+.request-photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:7px}
+.request-photo-btn{border:1px solid #d7dce3;background:#f8fafc;border-radius:14px;padding:13px 8px;font-weight:800;font-size:14px}
+.request-photo-picked{font-size:13px;color:#64748b;margin:8px 2px 0}
+@media(max-width:420px){.request-photo-actions{grid-template-columns:1fr 1fr}}
+</style>
+</head>
 <body>
 <script>
 const urlMode=new URLSearchParams(window.location.search).get('modo');
@@ -394,7 +410,14 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
   <div class="request-card request-form">
     <label>Tu nombre</label><input id="requestName" maxlength="60" placeholder="Ej: Juan">
     <label>¿Qué querés decir?</label><textarea id="requestMessage" maxlength="1000" placeholder="Escribí tu mensaje..."></textarea>
-    <label>📷 Foto (opcional)</label><input id="requestPhoto" type="file" accept="image/*" capture="environment">
+    <label>📷 Foto (opcional)</label>
+    <div class="request-photo-actions">
+      <button type="button" class="request-photo-btn" onclick="document.getElementById('requestCamera').click()">📸 Sacar foto</button>
+      <button type="button" class="request-photo-btn" onclick="document.getElementById('requestGallery').click()">🖼️ Cargar imagen</button>
+    </div>
+    <input id="requestCamera" type="file" accept="image/*" capture="environment" hidden onchange="selectRequestPhoto(this)">
+    <input id="requestGallery" type="file" accept="image/*" hidden onchange="selectRequestPhoto(this)">
+    <p id="requestPhotoPicked" class="request-photo-picked">Sin foto seleccionada</p>
     <button class="request-send" onclick="sendGuestRequest()">Enviar mensaje</button>
     <p id="requestStatus" style="text-align:center;font-weight:700"></p>
   </div>
@@ -409,7 +432,7 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 <button data-nav="regalos" onclick="showScreen('regalos')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></span>Regalos</button>
 <button data-nav="zonas" onclick="showScreen('zonas')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>Zonas</button>
 <button data-nav="mapa" onclick="showScreen('mapa')"><span><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></span>Mapa</button>
-<button data-nav="mensaje" onclick="openRequestScreen()"><span class="nav-icon">💬</span><span>Mensaje</span></button></nav><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
+<button data-nav="mensaje" onclick="openRequestScreen()"><span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-5A8 8 0 1 1 21 15Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></svg></span><span>Mensaje</span></button></nav><div class="sync-bar"><span id="syncState">☁️ Sincronizado</span><button type="button" onclick="syncOfflineQueue(true)">Sincronizar</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -1862,9 +1885,16 @@ async function uploadRequestPhoto(file,target){
   if(!rr.ok)throw new Error('No se pudo subir la foto');
   const up=await rr.json(); return up.key;
 }
+let selectedRequestPhoto=null;
+function selectRequestPhoto(input){
+  selectedRequestPhoto=input.files?.[0]||null;
+  document.getElementById('requestPhotoPicked').textContent=selectedRequestPhoto?'✓ '+selectedRequestPhoto.name:'Sin foto seleccionada';
+  const other=input.id==='requestCamera'?document.getElementById('requestGallery'):document.getElementById('requestCamera');
+  if(other)other.value='';
+}
 async function sendGuestRequest(){
   const st=document.getElementById('requestStatus'),name=document.getElementById('requestName').value.trim(),
-        message=document.getElementById('requestMessage').value.trim(),file=document.getElementById('requestPhoto').files[0];
+        message=document.getElementById('requestMessage').value.trim(),file=selectedRequestPhoto;
   if(!name||!message){st.textContent='Completá tu nombre y el mensaje.';return;}
   if(!navigator.onLine){st.textContent='Necesitás Internet para enviar el mensaje.';return;}
   st.textContent='Enviando...';
@@ -1872,7 +1902,9 @@ async function sendGuestRequest(){
     const photo_path=await uploadRequestPhoto(file,REQUEST_TARGET);
     const {error}=await supabaseClient.from('requests').insert({recipient:REQUEST_TARGET,sender_name:name,message,photo_path,status:'Pendiente'});
     if(error)throw error;
-    document.getElementById('requestMessage').value='';document.getElementById('requestPhoto').value='';
+    document.getElementById('requestMessage').value='';
+    document.getElementById('requestCamera').value='';document.getElementById('requestGallery').value='';
+    selectedRequestPhoto=null;document.getElementById('requestPhotoPicked').textContent='Sin foto seleccionada';
     st.textContent='✓ Mensaje enviado';
   }catch(e){console.error(e);st.textContent='❌ No se pudo enviar: '+(e.message||'error');}
 }
