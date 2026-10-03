@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- Versión prueba: wishlist + gifts + places sincronizados con Supabase; respaldo local -->
-<html lang="es">
+<html class="home-scroll-lock" lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1192,6 +1192,9 @@ function currentScreenId(){return document.querySelector('section.active')?.id||
 function setScreenOnly(id){
  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
  const el=document.getElementById(id);if(!el)return;el.classList.add('active');
+ // Home fijo: conserva exactamente el layout aprobado, pero evita cualquier scroll/overscroll.
+ document.documentElement.classList.toggle('home-scroll-lock',id==='home');
+ if(id==='home') window.scrollTo(0,0);
  document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.nav===id||(id==='zoneDetail'||id==='placesList'||id==='placeDetail'||id==='placeAction')&&b.dataset.nav==='zonas'||id==='personalDetail'&&b.dataset.nav==='paraMi'||id==='giftDetail'&&b.dataset.nav==='regalos'));
  window.scrollTo({top:0,behavior:'smooth'});
  if(id==='regalos')setTimeout(()=>renderGiftHome(),0);
@@ -2371,5 +2374,22 @@ setTimeout(injectMyRequestsCard,1200);
   html:not(.guest-mode) #home .home-zones-head{margin-bottom:6px!important}
   html:not(.guest-mode) #home .home-activity{margin-top:10px!important}
   html:not(.guest-mode) #home .home-activity>h2{margin-bottom:6px!important}
+}
+
+/* HOME-09: bloquear por completo el desplazamiento del Home sin alterar su layout */
+html.home-scroll-lock, html.home-scroll-lock body{
+  overflow:hidden!important;
+  overscroll-behavior:none!important;
+}
+html.home-scroll-lock body{
+  position:fixed!important;
+  inset:0!important;
+  width:100%!important;
+  height:100dvh!important;
+}
+html.home-scroll-lock #home{
+  overflow:hidden!important;
+  overscroll-behavior:none!important;
+  touch-action:pan-x!important;
 }
 </style>
