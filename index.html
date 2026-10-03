@@ -785,6 +785,27 @@ html.home-scroll-lock #home{
 }
 </style>
 
+
+<style id="p44-final-details">
+/* P44 — detalles finales: iconos estables, menos cola vacía, mapa limpio y Home recargable */
+@media(max-width:700px){
+ html:not(.guest-mode) body{padding-bottom:0!important;overscroll-behavior-y:auto!important}
+ html:not(.guest-mode) main{padding-bottom:76px!important}
+ html:not(.guest-mode) #paraMi,html:not(.guest-mode) #regalos{padding-bottom:8px!important;min-height:0!important}
+ html:not(.guest-mode) #paraMi .product-fallback{width:44px!important;height:44px!important;font-size:25px!important;flex:0 0 44px!important}
+ html:not(.guest-mode) #paraMi .personal-row{grid-template-columns:46px 1fr auto!important}
+ html:not(.guest-mode) #mapa{padding-top:8px!important}
+ html:not(.guest-mode) #mapa>.back{display:none!important}
+ html:not(.guest-mode) #mapa .map-main-title{text-align:center!important;margin:0 0 6px!important}
+ html:not(.guest-mode) #mapa .map-main-title h2{display:inline-flex!important;align-items:center!important;gap:8px!important;margin:0!important;font-size:27px!important;letter-spacing:-.4px!important}
+ html:not(.guest-mode) #mapa .map-title-mark{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(145deg,#8d2dff,#4d28e8);color:#fff;font-size:17px;box-shadow:0 0 18px rgba(153,55,255,.35)}
+ html:not(.guest-mode) #mapa .map-zone-title{text-align:center!important;margin:2px 0 9px!important;padding:7px 10px!important;border:1px solid #203a54!important;border-radius:13px!important;background:linear-gradient(145deg,#102033,#0a1624)!important}
+ html:not(.guest-mode) #mapa .map-zone-title h3{margin:0!important;font-size:17px!important;color:#fff!important}
+ html:not(.guest-mode) #mapa .map-zone-title p{display:block!important;margin:2px 0 0!important;font-size:11px!important;color:#8fa3ba!important}
+ html:not(.guest-mode) #mapZoneButtons{margin-top:0!important}
+ html:not(.guest-mode) #home{overflow:visible!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important}
+}
+</style>
 </head>
 <body>
 <script>
@@ -854,7 +875,7 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 <div id="photoViewer" class="photo-viewer" onclick="if(event.target===this)closePhotoViewer()"><button class="photo-viewer-close" onclick="closePhotoViewer()">×</button><button class="photo-viewer-nav photo-viewer-prev" onclick="movePhotoViewer(-1)" aria-label="Foto anterior">‹</button><img id="photoViewerImg" alt="Foto"><button class="photo-viewer-nav photo-viewer-next" onclick="movePhotoViewer(1)" aria-label="Foto siguiente">›</button><div id="photoViewerMeta" class="photo-viewer-meta"></div><div class="photo-viewer-actions"><button id="photoViewerDelete" class="photo-viewer-delete" onclick="deleteCurrentPhoto()">🗑️ Eliminar foto</button></div></div>
 <section id="personalDetail"><button class="back" onclick="appBack()">← Volver</button><div id="personalDetailContainer"></div></section>
 <section id="giftDetail"><button class="back" onclick="appBack()">← Volver</button><div id="giftDetailContainer"></div></section>
-<section id="mapa"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🗺️ Mapa</h2><p>Ubicate o elegí una zona para ver los lugares de tu viaje.</p></div><div class="map-controls"><button class="map-button" onclick="getCurrentLocation()">📍 Estoy acá</button></div><div class="screen-title" style="margin-top:14px"><h3>Elegir zona</h3></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" data-map-zone="Osaka" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" data-map-zone="Kyoto" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" data-map-zone="Tokio" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" data-map-zone="Kamakura" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" data-map-type="Todos" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" data-map-type="Visitar" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" data-map-type="Comer" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" data-map-type="Compras" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
+<section id="mapa"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title map-main-title"><h2><span class="map-title-mark">◇</span> Mapa</h2></div><div class="screen-title map-zone-title"><h3>Elegir zona</h3><p>Seleccioná una zona y qué querés ver</p></div><div class="map-controls" id="mapZoneButtons"><button class="map-button" data-map-zone="Osaka" onclick="showTripZoneOnMap('Osaka')">Osaka</button><button class="map-button" data-map-zone="Kyoto" onclick="showTripZoneOnMap('Kyoto')">Kyoto</button><button class="map-button" data-map-zone="Tokio" onclick="showTripZoneOnMap('Tokio')">Tokio</button><button class="map-button" data-map-zone="Kamakura" onclick="showTripZoneOnMap('Kamakura')">Kamakura</button></div><div id="mapTypeFilters" class="map-controls" style="display:none;margin-top:8px"><button class="map-button" data-map-type="Todos" onclick="filterTripMap('Todos')">Todos</button><button class="map-button" data-map-type="Visitar" onclick="filterTripMap('Visitar')">📍 Visitar</button><button class="map-button" data-map-type="Comer" onclick="filterTripMap('Comer')">🍜 Comer</button><button class="map-button" data-map-type="Compras" onclick="filterTripMap('Compras')">🛍️ Compras</button></div><p id="mapTripMessage" style="margin:10px 0"></p><div id="map"></div><div id="nearbyResults" style="margin-top:16px"></div></section>
 </main><div id="appToast" class="app-toast">✓ Guardado</div>
 <div id="itemEditor" class="budget-editor" onclick="if(event.target===this)closeItemEditor()"><div class="budget-editor-card"><h3 id="itemEditorTitle">Editar</h3><div id="itemEditorFields"></div><div class="add-actions"><button class="add-primary" onclick="saveItemEdit()">Guardar cambios</button><button class="add-secondary" onclick="closeItemEditor()">Cancelar</button></div></div></div>
 <div id="giftItemEditor" class="budget-editor" onclick="if(event.target===this)closeGiftItemEditor()"><div class="budget-editor-card"><h3>Agregar compra</h3><p>Agregá lo que compraste para este regalo.</p><div class="gift-add-modal-fields"><label>Nombre</label><input id="giftItemName" type="text" placeholder="Ej. Jarrón"><label>Precio</label><input id="giftItemPrice" type="number" min="0" step="1" inputmode="numeric" placeholder="¥"></div><div class="add-actions"><button class="add-primary" onclick="saveGiftItem()">Agregar</button><button class="add-secondary" onclick="closeGiftItemEditor()">Cancelar</button></div></div></div>
@@ -1287,7 +1308,7 @@ function setScreenOnly(id){
  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
  const el=document.getElementById(id);if(!el)return;el.classList.add('active');
  // Home fijo: conserva exactamente el layout aprobado, pero evita cualquier scroll/overscroll.
- document.documentElement.classList.toggle('home-scroll-lock',id==='home');
+ document.documentElement.classList.remove('home-scroll-lock');
  if(id==='home') window.scrollTo(0,0);
  document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.nav===id||(id==='zoneDetail'||id==='placesList'||id==='placeDetail'||id==='placeAction')&&b.dataset.nav==='zonas'||id==='personalDetail'&&b.dataset.nav==='paraMi'||id==='giftDetail'&&b.dataset.nav==='regalos'));
  window.scrollTo({top:0,behavior:'smooth'});
@@ -1809,11 +1830,7 @@ async function saveBudgetEdit(){
 }
 function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);const pp=pb>0?Math.min(100,Math.round(ps/pb*100)):0,gp=gb>0?Math.min(100,Math.round(gs/gb*100)):0;const pbox=document.querySelector('#paraMi .budget-box:first-child'),gbox=document.querySelector('#regalos .budget-box:first-child');if(pbox)pbox.dataset.pct=pp+'%';if(gbox)gbox.dataset.pct=gp+'%';}
 
-const personalVisualImages={
- 'Zapatillas / Sandalias':'https://static.nike.com/a/images/t_default/6e7c10f4-4fb5-4c7c-80a8-1e524aa8b49a/air-max-90-shoes.png',
- 'Ropa UNIQLO y demás':'https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/465185/item/goods_69_465185.jpg',
- 'Perfumes':'https://www.chanel.com/images//t_one///q_auto:good,f_auto,fl_lossy,dpr_1.1/w_1240/n-5-eau-de-parfum-spray-3-4fl-oz--packshot-default-125530-9564914667550.jpg'
-};
+const personalVisualImages={};
 function personalVisualImage(name){return personalVisualImages[name]||'';}
 function personalVisualMarkup(name,detail=false){
   const url=personalVisualImage(name);
