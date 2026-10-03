@@ -1,9 +1,10 @@
-const CACHE_NAME='v52-botones-flotantes';
-const RUNTIME_CACHE='viaje-japon-runtime-v52-botones-flotantes';
+const CACHE_NAME='v53-imagenes-finales';
+const RUNTIME_CACHE='viaje-japon-runtime-v53-imagenes-finales';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
   './regalos-bg.webp',
+ './assets/gift-baking.webp','./assets/gift-baseball.webp','./assets/gift-fma.webp','./assets/gift-gameboy.webp','./assets/gift-scorpio.webp','./assets/gift-tea.webp','./assets/gift-watch.webp','./assets/kyoto-bamboo.webp','./assets/kyoto-bazaar.webp','./assets/kyoto-eva.webp','./assets/kyoto-fushimi.webp','./assets/kyoto-golden.webp','./assets/kyoto-temples.webp','./assets/kyoto-uzumasa.webp','./assets/osaka-donki.webp','./assets/osaka-namba.webp','./assets/osaka-outlet.webp','./assets/osaka-pablo.webp','./assets/osaka-rikuro.webp','./assets/personal-disney.webp','./assets/personal-harry.webp','./assets/personal-perfumes.webp','./assets/personal-tea.webp','./assets/personal-uniqlo.webp','./assets/personal-universal.webp','./assets/tokyo-ghibli.webp','./assets/tokyo-hachiko.webp','./assets/tokyo-harry.webp','./assets/tokyo-outlet.webp','./assets/tokyo-shinjuku.webp','./assets/tokyo-uniqlo.webp',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
