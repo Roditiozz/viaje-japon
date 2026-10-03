@@ -2341,3 +2341,25 @@ setTimeout(injectMyRequestsCard,1200);
 </script>
 </body>
 </html>
+<style id="p36-home-final-touches">
+/* P36 — Home: marcos de zonas como Actividad reciente + limpieza inferior */
+@media(max-width:700px){
+  html:not(.guest-mode) #home .home-zone-tile{
+    border:1px solid #203a54!important;
+    box-shadow:0 5px 13px rgba(0,0,0,.28)!important;
+  }
+  html:not(.guest-mode) .bottom-nav{
+    border-bottom:0!important;
+    outline:0!important;
+  }
+  html:not(.guest-mode) body,
+  html:not(.guest-mode){background:#030b18!important}
+}
+</style>
+<style id="p37-home-group-lower">
+/* P37 — Home: bajar el bloque principal completo, conservando tamaños/proporciones */
+@media(max-width:700px){
+  html:not(.guest-mode) #home #homeCards{margin-top:150px!important}
+  html:not(.guest-mode) .bottom-nav{border-bottom:none!important;box-shadow:0 -10px 28px rgba(0,0,0,.36)!important}
+}
+</style>
