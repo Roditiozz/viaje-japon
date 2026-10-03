@@ -1,5 +1,5 @@
-const CACHE_NAME='v46-guest-final-polish';
-const RUNTIME_CACHE='viaje-japon-runtime-v46-guest-final-polish';
+const CACHE_NAME='v47-celular-lu-guide';
+const RUNTIME_CACHE='viaje-japon-runtime-v47-celular-lu-guide';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
