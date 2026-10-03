@@ -1,5 +1,5 @@
-const CACHE_NAME='v33-home-fondo-correcto';
-const RUNTIME_CACHE='viaje-japon-runtime-v29-guest-install';
+const CACHE_NAME='v34-home-top-fix';
+const RUNTIME_CACHE='viaje-japon-runtime-v34-home-top-fix';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',

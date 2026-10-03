@@ -609,6 +609,42 @@ html:not(.guest-mode) .sync-bar{bottom:74px!important}
  html:not(.guest-mode) #home .hero-search input::placeholder{color:rgba(235,239,255,.78)!important}
 }
 </style>
+
+<style id="p34-home-top-fix">
+/* P34 — Home: imagen solo arriba + degradado oscuro, torii rojo y buscador limpio. */
+@media(max-width:700px){
+ html:not(.guest-mode) #home{
+   position:relative!important;isolation:isolate!important;
+   background:#050b16!important;background-image:none!important;
+   min-height:calc(100vh - 68px)!important;
+ }
+ html:not(.guest-mode) #home:before{
+   content:""!important;display:block!important;position:absolute!important;z-index:-1!important;
+   left:0!important;right:0!important;top:0!important;height:430px!important;pointer-events:none!important;
+   background:
+     linear-gradient(180deg,rgba(2,7,18,.04) 0%,rgba(2,7,18,.10) 35%,rgba(5,11,22,.58) 67%,#050b16 100%),
+     url('./home-bg.png') center 36%/cover no-repeat!important;
+ }
+ html:not(.guest-mode) #home .home-brand-icon{
+   width:27px!important;height:27px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+   color:#ff2d45!important;filter:drop-shadow(0 0 7px rgba(255,45,69,.30))!important;
+ }
+ html:not(.guest-mode) #home .home-brand-icon svg{width:27px!important;height:27px!important;display:block!important;fill:currentColor!important}
+ html:not(.guest-mode) #home .home-search-icon{
+   width:23px!important;height:23px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+   transform:none!important;color:#f3f5ff!important;font-size:0!important;flex:0 0 23px!important;
+ }
+ html:not(.guest-mode) #home .home-search-icon svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:2!important;stroke-linecap:round!important}
+ html:not(.guest-mode) #home .hero-search input,
+ html:not(.guest-mode) #home .hero-search input:focus,
+ html:not(.guest-mode) #home .hero-search input:active{
+   background:transparent!important;background-color:transparent!important;background-image:none!important;
+   border:0!important;box-shadow:none!important;outline:0!important;-webkit-appearance:none!important;appearance:none!important;
+   padding:0!important;color:#fff!important;
+ }
+ html:not(.guest-mode) #home .hero-search input::placeholder{color:rgba(239,242,255,.82)!important;opacity:1!important}
+}
+</style>
 </head>
 <body>
 <script>
@@ -622,7 +658,7 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 <div id="customAppSplash" aria-hidden="true"><img src="./splash-viaje-japon.png" alt=""></div>
 <header><h1>🇯🇵 Mi Viaje a Japón</h1><div style="font-size:12px;color:#777;margin-top:4px">v2.2 · offline sync 4 · mapa ficha 3 · relaciones 1 · regalos grupos 1 · búsqueda 1 · mapa general 3 · diseño final 4 · fix imágenes · bloque mejoras 9 · viaje offline</div></header>
 <main>
-<section id="home" class="active"><div class="home-hero"><div class="home-brand"><span class="home-brand-icon" aria-hidden="true">⛩</span><span>Viaje Japón</span></div><div class="hero-search"><span class="home-search-icon" aria-hidden="true">⌕</span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, compras, regalos..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
+<section id="home" class="active"><div class="home-hero"><div class="home-brand"><span class="home-brand-icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M10 10h44v7H10zM15 20h34v6H15zM20 25h7v29h-7zM37 25h7v29h-7zM14 51h36v5H14z"/></svg></span><span>Viaje Japón</span></div><div class="hero-search"><span class="home-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg></span><input type="text" id="heroGlobalSearch" placeholder="Buscar lugares, compras, regalos..." oninput="document.getElementById('globalSearch').value=this.value;globalSearch()"></div></div>
 <div class="search-box"><h2>🔎 Buscar</h2><input type="text" id="globalSearch" placeholder="Buscar personas, regalos, lugares, productos..." oninput="globalSearch()"></div>
 <div id="searchBackWrap" style="display:none;margin:10px 0"><button class="back" type="button" onclick="clearGlobalSearch()">← Volver</button></div><div id="searchResults"></div>
 <div class="grid" id="homeCards">
