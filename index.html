@@ -2652,7 +2652,11 @@ html:not(.guest-mode) #paraMi .product-image-wrap img{max-width:88%!important;ma
  html.guest-mode #photoAlbum .photo-thumb{background:#102033!important;border:1px solid #28435d!important}
 
  /* Mensaje */
- html.guest-mode #mensaje{padding-top:10px!important;margin-top:0!important;min-height:0!important;align-content:start!important}
+ /* Mensaje vive fuera de <main>: cuando está activo, ocultamos el main vacío para que no deje un bloque arriba. */
+ html.guest-mode body:has(#mensaje.active) main{display:none!important}
+ html.guest-mode #mensaje{padding:8px 12px 92px!important;margin:0!important;min-height:0!important;align-content:start!important}
+ /* Invitados sólo ven las zonas cargadas por Rodo/Lu; no pueden agregar zonas desde esta vista. */
+ html.guest-mode #zonas>.add-button,html.guest-mode #addZonePanel{display:none!important}
  html.guest-mode #mensaje .screen-title{margin-bottom:12px!important}
  html.guest-mode #mensaje .request-card{background:linear-gradient(145deg,#102033,#091522)!important;border:1px solid #203b56!important;color:#fff!important;box-shadow:0 12px 28px rgba(0,0,0,.28)!important;border-radius:20px!important;padding:17px!important}
  html.guest-mode #mensaje .request-form label{color:#f5f8fc!important}
