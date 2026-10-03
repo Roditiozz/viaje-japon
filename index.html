@@ -480,6 +480,101 @@ html:not(.guest-mode) .sync-bar{background:#0b1726;color:#dbe7f4;border-color:#2
 }
 </style>
 
+
+<style id="p31-layout-correction">
+/* PRUEBA 31 — corrección visual sobre P30. Sin cambios de lógica/datos. */
+html:not(.guest-mode) main{max-width:760px;padding:0 12px 88px}
+
+/* HOME: compactar y eliminar restos claros */
+html:not(.guest-mode) #home .home-hero{height:235px;border-radius:0 0 24px 24px}
+html:not(.guest-mode) #home .home-hero-title{left:18px;bottom:66px;font-size:25px;line-height:1.05}
+html:not(.guest-mode) #home .hero-search{left:14px;right:14px;bottom:14px;min-height:46px}
+html:not(.guest-mode) #home #homeCards{gap:10px;margin-top:12px}
+html:not(.guest-mode) #home #homeCards .card{min-height:92px;padding:11px 8px;border-radius:16px}
+html:not(.guest-mode) #homeCards .home-card-icon{width:40px;height:40px;border-radius:12px}
+html:not(.guest-mode) #homeCards .card h3{font-size:16px;margin:5px 0 1px}
+html:not(.guest-mode) #homeCards .card p{font-size:12px;margin:0}
+html:not(.guest-mode) .home-zones-mobile{margin:13px 12px 0!important;padding:0!important;background:transparent!important;backdrop-filter:none!important;border-radius:0!important}
+html:not(.guest-mode) .home-zones-mobile h2{font-size:16px;margin-bottom:8px}
+html:not(.guest-mode) .home-zone-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important}
+html:not(.guest-mode) .home-zone-tile{height:82px!important;min-width:0!important;border-radius:12px!important}
+html:not(.guest-mode) .home-zone-tile span{font-size:12px!important;left:7px!important;bottom:7px!important}
+/* Mis pedidos + Fotos recientes: dos tarjetas reales y estables */
+html:not(.guest-mode) #myRequestsHomeCard,
+html:not(.guest-mode) .home-photos-mobile{box-sizing:border-box!important;display:block!important;float:none!important;vertical-align:initial!important;width:calc(50% - 17px)!important;min-width:0!important;height:88px!important;min-height:88px!important;margin-top:13px!important;margin-bottom:0!important;padding:11px!important;overflow:hidden!important;border-radius:15px!important}
+html:not(.guest-mode) #myRequestsHomeCard{margin-left:12px!important;margin-right:5px!important;float:left!important}
+html:not(.guest-mode) .home-photos-mobile{margin-left:5px!important;margin-right:12px!important;float:right!important}
+html:not(.guest-mode) .home-photos-mobile:after{content:"";display:block;clear:both}
+html:not(.guest-mode) #myRequestsHomeCard h3{font-size:14px!important;line-height:1.15!important;margin:0 0 5px!important;white-space:nowrap}
+html:not(.guest-mode) #myRequestsHomeCard p{font-size:10px!important;line-height:1.25!important;margin:0!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+html:not(.guest-mode) .home-photos-mobile .home-photos-head{gap:4px!important}
+html:not(.guest-mode) .home-photos-mobile .home-photos-head h2{font-size:13px!important;line-height:1.15!important;white-space:nowrap}
+html:not(.guest-mode) .home-photos-mobile .photo-link{font-size:10px!important;white-space:nowrap}
+html:not(.guest-mode) .home-photos-mobile .photo-grid{display:block!important;margin-top:5px!important}
+html:not(.guest-mode) .home-photos-mobile .photo-empty{font-size:10px!important;line-height:1.2!important;padding:0!important}
+html:not(.guest-mode) #home:after{content:"";display:block;clear:both}
+
+/* PARA MI / REGALOS: cabecera y presupuesto más compactos */
+html:not(.guest-mode) #paraMi:before,html:not(.guest-mode) #regalos:before{height:118px;margin:0 -12px -92px}
+html:not(.guest-mode) #paraMi>.back,html:not(.guest-mode) #regalos>.back{padding:8px 2px;margin:2px 0 4px;font-size:14px}
+html:not(.guest-mode) #paraMi>.screen-title,html:not(.guest-mode) #regalos>.screen-title{margin-bottom:4px}
+html:not(.guest-mode) #paraMi>.screen-title h2,html:not(.guest-mode) #regalos>.screen-title h2{font-size:20px;text-shadow:0 2px 8px #000}
+html:not(.guest-mode) .budget{border-radius:16px;margin-top:4px}
+html:not(.guest-mode) .budget-box{padding:8px 12px}
+html:not(.guest-mode) .budget-box:first-child{min-height:64px;padding:10px 68px 10px 12px}
+html:not(.guest-mode) .budget-box:first-child:after{right:13px;top:8px;width:42px;height:42px;border-width:5px;font-size:11px}
+html:not(.guest-mode) .budget-box:first-child strong{font-size:22px}
+html:not(.guest-mode) .budget-box strong{font-size:14px}
+html:not(.guest-mode) .budget-box small{font-size:11px}
+html:not(.guest-mode) #paraMi .list,html:not(.guest-mode) #regalos .list{gap:6px!important;margin-top:10px}
+html:not(.guest-mode) .personal-row,html:not(.guest-mode) .gift-row{min-height:64px!important;padding:7px 10px!important;border-radius:12px!important;border:1px solid #203a54!important;margin:0!important}
+html:not(.guest-mode) #personalList .personal-row{border:1px solid #203a54!important;border-radius:12px!important}
+html:not(.guest-mode) .personal-thumb{width:46px!important;height:46px!important}
+html:not(.guest-mode) .row-copy h3{font-size:15px!important;line-height:1.15!important}
+html:not(.guest-mode) .row-copy p{font-size:12px!important;line-height:1.2!important}
+html:not(.guest-mode) .gift-group-card{min-height:64px!important;padding:9px 11px!important;border-radius:13px!important;margin-bottom:7px!important}
+
+/* ZONAS: mantener dirección lograda, pero más compacta */
+html:not(.guest-mode) #zonas{padding-top:0}
+html:not(.guest-mode) #zonas>.back{padding:8px 2px;margin:2px 0 4px}
+html:not(.guest-mode) #zonas>.screen-title{margin-bottom:10px}
+html:not(.guest-mode) #zonas>.screen-title h2{font-size:23px}
+html:not(.guest-mode) #zonas>.screen-title p{font-size:14px;margin-top:2px}
+html:not(.guest-mode) #zonesList{gap:8px!important}
+html:not(.guest-mode) #zonesList .zone-card{height:94px!important;min-height:94px!important;border-radius:15px}
+html:not(.guest-mode) #zonesList .zone-copy{left:13px;bottom:10px}
+html:not(.guest-mode) #zonesList .zone-copy h3{font-size:20px}
+html:not(.guest-mode) #zonesList .zone-copy p{font-size:12px}
+html:not(.guest-mode) #zonesList .zone-arrow{right:10px;top:31px;width:30px;height:30px}
+
+/* MAPA: devolver funcionalidad de zonas, quitar tinte artificial y priorizar mapa */
+html:not(.guest-mode) #mapa>.screen-title:first-of-type{padding-top:8px;margin-bottom:4px;text-align:left}
+html:not(.guest-mode) #mapa>.screen-title:first-of-type h2{font-size:23px}
+html:not(.guest-mode) #mapa>.screen-title:nth-of-type(2){display:none!important}
+html:not(.guest-mode) #mapa>.map-controls:first-of-type{display:flex!important;margin:0 0 7px!important}
+html:not(.guest-mode) #mapa>.map-controls:first-of-type .map-button{padding:8px 11px;border-radius:12px;background:#102238;color:#fff;border:1px solid #27435f}
+html:not(.guest-mode) #mapZoneButtons{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;margin:0 0 6px!important}
+html:not(.guest-mode) #mapZoneButtons .map-button{padding:7px 2px!important;font-size:11px!important;border-radius:10px!important;background:#102238!important;color:#dce9f7!important;border:1px solid #27435f!important}
+html:not(.guest-mode) #mapZoneButtons .map-selected-zone{background:linear-gradient(100deg,#8b2cff,#4d39ee)!important;color:#fff!important;border-color:#9b55ff!important}
+html:not(.guest-mode) #mapTypeFilters{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;padding:0 0 7px!important}
+html:not(.guest-mode) #mapTypeFilters .map-button{padding:7px 2px!important;font-size:11px!important;border-radius:10px!important}
+html:not(.guest-mode) #mapTypeFilters .map-selected-type{background:linear-gradient(100deg,#8b2cff,#4d39ee)!important;color:#fff!important;border-color:#9b55ff!important}
+html:not(.guest-mode) #map{height:calc(100vh - 255px)!important;min-height:430px!important;border-radius:16px!important}
+html:not(.guest-mode) #map .leaflet-tile-pane{filter:brightness(.82) saturate(.88) contrast(1.05)!important}
+
+/* NAVEGACIÓN: un poco más compacta */
+html:not(.guest-mode) .bottom-nav{height:68px!important}
+html:not(.guest-mode) .bottom-nav button{font-size:9px!important;gap:2px!important}
+html:not(.guest-mode) .bottom-nav .nav-icon{width:25px!important;height:25px!important}
+html:not(.guest-mode) .bottom-nav .icon-svg{width:25px!important;height:25px!important}
+html:not(.guest-mode) .sync-bar{bottom:74px!important}
+
+@media(max-width:600px){
+ html:not(.guest-mode) #home .home-hero{height:225px}
+ html:not(.guest-mode) #map{height:calc(100vh - 250px)!important;min-height:420px!important}
+}
+</style>
+
 </head>
 <body>
 <script>

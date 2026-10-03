@@ -1,4 +1,4 @@
-const CACHE_NAME='v30-dark-final';
+const CACHE_NAME='v31-layout-correction';
 const RUNTIME_CACHE='viaje-japon-runtime-v29-guest-install';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png',
