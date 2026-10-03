@@ -1,7 +1,7 @@
-const CACHE_NAME='v39-home-fixed';
-const RUNTIME_CACHE='viaje-japon-runtime-v39-home-fixed';
+const CACHE_NAME='v40-para-regalos';
+const RUNTIME_CACHE='viaje-japon-runtime-v40-para-regalos';
 const APP_SHELL=[
- './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
+ './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png','./para-mi-bg.webp','./regalos-bg.webp',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
