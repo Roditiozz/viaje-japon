@@ -1,4 +1,4 @@
-const CACHE_NAME='v44-final-details';
+const CACHE_NAME='v45-final-details';
 const RUNTIME_CACHE='viaje-japon-runtime-v44-final-details';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',

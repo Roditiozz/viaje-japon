@@ -2563,3 +2563,81 @@ html:not(.guest-mode) #paraMi .product-fallback{width:42px!important;height:42px
 html:not(.guest-mode) #paraMi .product-image-wrap{width:42px!important;height:42px!important;border-radius:10px!important;background:#13263a!important;border:1px solid #2a4660!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important}
 html:not(.guest-mode) #paraMi .product-image-wrap img{max-width:88%!important;max-height:88%!important;width:auto!important;height:auto!important;object-fit:contain!important}
 </style>
+
+<style id="p45-guest-dark-redesign">
+/* P45 — estética invitado. Sólo afecta ?modo=rcoronel / ?modo=ldambra / invitado. */
+@media(max-width:700px){
+ html.guest-mode{background:#050b16!important;color-scheme:dark}
+ html.guest-mode body{background:#050b16!important;color:#f6f8fc!important}
+ html.guest-mode header{display:none!important}
+ html.guest-mode main{padding:0 12px 92px!important;max-width:760px!important}
+ html.guest-mode section{color:#f6f8fc!important}
+ html.guest-mode .screen-title h2,html.guest-mode .screen-title h3{color:#fff!important}
+ html.guest-mode .screen-title p,html.guest-mode .empty,html.guest-mode .photo-empty{color:#91a3b7!important}
+ html.guest-mode .back{background:transparent!important;color:#dbe7f4!important;border:0!important;box-shadow:none!important;padding:12px 2px!important;font-weight:800!important}
+
+ /* Home invitado: mismo lenguaje visual de la app, sin buscador ni accesos de dueño */
+ html.guest-mode #home{margin:0 -12px!important;position:relative!important;min-height:calc(100dvh - 74px)!important;background:#050b16!important;isolation:isolate!important}
+ html.guest-mode #home:before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:420px;background:linear-gradient(180deg,rgba(2,7,18,.03),rgba(2,7,18,.18) 48%,#050b16 100%),url('./home-bg.png') center 36%/cover no-repeat!important}
+ html.guest-mode #home .home-hero{height:118px!important;min-height:118px!important;margin:0!important;padding:15px 18px!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;overflow:visible!important}
+ html.guest-mode #home .home-brand{display:flex!important;align-items:center!important;gap:9px!important;color:#fff!important;font-size:21px!important;font-weight:900!important;text-shadow:0 2px 9px #000!important}
+ html.guest-mode #home .home-brand-icon{width:30px!important;height:30px!important;display:inline-flex!important;color:#ff2847!important;filter:drop-shadow(0 0 1px #fff) drop-shadow(0 1px 5px rgba(0,0,0,.65))!important}
+ html.guest-mode #home .home-brand-icon svg{width:30px!important;height:30px!important;fill:#ff2847!important;overflow:visible!important}
+ html.guest-mode #home .home-brand-icon svg path{fill:#ff2847!important;stroke:#fff!important;stroke-width:1.5!important;paint-order:stroke fill!important}
+ html.guest-mode #home .home-zones-mobile{margin:132px 12px 0!important;padding:0!important;background:transparent!important;backdrop-filter:none!important}
+ html.guest-mode #home .home-zones-head{display:flex!important;align-items:center!important;justify-content:space-between!important;margin-bottom:8px!important}
+ html.guest-mode #home .home-zones-head h2{margin:0!important;color:#fff!important;font-size:17px!important}
+ html.guest-mode #home .home-zones-all{border:0!important;background:transparent!important;color:#c85cff!important;font-weight:800!important;font-size:12px!important;padding:4px!important}
+ html.guest-mode #home .home-zone-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:7px!important}
+ html.guest-mode #home .home-zone-tile{height:104px!important;border-radius:14px!important;overflow:hidden!important;border:1px solid #284763!important;position:relative!important;background:#102033!important;box-shadow:0 7px 18px rgba(0,0,0,.3)!important}
+ html.guest-mode #home .home-zone-tile img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+ html.guest-mode #home .home-zone-tile:after{content:"";position:absolute;inset:42% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.92))}
+ html.guest-mode #home .home-zone-copy{position:absolute!important;z-index:2!important;left:7px!important;right:5px!important;bottom:7px!important;color:#fff!important}
+ html.guest-mode #home .home-zone-copy strong{font-size:11px!important;display:block!important}
+ html.guest-mode #home .home-zone-copy small{font-size:8px!important;color:#dce6f1!important;display:block!important;margin-top:1px!important}
+ html.guest-mode #home .home-activity{margin:16px 12px 0!important}
+ html.guest-mode #home .home-activity>h2{display:none!important}
+ html.guest-mode #home #myRequestsHomeCard{display:none!important}
+ html.guest-mode #home .home-activity-grid{display:block!important}
+ html.guest-mode #home .home-photos-mobile{display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;box-sizing:border-box!important;margin:0!important;padding:15px!important;min-height:78px!important;border-radius:17px!important;background:linear-gradient(145deg,#142641,#0b1727)!important;border:1px solid #2a4562!important;color:#fff!important;box-shadow:0 9px 22px rgba(0,0,0,.24)!important}
+ html.guest-mode #home .home-photos-mobile .activity-icon{width:45px!important;height:45px!important;border-radius:13px!important;display:grid!important;place-items:center!important;background:linear-gradient(145deg,#7c24f5,#b436f0)!important;font-size:22px!important}
+ html.guest-mode #home .activity-copy strong{display:block!important;color:#fff!important;font-size:16px!important}
+ html.guest-mode #home .activity-copy small{display:block!important;color:#9fb0c4!important;font-size:12px!important;margin-top:3px!important}
+ html.guest-mode #home .home-photos-head,html.guest-mode #home .home-photos-mobile>.photo-grid{display:none!important}
+
+ /* Zonas y listados */
+ html.guest-mode #zonas,html.guest-mode #zoneDetail,html.guest-mode #placesList,html.guest-mode #placeDetail,html.guest-mode #photoAlbum{padding-top:2px!important}
+ html.guest-mode #zonesList{grid-template-columns:1fr!important;gap:9px!important}
+ html.guest-mode .zone-card,html.guest-mode .place-row,html.guest-mode #zoneDetail .card{background:linear-gradient(145deg,#102033,#091522)!important;border:1px solid #203b56!important;color:#fff!important;box-shadow:none!important}
+ html.guest-mode .zone-card .zone-copy h3,html.guest-mode .place-row h3,html.guest-mode #zoneDetail .card h3{color:#fff!important}
+ html.guest-mode .zone-card .zone-copy p,html.guest-mode .place-row p,html.guest-mode #zoneDetail .card p{color:#9badc0!important}
+ html.guest-mode .zone-card{border-radius:17px!important;overflow:hidden!important}
+ html.guest-mode .zone-card img{background:#102033!important}
+ html.guest-mode .status-badge{border:1px solid #6f3040!important;background:#351725!important;color:#ff9aad!important}
+
+ /* Ficha y álbum de fotos */
+ html.guest-mode #placeDetail .detail-card,html.guest-mode #placeDetail .photo-card{background:linear-gradient(145deg,#102033,#091522)!important;border:1px solid #203b56!important;color:#fff!important;box-shadow:none!important}
+ html.guest-mode #placeDetail .detail-card h2,html.guest-mode #placeDetail .photo-card h3{color:#fff!important}
+ html.guest-mode #placeDetail .detail-head p,html.guest-mode #placeDetail .photo-card p{color:#91a3b7!important}
+ html.guest-mode #placeDetail .photo-link,html.guest-mode #placeDetail .photo-action{color:#d85cff!important}
+ html.guest-mode #photoAlbum .photo-filter{background:#102033!important;color:#dce7f2!important;border:1px solid #29455f!important}
+ html.guest-mode #photoAlbum .photo-filter.active{background:linear-gradient(135deg,#7d24f5,#b735ee)!important;color:#fff!important;border-color:#b85aff!important}
+ html.guest-mode #photoAlbum .photo-thumb{background:#102033!important;border:1px solid #28435d!important}
+
+ /* Mensaje */
+ html.guest-mode #mensaje{padding-top:58px!important}
+ html.guest-mode #mensaje .screen-title{margin-bottom:12px!important}
+ html.guest-mode #mensaje .request-card{background:linear-gradient(145deg,#102033,#091522)!important;border:1px solid #203b56!important;color:#fff!important;box-shadow:0 12px 28px rgba(0,0,0,.28)!important;border-radius:20px!important;padding:17px!important}
+ html.guest-mode #mensaje .request-form label{color:#f5f8fc!important}
+ html.guest-mode #mensaje .request-form input,html.guest-mode #mensaje .request-form textarea{background:#071421!important;color:#fff!important;border:1px solid #34506d!important;caret-color:#c45cff!important}
+ html.guest-mode #mensaje .request-form input::placeholder,html.guest-mode #mensaje .request-form textarea::placeholder{color:#71849a!important}
+ html.guest-mode #mensaje .request-photo-btn{background:#13263b!important;color:#eaf1f8!important;border:1px solid #2b4967!important}
+ html.guest-mode #mensaje .request-photo-picked{color:#91a3b7!important}
+ html.guest-mode #mensaje .request-send{background:linear-gradient(135deg,#7d24f5,#b735ee)!important;color:#fff!important;box-shadow:0 7px 20px rgba(137,44,255,.24)!important}
+
+ /* Navegación invitado */
+ html.guest-mode .bottom-nav{background:rgba(4,11,22,.97)!important;border-top:1px solid #20364d!important;box-shadow:0 -8px 24px rgba(0,0,0,.22)!important}
+ html.guest-mode .bottom-nav button{color:#8294a8!important;background:transparent!important}
+ html.guest-mode .bottom-nav button.active{color:#b54cff!important;text-shadow:0 0 14px rgba(181,76,255,.45)!important}
+}
+</style>
