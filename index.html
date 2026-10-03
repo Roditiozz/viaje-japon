@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Versión prueba: wishlist + gifts + places sincronizados con Supabase; respaldo local -->
+<!-- Prueba 43: pasada global oscura + fichas + mapa + modales -->
 <html class="home-scroll-lock" lang="es">
 <head>
 <meta charset="UTF-8">
@@ -1810,11 +1810,8 @@ async function saveBudgetEdit(){
 function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);const pp=pb>0?Math.min(100,Math.round(ps/pb*100)):0,gp=gb>0?Math.min(100,Math.round(gs/gb*100)):0;const pbox=document.querySelector('#paraMi .budget-box:first-child'),gbox=document.querySelector('#regalos .budget-box:first-child');if(pbox)pbox.dataset.pct=pp+'%';if(gbox)gbox.dataset.pct=gp+'%';}
 
 const personalVisualImages={
- 'Nintendo Switch':'https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/c_scale,w_400/ncom/en_US/switch/site-design-update/hardware/switch/nintendo-switch-oled-model-white-set/gallery/image01',
- 'Celular Lu':'https://images.samsung.com/is/image/samsung/p6pim/ar/sm-s921bzyjaro/gallery/ar-galaxy-s24-s921-sm-s921bzyjaro-thumb-539322924',
  'Zapatillas / Sandalias':'https://static.nike.com/a/images/t_default/6e7c10f4-4fb5-4c7c-80a8-1e524aa8b49a/air-max-90-shoes.png',
  'Ropa UNIQLO y demás':'https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/465185/item/goods_69_465185.jpg',
- 'Micrófono corbatero':'https://rode.com/images/page/2061/modules/8052/lavalier-go-3-quarter-hero-1080x1080-rgb.png',
  'Perfumes':'https://www.chanel.com/images//t_one///q_auto:good,f_auto,fl_lossy,dpr_1.1/w_1240/n-5-eau-de-parfum-spray-3-4fl-oz--packshot-default-125530-9564914667550.jpg'
 };
 function personalVisualImage(name){return personalVisualImages[name]||'';}
@@ -2486,4 +2483,66 @@ html.home-scroll-lock #home{
   overscroll-behavior:none!important;
   touch-action:pan-x!important;
 }
+
+/* ===== P43 PASADA GLOBAL OSCURA ===== */
+html:not(.guest-mode) #giftList{gap:6px!important;background:transparent!important;border:0!important;border-radius:0!important;overflow:visible!important}
+html:not(.guest-mode) #giftList .gift-row{border:1px solid #203a54!important;border-radius:12px!important;background:linear-gradient(145deg,#102033,#0a1624)!important;margin:0!important}
+html:not(.guest-mode) #regalos .add-button{margin-top:8px!important}
+html:not(.guest-mode) #regalos{padding-bottom:92px!important}
+
+/* fichas de compra/regalo */
+html:not(.guest-mode) #personalDetail .detail-card,html:not(.guest-mode) #giftDetail .detail-card{background:#0d1d2e!important;border:1px solid #203a54!important;color:#f5f7fb!important;box-shadow:none!important}
+html:not(.guest-mode) #personalDetail .detail-product-image,html:not(.guest-mode) #giftDetail .detail-product-image{height:150px!important;margin:0 0 12px!important;border:0!important;border-radius:16px!important;background:linear-gradient(145deg,#13283e,#0a1726)!important}
+html:not(.guest-mode) #personalDetail .product-image-wrap,html:not(.guest-mode) #personalDetail .detail-image-wrap{background:transparent!important;border:0!important}
+html:not(.guest-mode) #personalDetail .detail-product-image img{max-height:125px!important;max-width:78%!important;object-fit:contain!important}
+html:not(.guest-mode) #personalDetail .detail-fallback,html:not(.guest-mode) #giftDetail .detail-product-image>div{font-size:64px!important;background:transparent!important;border:0!important}
+html:not(.guest-mode) #personalDetail .detail-form-row,html:not(.guest-mode) #giftDetail .detail-form-row{border-bottom:1px solid #203a54!important;padding:11px 0!important}
+html:not(.guest-mode) #personalDetail .status-btn,html:not(.guest-mode) #giftDetail .status-btn{background:#24143f!important;color:#f4eaff!important;border:1px solid #7135bd!important;border-radius:12px!important;padding:9px 13px!important}
+html:not(.guest-mode) #personalDetail .gift-total-box,html:not(.guest-mode) #giftDetail .gift-total-box{background:linear-gradient(135deg,#27134a,#111d33)!important;color:#fff!important;border:1px solid #5930a3!important;border-radius:14px!important}
+html:not(.guest-mode) #giftDetail .gift-total-box{background:linear-gradient(135deg,#4a1230,#171626)!important;border-color:#9a285e!important}
+html:not(.guest-mode) .gift-add-item{background:linear-gradient(135deg,#7c24f5,#b436f0)!important;color:#fff!important;border:1px solid #b95aff!important;border-radius:12px!important}
+html:not(.guest-mode) .gift-item-row{background:#102033!important;border:1px solid #203a54!important;color:#fff!important}
+html:not(.guest-mode) .gift-item-row small{color:#a9b8ca!important}
+html:not(.guest-mode) .gift-empty-items{color:#8192a8!important;padding:18px 8px!important}
+html:not(.guest-mode) #personalDetail .manage-actions,html:not(.guest-mode) #giftDetail .manage-actions{margin-top:12px!important}
+
+/* modal agregar compra: legible y por encima de todo */
+html:not(.guest-mode) .budget-editor{z-index:12000!important;background:rgba(1,7,16,.82)!important;pointer-events:auto!important}
+html:not(.guest-mode) .budget-editor.open{display:flex!important}
+html:not(.guest-mode) .budget-editor-card{background:#0d1d2e!important;color:#fff!important;border:1px solid #2b4662!important;box-shadow:0 20px 60px rgba(0,0,0,.55)!important}
+html:not(.guest-mode) .budget-editor-card p{color:#9fb0c4!important}
+html:not(.guest-mode) .budget-editor-card input,html:not(.guest-mode) .gift-add-modal-fields input{background:#071421!important;color:#fff!important;border:1px solid #34506d!important;caret-color:#c45cff!important;font-size:16px!important}
+html:not(.guest-mode) .budget-editor-card input::placeholder,html:not(.guest-mode) .gift-add-modal-fields input::placeholder{color:#71849a!important}
+html:not(.guest-mode) .budget-editor-card .add-primary{background:linear-gradient(135deg,#7d24f5,#b735ee)!important;color:#fff!important}
+html:not(.guest-mode) .budget-editor-card .add-secondary{background:#16283b!important;color:#dbe6f2!important;border:1px solid #2b4662!important}
+
+/* mapa compacto */
+html:not(.guest-mode) #mapa>.screen-title{margin:0 0 6px!important}
+html:not(.guest-mode) #mapa>.screen-title h2{font-size:25px!important}
+html:not(.guest-mode) #mapa>.map-controls:first-of-type{display:flex!important;margin:0 auto 8px!important;justify-content:center!important}
+html:not(.guest-mode) #mapa>.map-controls:first-of-type .map-button{width:auto!important;padding:8px 14px!important;background:#13263b!important;color:#fff!important;border:1px solid #2a4765!important;border-radius:12px!important;font-size:14px!important}
+html:not(.guest-mode) #mapa>.map-controls:first-of-type:after{display:none!important}
+html:not(.guest-mode) #mapa>.screen-title:nth-of-type(2){display:block!important;text-align:center!important;margin:4px 0 5px!important}
+html:not(.guest-mode) #mapa>.screen-title:nth-of-type(2) h3{margin:0!important;font-size:17px!important}
+html:not(.guest-mode) #mapZoneButtons{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important;margin-bottom:6px!important}
+html:not(.guest-mode) #mapZoneButtons .map-button,html:not(.guest-mode) #mapTypeFilters .map-button{margin:0!important;padding:8px 5px!important;font-size:13px!important;background:#102238!important;color:#eaf1f8!important;border:1px solid #27435f!important}
+html:not(.guest-mode) #mapTypeFilters{grid-template-columns:repeat(4,1fr)!important;gap:6px!important;margin:0 0 7px!important}
+html:not(.guest-mode) #mapTripMessage{margin:4px 0!important}
+
+/* fichas de lugares */
+html:not(.guest-mode) #placeDetail .detail-card,html:not(.guest-mode) #placeDetail .photo-card{background:#0d1d2e!important;border:1px solid #203a54!important;color:#f5f7fb!important;box-shadow:none!important}
+html:not(.guest-mode) #placeDetail .detail-head p,html:not(.guest-mode) #placeDetail .photo-card p,html:not(.guest-mode) #placeDetail .photo-empty{color:#91a3b7!important}
+html:not(.guest-mode) #placeDetail .type-tile{background:#10243a!important;color:#f5f7fb!important;border:1px solid #284660!important;border-radius:14px!important}
+html:not(.guest-mode) #placeDetail .type-tile:active{background:#182f48!important}
+html:not(.guest-mode) #placeDetail .status-btn{background:#251540!important;color:#f2e8ff!important;border:1px solid #7135bd!important}
+html:not(.guest-mode) #placeDetail .place-google-only .map-button{background:#172b41!important;color:#fff!important;border:1px solid #315270!important}
+html:not(.guest-mode) #placeDetail .edit-btn{background:#172b41!important;color:#e9f3ff!important;border:1px solid #315270!important}
+html:not(.guest-mode) #placeDetail .delete-btn{background:#351725!important;color:#ff9aad!important;border:1px solid #713044!important}
+html:not(.guest-mode) #placeDetail .photo-action{background:#172b41!important;color:#fff!important;border:1px solid #315270!important}
+html:not(.guest-mode) #placeDetail .photo-thumb{background:#102238!important}
+
+/* iconos de Para mí: siempre contenidos, sin recortes blancos */
+html:not(.guest-mode) #paraMi .product-fallback{width:42px!important;height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important;border-radius:10px!important;background:linear-gradient(145deg,#172c42,#0d1c2c)!important;border:1px solid #2a4660!important;font-size:24px!important;overflow:hidden!important}
+html:not(.guest-mode) #paraMi .product-image-wrap{width:42px!important;height:42px!important;border-radius:10px!important;background:#13263a!important;border:1px solid #2a4660!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important}
+html:not(.guest-mode) #paraMi .product-image-wrap img{max-width:88%!important;max-height:88%!important;width:auto!important;height:auto!important;object-fit:contain!important}
 </style>
