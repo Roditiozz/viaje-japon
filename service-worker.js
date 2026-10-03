@@ -1,5 +1,5 @@
-const CACHE_NAME='v50-foto-video';
-const RUNTIME_CACHE='viaje-japon-runtime-v50-foto-video';
+const CACHE_NAME='v51-foto-grabar';
+const RUNTIME_CACHE='viaje-japon-runtime-v51-foto-grabar';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
