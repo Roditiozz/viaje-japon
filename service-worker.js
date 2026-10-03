@@ -1,5 +1,5 @@
-const CACHE_NAME='v37-home-group-lower';
-const RUNTIME_CACHE='viaje-japon-runtime-v37-home-group-lower';
+const CACHE_NAME='v38-home-no-scroll';
+const RUNTIME_CACHE='viaje-japon-runtime-v38-home-no-scroll';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
