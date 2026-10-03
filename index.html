@@ -732,6 +732,59 @@ html:not(.guest-mode) .sync-bar{bottom:74px!important}
   html:not(.guest-mode) #paraMi>.budget .budget-box strong, html:not(.guest-mode) #regalos>.budget .budget-box strong{font-size:13px!important;color:#fff!important}
 }
 </style>
+
+<style id="p42-listas-compactas">
+/* P42: listas Para mí/Regalos + pull-to-refresh mínimo en Home. */
+@media(max-width:700px){
+  /* Para mí: quitar el contenedor blanco heredado y acercar las filas. */
+  html:not(.guest-mode) #personalList{
+    display:flex!important;flex-direction:column!important;gap:5px!important;
+    margin-top:8px!important;background:transparent!important;border:0!important;
+    border-radius:0!important;overflow:visible!important;
+  }
+  html:not(.guest-mode) #personalList .personal-row{
+    min-height:62px!important;padding:6px 9px!important;margin:0!important;
+    border:1px solid #203a54!important;border-radius:12px!important;
+    background:linear-gradient(145deg,#102033 0%,#0a1624 100%)!important;
+    grid-template-columns:50px 1fr auto!important;gap:9px!important;
+  }
+  /* La imagen queda contenida en una baldosa oscura/translúcida, nunca blanca. */
+  html:not(.guest-mode) #personalList .product-image-wrap,
+  html:not(.guest-mode) #personalList .product-fallback{
+    width:46px!important;height:46px!important;box-sizing:border-box!important;
+    border-radius:10px!important;overflow:hidden!important;
+    background:linear-gradient(145deg,rgba(38,57,78,.96),rgba(14,28,44,.96))!important;
+    border:1px solid rgba(119,151,181,.24)!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+  }
+  html:not(.guest-mode) #personalList .product-image-wrap img{
+    width:100%!important;height:100%!important;display:block!important;
+    object-fit:contain!important;padding:3px!important;box-sizing:border-box!important;
+    background:transparent!important;
+  }
+  html:not(.guest-mode) #personalList .product-fallback{font-size:25px!important}
+  html:not(.guest-mode) #personalList .row-copy h3{margin:0 0 2px!important}
+  html:not(.guest-mode) #personalList .row-copy p{margin:1px 0 0!important}
+
+  /* Regalos: misma tarjeta actual, solamente reducir separación vertical. */
+  html:not(.guest-mode) #regalos .gift-group-vertical{display:flex!important;flex-direction:column!important;gap:5px!important}
+  html:not(.guest-mode) #regalos .gift-group-card{
+    min-height:62px!important;margin:0!important;padding:8px 11px!important;
+  }
+}
+
+/* Home: mantener el diseño aprobado pero permitir el gesto nativo de recarga. */
+html.home-scroll-lock,html.home-scroll-lock body{
+  overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto!important;
+}
+html.home-scroll-lock body{
+  position:static!important;inset:auto!important;width:100%!important;height:auto!important;min-height:100dvh!important;
+}
+html.home-scroll-lock #home{
+  overflow:visible!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;
+}
+</style>
+
 </head>
 <body>
 <script>

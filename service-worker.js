@@ -1,5 +1,5 @@
-const CACHE_NAME='v41-para-regalos-fixed';
-const RUNTIME_CACHE='viaje-japon-runtime-v41-para-regalos-fixed';
+const CACHE_NAME='v42-listas-compactas';
+const RUNTIME_CACHE='viaje-japon-runtime-v42-listas-compactas';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
