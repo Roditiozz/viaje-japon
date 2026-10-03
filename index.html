@@ -1457,6 +1457,7 @@ const visualImages={
     'teamLab':'https://image.co-trip.jp/content/14renewal_images_l/610996/sectionImage_11_1_20230404154902366.jpg',
     'Acuario Osaka':'https://www.kintetsu-re.co.jp/zzzzhotel/osaka-namba/data/sightseeing/%E6%B5%B7%E9%81%8A%E9%A4%A8%E5%A4%96%E8%A6%B3.jpg',
     'Pokémon Center Osaka':'https://img.wongnai.com/p/1920x0/2019/10/22/6f5a6a649c8946179ddc19e475024c49.jpg',
+    'Pokémon Center Tokio':'https://img.wongnai.com/p/1920x0/2019/10/22/6f5a6a649c8946179ddc19e475024c49.jpg',
     'Sensō-ji':'https://media.odynovotours.com/thumbnail/tour/78000/02845026420896299885/a-main-gate-of-sensoji-temple-in-asakusa-tokyo-daytime_76791-950w.jpg',
     'Shibuya':'https://res.cloudinary.com/jnto/image/upload/w_600%2Cfl_lossy%2Cf_auto%2Cq_auto%2Cc_scale/v1/media/filer_public/e6/77/e677316d-2fc9-424c-8b75-90ccb38ba3fe/ij8xtxmq_srovvl',
     'teamLab Planets':'https://www.japanmanifest.com/static/image/Colorful_rainbow_lighting_at_teamLab_Planets.jpg',
@@ -1903,7 +1904,7 @@ function personalVisualMarkup(name,detail=false){
   const url=personalVisualImage(name);
   const icon=personalVisualIcon(name);
   if(!url)return `<div class="product-fallback ${detail?'detail-fallback':''}">${icon}</div>`;
-  return `<div class="product-image-wrap ${detail?'detail-image-wrap':''}"><img src="${url}" alt="${esc(name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="product-fallback ${detail?'detail-fallback':''}" style="display:none">${icon}</div></div>`;
+  return `<div class="product-image-wrap ${detail?'detail-image-wrap':''}"><img src="${url}" alt="${esc(name)}" loading="lazy"></div>`;
 }
 function personalVisualIcon(name){
  const n=normalizedSearchText(name);

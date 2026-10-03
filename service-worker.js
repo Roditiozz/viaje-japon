@@ -1,5 +1,5 @@
-const CACHE_NAME='v53-imagenes-finales';
-const RUNTIME_CACHE='viaje-japon-runtime-v53-imagenes-finales';
+const CACHE_NAME='v54-imagenes-fix';
+const RUNTIME_CACHE='viaje-japon-runtime-v54-imagenes-fix';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
