@@ -356,7 +356,131 @@ html.guest-mode .bottom-nav button[data-nav="mensaje"]{display:flex!important;fl
 html.guest-mode .bottom-nav button[data-nav="mensaje"] .nav-icon{display:flex!important;align-items:center;justify-content:center;width:28px;height:28px}
 html.guest-mode .bottom-nav button[data-nav="mensaje"] .icon-svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 html.guest-mode .bottom-nav button[data-nav="mensaje"] .nav-label{display:block!important;font-size:12px!important;line-height:1.1!important;font-weight:700!important}
-</style></head>
+</style>
+<style id="p30-dark-final">
+/* PRUEBA 30 — Diseño final oscuro. Solo modos Rodo/Lu; lógica intacta. */
+html:not(.guest-mode){--p30-bg:#050b16;--p30-surface:#0b1726;--p30-surface2:#102033;--p30-line:#213b56;--p30-text:#f7fbff;--p30-muted:#9badc0;--p30-purple:#8b2cff;--p30-blue:#168dff;--p30-pink:#ec268f}
+html:not(.guest-mode) body{background:radial-gradient(circle at 20% 0,#17204a 0,#08111f 26%,#050b16 58%);color:var(--p30-text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+html:not(.guest-mode) header{display:none}
+html:not(.guest-mode) main{max-width:760px;padding:0 12px 100px}
+html:not(.guest-mode) section{color:var(--p30-text)}
+html:not(.guest-mode) .screen-title h2{color:#fff;font-size:26px;margin:0 0 4px}
+html:not(.guest-mode) .screen-title p{color:var(--p30-muted)}
+html:not(.guest-mode) .back{background:transparent;color:#dbe8f5;border:0;box-shadow:none;padding:12px 2px;margin:4px 0 8px;font-size:15px}
+html:not(.guest-mode) .card,html:not(.guest-mode) .item,html:not(.guest-mode) .detail-card,html:not(.guest-mode) .search-box,html:not(.guest-mode) .photo-card,html:not(.guest-mode) .request-card,html:not(.guest-mode) .add-panel{background:linear-gradient(145deg,#102033,#091522);color:#fff;border:1px solid var(--p30-line);box-shadow:0 10px 24px rgba(0,0,0,.20)}
+html:not(.guest-mode) .item p,html:not(.guest-mode) .card p,html:not(.guest-mode) .photo-empty,html:not(.guest-mode) .empty{color:var(--p30-muted)}
+html:not(.guest-mode) .empty{background:#0b1726;border:1px solid var(--p30-line)}
+
+/* HOME */
+html:not(.guest-mode) #home{margin:0 -12px}
+html:not(.guest-mode) #home .home-hero{height:315px;margin:0;border-radius:0 0 30px 30px;background:linear-gradient(180deg,rgba(2,7,18,.06) 0%,rgba(3,8,20,.10) 45%,rgba(3,8,20,.94) 100%),url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v1772697600/dealsaway/994/trip/994/product_photo/shutterstock_24560084331729728808185_lusz2u.jpg') center 42%/cover!important;border-bottom:1px solid #27476a;box-shadow:0 16px 36px rgba(0,0,0,.38)}
+html:not(.guest-mode) #home .home-hero-title{left:20px;bottom:80px;font-size:32px;line-height:1.03;color:#fff;text-shadow:0 3px 14px #000}
+html:not(.guest-mode) #home .hero-search{left:16px;right:16px;bottom:18px;background:rgba(10,21,36,.88);border:1px solid #385879;color:#fff;backdrop-filter:blur(12px);box-shadow:none}
+html:not(.guest-mode) #home .hero-search input{color:#fff}
+html:not(.guest-mode) #home .hero-search input::placeholder{color:#aab8c9}
+html:not(.guest-mode) #home>#searchResults,html:not(.guest-mode) #home>#searchBackWrap{margin-left:12px;margin-right:12px}
+html:not(.guest-mode) #home #homeCards{display:grid!important;grid-template-columns:1fr 1fr;gap:12px;margin:14px 12px 0}
+html:not(.guest-mode) #home #homeCards .card:nth-child(n+3){display:none!important}
+html:not(.guest-mode) #home #homeCards .card{min-height:110px;padding:14px 8px;border-radius:17px;text-align:center;align-items:center;background:linear-gradient(145deg,#15213a,#0a1424)!important;border:1px solid #593bd0;box-shadow:inset 0 0 26px rgba(120,43,255,.10)}
+html:not(.guest-mode) #home #homeCards .card:nth-child(2){border-color:#b72d88;box-shadow:inset 0 0 26px rgba(236,38,143,.10)}
+html:not(.guest-mode) #homeCards .home-card-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#b31aff,#5d38ff);color:#fff!important}
+html:not(.guest-mode) #homeCards .card:nth-child(2) .home-card-icon{background:linear-gradient(145deg,#ff6a24,#ef208c)}
+html:not(.guest-mode) #homeCards .card h3{color:#fff;margin:7px 0 2px;font-size:18px}
+html:not(.guest-mode) #homeCards .card p{color:#aebbd0}
+html:not(.guest-mode) .home-zones-mobile{margin:16px 12px 0}
+html:not(.guest-mode) .home-zones-mobile h2{font-size:17px;margin:0 0 9px;color:#fff}
+html:not(.guest-mode) .home-zone-grid{gap:7px}
+html:not(.guest-mode) .home-zone-tile{height:105px;border-radius:13px;border:1px solid #284763;box-shadow:0 6px 16px rgba(0,0,0,.28)}
+html:not(.guest-mode) .home-zone-tile:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.9))}
+html:not(.guest-mode) .home-zone-tile span{z-index:2;color:#fff;font-weight:800;text-shadow:0 2px 5px #000}
+html:not(.guest-mode) #myRequestsHomeCard{display:inline-block;vertical-align:top;width:calc(50% - 19px);margin:16px 4px 0 12px!important;min-height:92px;padding:14px!important;border-radius:16px!important;background:linear-gradient(145deg,#251454,#0c1b30)!important}
+html:not(.guest-mode) #myRequestsHomeCard h3{font-size:16px;margin:0 0 8px;color:#fff}
+html:not(.guest-mode) #myRequestsHomeCard p{font-size:12px!important;color:#aebbd0!important}
+html:not(.guest-mode) .home-photos-mobile{display:inline-block;vertical-align:top;width:calc(50% - 19px);margin:16px 12px 0 4px;padding:13px!important;min-height:92px;border:1px solid var(--p30-line);border-radius:16px;background:linear-gradient(145deg,#13253a,#0a1624)}
+html:not(.guest-mode) .home-photos-mobile .home-photos-head h2{font-size:15px;margin:0;color:#fff}
+html:not(.guest-mode) .home-photos-mobile .photo-link{font-size:11px;color:#e059c4}
+html:not(.guest-mode) .home-photos-mobile .photo-grid{margin-top:8px}
+html:not(.guest-mode) .home-photos-mobile .photo-empty{font-size:12px;padding:4px 0}
+html:not(.guest-mode) .welcome-strip{display:none}
+
+/* PARA MI / REGALOS */
+html:not(.guest-mode) #paraMi,html:not(.guest-mode) #regalos{padding-top:0}
+html:not(.guest-mode) #paraMi:before,html:not(.guest-mode) #regalos:before{content:"";display:block;height:150px;margin:0 -12px -118px;background-position:center;background-size:cover;opacity:.96;pointer-events:none}
+html:not(.guest-mode) #paraMi:before{background-image:linear-gradient(180deg,rgba(3,8,20,.12),#050b16 94%),url('https://www.travelchinaguide.com/images/photogallery/2023/1114113925.jpg')}
+html:not(.guest-mode) #regalos:before{background-image:linear-gradient(180deg,rgba(40,0,15,.10),#050b16 94%),url('https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v1772697600/dealsaway/994/trip/994/product_photo/shutterstock_24560084331729728808185_lusz2u.jpg')}
+html:not(.guest-mode) #paraMi>.back,html:not(.guest-mode) #regalos>.back,html:not(.guest-mode) #paraMi>.screen-title,html:not(.guest-mode) #regalos>.screen-title{position:relative;z-index:2}
+html:not(.guest-mode) #paraMi>.screen-title p,html:not(.guest-mode) #regalos>.screen-title p{display:none}
+html:not(.guest-mode) .budget{position:relative;z-index:2;padding:0;border-radius:18px;overflow:hidden;background:#0b1726;border:1px solid #463e8f;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+html:not(.guest-mode) #regalos .budget{border-color:#7b285a}
+html:not(.guest-mode) .budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+html:not(.guest-mode) .budget-box{background:#0c1928;border:0;border-radius:0;padding:10px 14px;color:#fff;border-top:1px solid rgba(255,255,255,.07)}
+html:not(.guest-mode) .budget-box:first-child{grid-column:1/-1;min-height:78px;padding:13px 82px 13px 14px;background:linear-gradient(110deg,#6633dc,#2d1b73);border:0;position:relative}
+html:not(.guest-mode) #regalos .budget-box:first-child{background:linear-gradient(110deg,#a51b61,#541334)}
+html:not(.guest-mode) .budget-box:first-child:after{content:attr(data-pct);position:absolute;right:16px;top:12px;width:48px;height:48px;border:6px solid rgba(255,255,255,.28);border-top-color:#c758ff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800}
+html:not(.guest-mode) #regalos .budget-box:first-child:after{border-top-color:#ff4a9d}
+html:not(.guest-mode) .budget-box small{color:#c9d4e3;margin-bottom:2px}
+html:not(.guest-mode) .budget-box strong{font-size:15px;color:#fff}
+html:not(.guest-mode) .budget-box:first-child strong{font-size:25px}
+html:not(.guest-mode) .budget-box:nth-child(4){grid-column:1/-1}
+html:not(.guest-mode) #paraMi .list,html:not(.guest-mode) #regalos .list{gap:7px}
+html:not(.guest-mode) .personal-row,html:not(.guest-mode) .gift-row{min-height:72px;padding:9px 12px;border-radius:13px;background:linear-gradient(145deg,#102033,#0a1624);border-color:#203a54}
+html:not(.guest-mode) .row-copy h3{color:#fff;font-size:16px}
+html:not(.guest-mode) .row-copy p{color:#9fb0c3!important}
+html:not(.guest-mode) .row-chevron{color:#dcecff}
+html:not(.guest-mode) .gift-group-card{background:linear-gradient(145deg,#102033,#0a1624)!important;border:1px solid #203a54!important;color:#fff!important;box-shadow:none!important}
+html:not(.guest-mode) .gift-group-card p{color:#9fb0c3!important}
+html:not(.guest-mode) #regalos>.search-box{background:#0b1726;border-color:#203a54;padding:10px 12px}
+html:not(.guest-mode) #regalos>.search-box h2{display:none}
+html:not(.guest-mode) .search-box input,html:not(.guest-mode) input,html:not(.guest-mode) select,html:not(.guest-mode) textarea{background:#081421!important;color:#fff!important;border-color:#29445f!important}
+html:not(.guest-mode) .add-button{background:transparent!important;color:#fff!important;border:1px solid #47617b!important}
+
+/* ZONAS */
+html:not(.guest-mode) #zonas{padding-top:4px}
+html:not(.guest-mode) #zonesList{gap:9px!important}
+html:not(.guest-mode) #zonesList .zone-card{height:112px;min-height:112px!important;display:block!important;position:relative;border-radius:17px;overflow:hidden;padding:0!important;border:1px solid #284763!important;background:#0b1726!important}
+html:not(.guest-mode) #zonesList .zone-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.08) contrast(1.05)}
+html:not(.guest-mode) #zonesList .zone-card:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,7,16,.88) 0%,rgba(2,7,16,.30) 62%,rgba(2,7,16,.58) 100%)}
+html:not(.guest-mode) #zonesList .zone-copy{position:absolute;z-index:2;left:14px;bottom:13px;padding:0}
+html:not(.guest-mode) #zonesList .zone-copy h3{font-size:23px;color:#fff;margin:0 0 2px}
+html:not(.guest-mode) #zonesList .zone-copy p{color:#fff;font-size:13px}
+html:not(.guest-mode) #zonesList .zone-arrow{position:absolute;z-index:3;right:12px;top:40px;width:31px;height:31px;border-radius:50%;background:rgba(5,11,22,.72);display:grid;place-items:center;color:#fff;font-size:24px}
+html:not(.guest-mode) #zonesList .photo-count{color:#ff4c8f}
+
+/* MAPA: ocupa casi toda la pantalla; tiles existentes oscurecidos sin cambiar proveedor */
+html:not(.guest-mode) #mapa>.back{display:none}
+html:not(.guest-mode) #mapa>.screen-title:first-of-type{padding-top:12px;margin-bottom:6px}
+html:not(.guest-mode) #mapa>.screen-title:first-of-type p,html:not(.guest-mode) #mapa>.screen-title:nth-of-type(2),html:not(.guest-mode) #mapa>.map-controls:first-of-type,html:not(.guest-mode) #mapZoneButtons{display:none!important}
+html:not(.guest-mode) #mapTypeFilters{display:flex!important;background:transparent;border:0;box-shadow:none;padding:4px 0 8px;margin:0!important;gap:7px}
+html:not(.guest-mode) #mapTypeFilters .map-button{background:#102238;color:#dce9f7;border:1px solid #27435f;border-radius:999px;padding:9px 13px}
+html:not(.guest-mode) #mapTypeFilters .map-button:first-child{background:linear-gradient(100deg,#8b2cff,#4d39ee);border-color:#9b55ff;color:#fff}
+html:not(.guest-mode) #mapTripMessage{display:none}
+html:not(.guest-mode) #map{height:calc(100vh - 180px)!important;min-height:560px;border-radius:20px;border:1px solid #27527c;box-shadow:0 14px 34px rgba(0,0,0,.38);background:#06101d}
+html:not(.guest-mode) #map .leaflet-tile-pane{filter:brightness(.63) saturate(.82) contrast(1.22) hue-rotate(175deg)}
+html:not(.guest-mode) #map .leaflet-control-zoom a{background:#102238;color:#fff;border-color:#2d4b68}
+
+/* PEDIDOS / FOTOS */
+html:not(.guest-mode) #misPedidos{padding-top:10px}
+html:not(.guest-mode) #misPedidos .request-item{background:#0d1b2a!important;border:1px solid #243e58!important;color:#fff!important;border-radius:16px!important}
+html:not(.guest-mode) #misPedidos .empty{min-height:145px;display:grid;place-items:center;border-radius:18px;color:#a9b8ca;background:linear-gradient(145deg,#102033,#0a1624)}
+html:not(.guest-mode) #photoAlbum{padding-top:4px}
+html:not(.guest-mode) .photo-filter{background:#102238!important;color:#dce9f7!important;border-color:#29445f!important}
+html:not(.guest-mode) .photo-filter.active{background:linear-gradient(100deg,#8b2cff,#4d39ee)!important;color:#fff!important}
+
+/* NAVEGACION */
+html:not(.guest-mode) .bottom-nav{height:76px;background:rgba(5,11,22,.97);border-top:1px solid #1e3852;box-shadow:0 -10px 28px rgba(0,0,0,.36);backdrop-filter:blur(15px)}
+html:not(.guest-mode) .bottom-nav button{color:#8394a8;font-size:10px}
+html:not(.guest-mode) .bottom-nav svg{stroke:currentColor}
+html:not(.guest-mode) .bottom-nav button.active{background:transparent;color:#fff;text-shadow:0 0 12px #a642ff}
+html:not(.guest-mode) .bottom-nav button.active svg{filter:drop-shadow(0 0 6px #8b2cff);stroke:#a34cff}
+html:not(.guest-mode) .sync-bar{background:#0b1726;color:#dbe7f4;border-color:#29445f;bottom:82px}
+@media(max-width:600px){
+ html:not(.guest-mode) main{padding-left:12px;padding-right:12px}
+ html:not(.guest-mode) #home .home-hero{height:300px}
+ html:not(.guest-mode) #map{height:calc(100vh - 174px)!important;min-height:510px}
+}
+</style>
+
+</head>
 <body>
 <script>
 const urlMode=new URLSearchParams(window.location.search).get('modo');
@@ -384,12 +508,12 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 <div class="home-zone-tile" onclick="showZone('Kamakura')"><img src="https://asset.gtn.co.jp/magazine/uploads/2025/06/image-151.jpg"><span>Kamakura</span></div>
 </div></div><div class="home-photos-mobile"><div class="home-photos-head"><h2>📷 Fotos recientes</h2><button class="photo-link" onclick="openPhotoAlbum()">Ver todas</button></div><div id="homeRecentPhotos" class="photo-grid"><div class="photo-empty">Todavía no hay fotos.</div></div></div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
 
-<section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" onclick="openBudgetEditor('personal')"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div>
+<section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" data-pct="0%" onclick="openBudgetEditor('personal')"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div>
 <button class="add-button" type="button" onclick="toggleAddPanel('addPersonalPanel')">＋ Agregar compra</button>
 <div class="add-panel" id="addPersonalPanel"><h3>Nueva compra</h3><label>Nombre</label><input id="newPersonalName" placeholder="Ej.: Auriculares"><label>Cantidad (opcional)</label><input id="newPersonalQty" placeholder="Ej.: 1"><label>Presupuesto máximo (opcional)</label><input id="newPersonalBudget" type="number" min="0" placeholder="¥"><div class="add-actions"><button class="add-primary" onclick="addPersonalItem()">Guardar</button><button class="add-secondary" onclick="toggleAddPanel('addPersonalPanel',false)">Cancelar</button></div></div>
 </section>
 
-<section id="regalos"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" onclick="openBudgetEditor('gifts')"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div>
+<section id="regalos"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" data-pct="0%" onclick="openBudgetEditor('gifts')"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div>
 <button class="add-button" type="button" onclick="toggleAddPanel('addGiftPanel')">＋ Agregar regalo / persona</button>
 <div class="add-panel" id="addGiftPanel"><h3>Nuevo regalo</h3><label>Persona</label><input id="newGiftPerson" placeholder="Nombre"><label>Grupo</label><select id="newGiftGroup"><option>Familia Lu</option><option>Familia Rodo</option><option>Amigos Lu</option><option>Amigos Rodo</option><option>Trabajo</option></select><label>Interés (opcional)</label><input id="newGiftInterest" placeholder="Ej.: Anime"><label>Idea (opcional)</label><input id="newGiftIdea" placeholder="Ej.: Figura"><div class="add-actions"><button class="add-primary" onclick="addGiftItem()">Guardar</button><button class="add-secondary" onclick="toggleAddPanel('addGiftPanel',false)">Cancelar</button></div></div>
 </section>
@@ -1370,7 +1494,7 @@ async function saveBudgetEdit(){
   }
  }catch(e){console.warn('Presupuesto guardado localmente; nube pendiente/no compatible:',e?.message||e);}
 }
-function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);}
+function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);const pp=pb>0?Math.min(100,Math.round(ps/pb*100)):0,gp=gb>0?Math.min(100,Math.round(gs/gb*100)):0;const pbox=document.querySelector('#paraMi .budget-box:first-child'),gbox=document.querySelector('#regalos .budget-box:first-child');if(pbox)pbox.dataset.pct=pp+'%';if(gbox)gbox.dataset.pct=gp+'%';}
 
 const personalVisualImages={
  'Nintendo Switch':'https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/c_scale,w_400/ncom/en_US/switch/site-design-update/hardware/switch/nintendo-switch-oled-model-white-set/gallery/image01',
