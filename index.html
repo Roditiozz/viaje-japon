@@ -645,6 +645,52 @@ html:not(.guest-mode) .sync-bar{bottom:74px!important}
  html:not(.guest-mode) #home .hero-search input::placeholder{color:rgba(239,242,255,.82)!important;opacity:1!important}
 }
 </style>
+
+<style id="p35-home-03-06">
+/* P35 — HOME-03 a HOME-06. Mantiene fondo y buscador aprobados. */
+@media(max-width:700px){
+  /* HOME-03: torii rojo con borde claro para separarlo del fondo */
+  html:not(.guest-mode) #home .home-brand-icon{
+    width:30px!important;height:30px!important;color:#ff2847!important;
+    filter:drop-shadow(0 0 1px #fff) drop-shadow(0 1px 5px rgba(0,0,0,.65))!important;
+  }
+  html:not(.guest-mode) #home .home-brand-icon svg{width:30px!important;height:30px!important;overflow:visible!important}
+  html:not(.guest-mode) #home .home-brand-icon svg path{fill:#ff2847!important;stroke:rgba(255,255,255,.95)!important;stroke-width:1.5!important;paint-order:stroke fill!important;stroke-linejoin:round!important}
+
+  /* HOME-04: mismo tamaño de tarjetas; más abajo y más juntas */
+  html:not(.guest-mode) #home #homeCards{margin:70px 12px 0!important;gap:7px!important}
+
+  /* HOME-05: Zonas destacadas */
+  html:not(.guest-mode) #home .home-zones-mobile{margin:14px 12px 0!important}
+  html:not(.guest-mode) #home .home-zones-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin-bottom:8px!important}
+  html:not(.guest-mode) #home .home-zones-head h2{margin:0!important;font-size:16px!important;color:#fff!important}
+  html:not(.guest-mode) #home .home-zones-all{border:0!important;background:transparent!important;color:#eef2ff!important;font-size:11px!important;font-weight:700!important;padding:4px 0!important;white-space:nowrap!important}
+  html:not(.guest-mode) #home .home-zone-grid{gap:7px!important}
+  html:not(.guest-mode) #home .home-zone-tile{height:94px!important;border-radius:12px!important;border:1px solid rgba(112,133,174,.55)!important;box-shadow:0 5px 13px rgba(0,0,0,.28)!important}
+  html:not(.guest-mode) #home .home-zone-tile:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(2,7,18,.88) 100%);pointer-events:none}
+  html:not(.guest-mode) #home .home-zone-copy{position:absolute!important;z-index:2!important;left:7px!important;right:5px!important;bottom:6px!important;color:#fff!important;line-height:1.05!important}
+  html:not(.guest-mode) #home .home-zone-copy strong{display:block!important;font-size:12px!important;white-space:nowrap!important}
+  html:not(.guest-mode) #home .home-zone-copy small{display:block!important;margin-top:3px!important;font-size:9px!important;color:#fff!important;font-weight:600!important;white-space:nowrap!important}
+
+  /* HOME-06: Actividad reciente, dos accesos completos */
+  html:not(.guest-mode) #home .home-activity{clear:both!important;margin:15px 12px 0!important;padding:0!important}
+  html:not(.guest-mode) #home .home-activity>h2{margin:0 0 8px!important;font-size:16px!important;color:#fff!important}
+  html:not(.guest-mode) #home .home-activity-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+  html:not(.guest-mode) #home #myRequestsHomeCard,
+  html:not(.guest-mode) #home .home-photos-mobile{
+    float:none!important;display:flex!important;width:auto!important;height:62px!important;min-height:62px!important;margin:0!important;padding:8px 9px!important;
+    border-radius:12px!important;border:1px solid #203a54!important;background:linear-gradient(145deg,#102033,#0a1624)!important;
+    box-sizing:border-box!important;overflow:hidden!important;align-items:center!important;gap:8px!important;color:#fff!important;cursor:pointer!important;
+  }
+  html:not(.guest-mode) #home .activity-icon{width:38px!important;height:38px!important;flex:0 0 38px!important;border-radius:10px!important;display:grid!important;place-items:center!important;font-size:20px!important;background:linear-gradient(145deg,#9f20ff,#5c31ef)!important;box-shadow:inset 0 0 14px rgba(255,255,255,.08)!important}
+  html:not(.guest-mode) #home .home-photos-mobile .activity-icon{background:linear-gradient(145deg,#c06a42,#8b4d37)!important}
+  html:not(.guest-mode) #home .activity-copy{min-width:0!important;line-height:1.12!important}
+  html:not(.guest-mode) #home .activity-copy strong{display:block!important;color:#fff!important;font-size:12px!important;white-space:nowrap!important}
+  html:not(.guest-mode) #home .activity-copy small{display:block!important;color:#aebbd0!important;font-size:9px!important;margin-top:3px!important;white-space:nowrap!important}
+  html:not(.guest-mode) #home .home-photos-head,html:not(.guest-mode) #home .home-photos-mobile .photo-grid{display:none!important}
+}
+</style>
+
 </head>
 <body>
 <script>
@@ -666,12 +712,16 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 <div class="card" onclick="showScreen('regalos')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-1.5-3.8-6-4.1-6-1.3C6 5.4 8 5 12 5Zm0 0c1.5-3.8 6-4.1 6-1.3 0 1.7-2 1.3-6 1.3Z"/></svg></div><h3>Regalos</h3><p>Para otros</p></div>
 <div class="card" onclick="showScreen('zonas')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Por zona</h3><p>Visitar · Comer · Compras</p></div>
 <div class="card" onclick="showScreen('mapa')"><div class="home-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></svg></div><h3>Mapa</h3><p>Ver todo en el mapa</p></div>
-</div><div class="home-zones-mobile"><h2>Zonas</h2><div class="home-zone-grid">
-<div class="home-zone-tile" onclick="showZone('Tokio')"><img src="https://res.cloudinary.com/dealsaway/image/upload/w_1000%2Cdpr_auto/v1772697600/dealsaway/994/trip/994/product_photo/shutterstock_24560084331729728808185_lusz2u.jpg"><span>Tokio</span></div>
-<div class="home-zone-tile" onclick="showZone('Osaka')"><img src="https://imgcp.aacdn.jp/img-a/1200/900/aa_news/article/2023/03/08/640821c1bc890.jpg"><span>Osaka</span></div>
-<div class="home-zone-tile" onclick="showZone('Kyoto')"><img src="https://www.travelchinaguide.com/images/photogallery/2023/1114113925.jpg"><span>Kyoto</span></div>
-<div class="home-zone-tile" onclick="showZone('Kamakura')"><img src="https://asset.gtn.co.jp/magazine/uploads/2025/06/image-151.jpg"><span>Kamakura</span></div>
-</div></div><div class="home-photos-mobile"><div class="home-photos-head"><h2>📷 Fotos recientes</h2><button class="photo-link" onclick="openPhotoAlbum()">Ver todas</button></div><div id="homeRecentPhotos" class="photo-grid"><div class="photo-empty">Todavía no hay fotos.</div></div></div><div class="welcome-strip"><div class="torii">⛩️</div><div><strong>¡Listos para Japón!</strong><small>Explorá lugares, organizá tus compras y no te pierdas nada.</small></div></div></section>
+</div><div class="home-zones-mobile"><div class="home-zones-head"><h2>Zonas destacadas</h2><button class="home-zones-all" onclick="showScreen('zonas')">Ver todas ›</button></div><div class="home-zone-grid">
+<div class="home-zone-tile" onclick="showZone('Tokio')"><img src="https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=900&q=80"><div class="home-zone-copy"><strong>Tokio</strong><small data-home-zone-count="Tokio">9 lugares</small></div></div>
+<div class="home-zone-tile" onclick="showZone('Osaka')"><img src="https://images.unsplash.com/photo-1590559899731-a382839e5549?auto=format&fit=crop&w=900&q=80"><div class="home-zone-copy"><strong>Osaka</strong><small data-home-zone-count="Osaka">11 lugares</small></div></div>
+<div class="home-zone-tile" onclick="showZone('Kyoto')"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=80"><div class="home-zone-copy"><strong>Kyoto</strong><small data-home-zone-count="Kyoto">5 lugares</small></div></div>
+<div class="home-zone-tile" onclick="showZone('Kamakura')"><img src="https://asset.gtn.co.jp/magazine/uploads/2025/06/image-151.jpg"><div class="home-zone-copy"><strong>Kamakura</strong><small data-home-zone-count="Kamakura">1 lugar</small></div></div>
+</div></div>
+<div class="home-activity"><h2>Actividad reciente</h2><div class="home-activity-grid">
+<div id="myRequestsHomeCard" class="request-card clickable" onclick="openMyRequests()"><div class="activity-icon">💬</div><div class="activity-copy"><strong>Mis pedidos</strong><small id="homeRequestSummary">0 pedidos</small><span data-my-request-count class="request-count" style="display:none">0</span></div></div>
+<div class="home-photos-mobile" onclick="openPhotoAlbum()"><div class="activity-icon">📷</div><div class="activity-copy"><strong>Fotos recientes</strong><small id="homePhotoSummary">0 fotos</small></div><div id="homeRecentPhotos" class="photo-grid"></div></div>
+</div></div></section>
 
 <section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" data-pct="0%" onclick="openBudgetEditor('personal')"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div>
 <button class="add-button" type="button" onclick="toggleAddPanel('addPersonalPanel')">＋ Agregar compra</button>
@@ -1384,6 +1434,7 @@ function renderZones(){
   const container=document.getElementById('zonesList');if(!container)return;container.innerHTML='';
   supabaseZones.forEach(zone=>{
     const count=places.filter(p=>p.zone===zone.name).length;
+    document.querySelectorAll(`[data-home-zone-count="${zone.name}"]`).forEach(el=>el.textContent=count+' lugar'+(count===1?'':'es'));
     const card=document.createElement('div');card.className='card zone-card';card.onclick=()=>showZone(zone.name);
     const zi=visualImages.zones[zone.name]||zone.photo||'';
     const pc=tripPhotos.filter(ph=>ph.zone_name===zone.name).length;
@@ -2061,7 +2112,7 @@ async function loadTripPhotos(){
 let viewerPhotoId=null;
 let viewerPhotoList=[];
 function photoThumbHTML(ph){const u=photoPublicUrl(ph);const badge=ph._pending?'<span class="photo-pending-badge">📴 Pendiente</span>':'';return `<div class="photo-thumb" onclick="openPhotoViewerById(${JSON.stringify(ph.id)})"><img src="${u}" alt="Foto del viaje" loading="lazy">${badge}</div>`;}
-function renderHomeRecentPhotos(){const el=document.getElementById('homeRecentPhotos');if(!el)return;const a=tripPhotos.slice(0,4);el.innerHTML=a.length?a.map(photoThumbHTML).join(''):'<div class="photo-empty">Todavía no hay fotos.</div>';}
+function renderHomeRecentPhotos(){const el=document.getElementById('homeRecentPhotos');if(el)el.innerHTML='';const sum=document.getElementById('homePhotoSummary');if(sum){const n=tripPhotos.length;sum.textContent=n+' foto'+(n===1?'':'s');}}
 function renderZonePhotos(zone){const el=document.getElementById('zonePhotoGrid');if(!el)return;const a=tripPhotos.filter(x=>x.zone_name===zone).slice(0,8);el.innerHTML=a.length?a.map(photoThumbHTML).join(''):'<div class="photo-empty">Todavía no hay fotos de esta zona.</div>';}
 function renderPlacePhotos(p){const el=document.getElementById('placePhotoGrid');if(!el)return;const a=tripPhotos.filter(x=>x.zone_name===p.zone&&x.place_name===p.name).slice(0,8);el.innerHTML=a.length?a.map(photoThumbHTML).join(''):'<div class="photo-empty">Todavía no hay fotos de este lugar.</div>';}
 function refreshPhotoUI(){renderHomeRecentPhotos();renderZones();if(document.getElementById('zoneDetail')?.classList.contains('active'))renderZonePhotos(currentZone);if(document.getElementById('placeDetail')?.classList.contains('active')){const p=getPlaceById(currentDetailPlaceId);if(p)renderPlacePhotos(p);}if(document.getElementById('placeAction')?.classList.contains('active')){const p=getPlaceById(currentDetailPlaceId);if(p){renderPlaceActionPhotos(p);renderPlacePhotos(p);}}if(document.getElementById('photoAlbum')?.classList.contains('active'))renderPhotoAlbum();}
@@ -2272,7 +2323,8 @@ async function loadMyRequests(){
   if(error){console.error(error);return;}
   window.myRequests=data||[];
   const pending=window.myRequests.filter(x=>x.status!=='Visto').length;
-  document.querySelectorAll('[data-my-request-count]').forEach(el=>{el.textContent=pending;el.style.display=pending?'inline-flex':'none'});
+  document.querySelectorAll('[data-my-request-count]').forEach(el=>{el.textContent=pending;el.style.display='none'});
+  const homeSummary=document.getElementById('homeRequestSummary');if(homeSummary)homeSummary.textContent=pending+' pedido'+(pending===1?'':'s');
   const box=document.getElementById('myRequestsList');if(!box)return;
   document.getElementById('myRequestsSubtitle').textContent=(APP_MODE==='rodo'?'Pedidos para Rodo':'Pedidos para Lucía');
   box.innerHTML=window.myRequests.length?window.myRequests.map(x=>`<div class="request-item"><b>${esc(x.sender_name)}</b><p>${esc(x.message)}</p>${x.photo_path?`<img src="${requestPhotoUrl(x.photo_path)}" alt="Foto del pedido">`:''}<p><span class="status-pill ${x.status==='Visto'?'visited':'pending'}">${esc(x.status||'Pendiente')}</span></p><button onclick="markRequestSeen(${x.id})">Marcar visto</button> <button onclick="deleteRequest(${x.id},'${(x.photo_path||'').replace(/'/g,"")}')">Eliminar</button></div>`).join(''):'<div class="empty">No hay pedidos todavía.</div>';
@@ -2282,13 +2334,8 @@ async function deleteRequest(id,path){if(!confirm('¿Eliminar este pedido?'))ret
 function openMyRequests(){showScreen('misPedidos');loadMyRequests()}
 function injectMyRequestsCard(){
   if(!['rodo','lu'].includes(APP_MODE))return;
-  const home=document.getElementById('home'); if(!home||document.getElementById('myRequestsHomeCard'))return;
-  const zones=home.querySelector('.zones-card,.home-zones,.zone-grid')?.parentElement;
-  const card=document.createElement('div');card.id='myRequestsHomeCard';card.className='request-card clickable';
-  card.onclick=openMyRequests;card.innerHTML=`<h3>💬 Mis pedidos <span data-my-request-count class="request-count" style="display:none">0</span></h3><p style="margin:4px 0;color:#64748b">Mensajes de familiares y amigos</p>`;
-  const photos=[...home.querySelectorAll('h2,h3')].find(x=>x.textContent.includes('Fotos recientes'))?.closest('.photo-card,.home-photos-card,section,div');
-  if(photos&&photos.parentNode)photos.parentNode.insertBefore(card,photos);else home.appendChild(card);
-  loadMyRequests();
+  const card=document.getElementById('myRequestsHomeCard');
+  if(card){card.onclick=openMyRequests;loadMyRequests();return;}
 }
 setTimeout(injectMyRequestsCard,1200);
 </script>
