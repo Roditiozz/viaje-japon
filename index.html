@@ -820,6 +820,56 @@ html:not(.guest-mode) #personalDetail .phone-guide-copy>small{grid-column:1/-1;c
 html:not(.guest-mode) #personalDetail .phone-store-tags{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
 html:not(.guest-mode) #personalDetail .phone-store-tags span{padding:5px 9px;border-radius:999px;background:#13283c;border:1px solid #2b4964;color:#dce8f4;font-size:11px}
 </style>
+
+<style id="p52-floating-add-buttons">
+/* P52: acciones de alta compactas. Solo propietarios; no cambia ninguna función. */
+html:not(.guest-mode) #paraMi > .add-button,
+html:not(.guest-mode) #regalos > .add-button,
+html:not(.guest-mode) #zonas > .add-button{
+  position:fixed!important;
+  right:max(18px,calc((100vw - 820px)/2 + 18px))!important;
+  bottom:84px!important;
+  z-index:1185!important;
+  width:58px!important;
+  height:58px!important;
+  min-width:58px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  font-size:0!important;
+  line-height:58px!important;
+  color:#fff!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  cursor:pointer!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.45)!important;
+}
+html:not(.guest-mode) #paraMi > .add-button:after,
+html:not(.guest-mode) #regalos > .add-button:after,
+html:not(.guest-mode) #zonas > .add-button:after{content:"+";font-size:38px;font-weight:300;line-height:1;color:#fff}
+/* Para mí: misma familia violeta/fucsia de la tarjeta de presupuesto. */
+html:not(.guest-mode) #paraMi > .add-button{
+  background:linear-gradient(145deg,#7a22ff,#c600f4)!important;
+  box-shadow:0 0 20px rgba(155,40,255,.48),0 9px 24px rgba(0,0,0,.48)!important;
+}
+/* Regalos: misma familia rojo/magenta de la tarjeta de presupuesto. */
+html:not(.guest-mode) #regalos > .add-button{
+  background:linear-gradient(145deg,#c01861,#ff174f)!important;
+  box-shadow:0 0 20px rgba(231,25,101,.42),0 9px 24px rgba(0,0,0,.48)!important;
+}
+/* Zonas: verde/turquesa manteniendo el mismo efecto luminoso. */
+html:not(.guest-mode) #zonas > .add-button{
+  background:linear-gradient(145deg,#13d89b,#00b982)!important;
+  box-shadow:0 0 20px rgba(15,211,153,.42),0 9px 24px rgba(0,0,0,.48)!important;
+}
+html:not(.guest-mode) #paraMi > .add-button:active,
+html:not(.guest-mode) #regalos > .add-button:active,
+html:not(.guest-mode) #zonas > .add-button:active{transform:scale(.94)!important}
+/* Dentro de una zona se conserva la barra existente; no hay botón flotante. */
+html:not(.guest-mode) #zoneDetail > .add-button{position:static!important;width:100%!important}
+</style>
 </head>
 <body>
 <script>
