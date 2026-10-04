@@ -8,7 +8,7 @@ export default {async fetch(request,env){
  if(u.pathname==="/health") return reply({ok:true,service:"viaje-japon-fotos"});
  if(u.pathname==="/upload"&&request.method==="POST"){
   const type=request.headers.get("Content-Type")||"";
-  if(!type.startsWith("image/")) return reply({error:"Solo imagenes"},415);
+  if(!type.startsWith("image/") && !type.startsWith("video/")) return reply({error:"Solo imagenes o videos"},415);
   const zone=clean(request.headers.get("X-Zone"),"Sin-zona"), place=clean(request.headers.get("X-Place"),"Sin-lugar");
   const original=request.headers.get("X-Filename")||"foto.jpg";
   const ext=(original.match(/\.([a-zA-Z0-9]{2,5})$/)||[])[1]||"jpg";
