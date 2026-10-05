@@ -1,5 +1,5 @@
-const CACHE_NAME='v57-respuestas-mensajes';
-const RUNTIME_CACHE='viaje-japon-runtime-v57-respuestas-mensajes';
+const CACHE_NAME='v58-sin-respuestas';
+const RUNTIME_CACHE='viaje-japon-runtime-v58-sin-respuestas';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
