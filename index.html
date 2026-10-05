@@ -874,7 +874,13 @@ html:not(.guest-mode) #zoneDetail > .add-button{position:static!important;width:
 <body>
 <script>
 const urlMode=new URLSearchParams(window.location.search).get('modo');
-const APP_MODE=(urlMode==='rodo'||urlMode==='lu'||urlMode==='rcoronel'||urlMode==='ldambra')?urlMode:'invitado';
+const validModes=['rodo','lu','rcoronel','ldambra'];
+if(urlMode==='rodo'||urlMode==='lu'){
+  try{localStorage.setItem('japon_owner_mode_v1',urlMode);}catch(e){}
+}
+let savedOwnerMode='';
+try{savedOwnerMode=localStorage.getItem('japon_owner_mode_v1')||'';}catch(e){}
+const APP_MODE=validModes.includes(urlMode)?urlMode:(['rodo','lu'].includes(savedOwnerMode)?savedOwnerMode:'invitado');
 const IS_GUEST=!['rodo','lu'].includes(APP_MODE);
 const REQUEST_TARGET=APP_MODE==='rcoronel'?'rodo':(APP_MODE==='ldambra'?'lu':null);
 if(IS_GUEST) document.documentElement.classList.add('guest-mode');
@@ -922,7 +928,7 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 
   <div class="grid" id="zonesList"></div>
 <button class="add-button" type="button" onclick="toggleAddPanel('addZonePanel')">＋ Agregar zona</button>
-<div class="add-panel" id="addZonePanel"><h3>Nueva zona</h3><label>Nombre</label><input id="newZoneName" placeholder="Ej.: Nara"><div class="add-actions"><button class="add-primary" onclick="addZone()">Guardar zona</button><button class="add-secondary" onclick="toggleAddPanel('addZonePanel',false)">Cancelar</button></div></div>
+<div class="add-panel" id="addZonePanel"><h3>Nueva zona</h3><label>Nombre</label><input id="newZoneName" placeholder="Ej.: Nara"><label>Imagen de la zona (opcional)</label><div class="photo-actions"><button type="button" class="photo-action primary" onclick="document.getElementById('newZoneCamera').click()">📸 Sacar foto</button><button type="button" class="photo-action" onclick="document.getElementById('newZoneGallery').click()">🖼️ Elegir foto</button></div><input id="newZoneCamera" type="file" accept="image/*" capture="environment" hidden onchange="selectNewZoneImage(this)"><input id="newZoneGallery" type="file" accept="image/*" hidden onchange="selectNewZoneImage(this)"><p id="newZoneImagePicked" style="font-size:13px;color:#91a3b7;margin:8px 0">Sin imagen seleccionada</p><div class="add-actions"><button class="add-primary" onclick="addZone()">Guardar zona</button><button class="add-secondary" onclick="cancelAddZone()">Cancelar</button></div></div>
 </section>
 
 <section id="zoneDetail"><button class="back" onclick="appBack()">← Volver a zonas</button><div class="screen-title"><h2 id="zoneTitle"></h2><p id="zoneDescription"></p></div><div class="grid"><div class="card" onclick="showPlaceType('Visitar')"><h3>📍 Visitar</h3><p id="countVisitar"></p></div><div class="card" onclick="showPlaceType('Compras')"><h3>🛍️ Compras</h3><p id="countCompras"></p></div><div class="card" onclick="showPlaceType('Comer')"><h3>🍜 Comer</h3><p id="countComer"></p></div></div><button class="add-button" type="button" onclick="toggleAddPanel('addPlacePanel')">＋ Agregar lugar en esta zona</button><div class="manage-actions"><button class="edit-btn" onclick="openItemEditor('zone',currentZone)">✎ Editar zona</button><button class="delete-btn" onclick="deleteItem('zone',currentZone)">Eliminar zona</button></div>
@@ -1187,7 +1193,7 @@ async function loadZonesFromSupabase() {
   try {
     const { data, error } = await supabaseClient
       .from("zones")
-      .select("id, name")
+      .select("id, name, photo_url")
       .order("name", { ascending: true });
 
     if (error) throw error;
@@ -1583,19 +1589,44 @@ function toggleAddPanel(id,force){
  el.classList.toggle('open',open);
  if(open)setTimeout(()=>el.querySelector('input')?.focus(),50);
 }
+let newZoneImageFile=null;
+function selectNewZoneImage(input){
+ const file=input?.files?.[0]||null;
+ if(!file)return;
+ if(!file.type?.startsWith('image/')){showSavedToast('Elegí una imagen');input.value='';return;}
+ newZoneImageFile=file;
+ const el=document.getElementById('newZoneImagePicked');if(el)el.textContent='✓ '+file.name;
+}
+function clearNewZoneImage(){
+ newZoneImageFile=null;
+ ['newZoneCamera','newZoneGallery'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+ const label=document.getElementById('newZoneImagePicked');if(label)label.textContent='Sin imagen seleccionada';
+}
+function cancelAddZone(){clearNewZoneImage();toggleAddPanel('addZonePanel',false);}
+async function uploadZoneCover(file,zoneName){
+ if(!file)return '';
+ if(!navigator.onLine)throw new Error('Necesitás Internet para subir la imagen de la zona.');
+ const blob=await compressPhoto(file,1800,.88);
+ const rr=await fetch(PHOTO_R2_WORKER+'/upload',{method:'POST',headers:{'Content-Type':'image/jpeg','X-Zone':zoneName,'X-Place':'Portada-zona','X-Filename':file.name||'zona.jpg'},body:blob});
+ if(!rr.ok)throw new Error('No se pudo subir la imagen: '+await rr.text());
+ const uploaded=await rr.json();
+ return uploaded.key||'';
+}
 async function addZone(){
  const input=document.getElementById('newZoneName');const name=(input?.value||'').trim();
  if(!name)return showSavedToast('Escribí un nombre');
  if(supabaseZones.some(z=>normalizedSearchText(z.name)===normalizedSearchText(name)))return showSavedToast('Esa zona ya existe');
- const local={id:'local-zone-'+Date.now(),name,_custom:true};supabaseZones.push(local);rememberCustom('zones',local);
- const payload={name};
+ let photoUrl='';
+ try{if(newZoneImageFile)photoUrl=await uploadZoneCover(newZoneImageFile,name);}catch(e){alert(e.message||'No se pudo subir la imagen.');return;}
+ const local={id:'local-zone-'+Date.now(),name,photo_url:photoUrl,_custom:true};supabaseZones.push(local);rememberCustom('zones',local);
+ const payload={name,photo_url:photoUrl||null};
  try{
    if(!supabaseClient||!navigator.onLine)throw new Error('offline');
-   const {data,error}=await supabaseClient.from('zones').insert(payload).select('id,name').single();
+   const {data,error}=await supabaseClient.from('zones').insert(payload).select('id,name,photo_url').single();
    if(error)throw error;Object.assign(local,data);
  }catch(e){queueCrud({action:'insert',table:'zones',payload});console.warn('Zona pendiente de nube:',e?.message||e);}
  localStorage.setItem('japon_custom_zones',JSON.stringify(supabaseZones.filter(z=>String(z.id).startsWith('local-zone-'))));
- input.value='';toggleAddPanel('addZonePanel',false);renderZones();showSavedToast('✓ Zona agregada');
+ input.value='';clearNewZoneImage();toggleAddPanel('addZonePanel',false);renderZones();showSavedToast('✓ Zona agregada');
 }
 async function addPlace(){
  const name=(document.getElementById('newPlaceName')?.value||'').trim();
@@ -1620,7 +1651,8 @@ function renderZones(){
     const count=places.filter(p=>p.zone===zone.name).length;
     document.querySelectorAll(`[data-home-zone-count="${zone.name}"]`).forEach(el=>el.textContent=count+' lugar'+(count===1?'':'es'));
     const card=document.createElement('div');card.className='card zone-card';card.onclick=()=>showZone(zone.name);
-    const zi=visualImages.zones[zone.name]||zone.photo||'';
+    const zoneStoredImage=zone.photo_url||zone.photo||'';
+    const zi=zoneStoredImage?(String(zoneStoredImage).startsWith('Japon-2026/')?photoPublicUrl(zoneStoredImage):zoneStoredImage):(visualImages.zones[zone.name]||'');
     const pc=tripPhotos.filter(ph=>ph.zone_name===zone.name).length;
     card.innerHTML=`${zi?`<img src="${zi}" alt="${esc(zone.name)}" loading="lazy" onerror="this.outerHTML='<div class=\'zone-placeholder\'>📍</div>'">`:`<div class="zone-placeholder">📍</div>`}<div class="zone-copy"><h3>${esc(zone.name)}</h3><p>${count} lugar${count===1?'':'es'} · <span class="photo-count">${pc} foto${pc===1?'':'s'}</span></p></div><div class="zone-arrow">›</div>`;
     container.appendChild(card);
