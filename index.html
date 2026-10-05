@@ -2026,15 +2026,21 @@ function deleteGiftItem(index,itemId){const k=giftIdentity(index);giftItemsData[
 function showGiftDetail(index){const g=gifts[index];if(!g)return;const d=getPurchase('gifts',index);if(d.status==='Buscando')d.status='Pendiente';const items=getGiftItems(index);const total=giftItemsTotal(index);const rows=items.length?items.map(x=>`<div class="gift-item-row"><div><b>${esc(x.name)}</b><small>${formatYen(x.price)}</small></div><strong>${formatYen(x.price)}</strong><button class="gift-item-delete" onclick="deleteGiftItem(${index},'${esc(x.id)}')">✕</button></div>`).join(''):`<div class="gift-empty-items"><div class="bag">🛍️</div><p>Todavía no agregaste ninguna compra para este regalo.</p></div>`;document.getElementById('giftDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image">${giftDetailVisual(g)}</div><h2>${esc(g[0])} <span style="font-size:15px;font-weight:500">(${esc(g[1])})</span></h2>${g[2]?`<div class="detail-form-row"><strong>Interés</strong><span>${esc(g[2])}</span></div>`:''}${g[3]?`<div class="detail-form-row"><strong>Ideas</strong><span>${esc(g[3])}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('gifts',${index})">${statusLabel(d.status)}</button></div><div class="gift-total-box"><span>Total</span><strong>${formatYen(total)}</strong></div><div class="gift-items-head"><h3>Compras</h3><button type="button" class="gift-add-item" onclick="openGiftItemEditor(${index})">＋ Agregar</button></div>${rows}<div class="manage-actions" style="grid-template-columns:1fr"><button class="delete-btn" onclick="deleteItem('gifts',${index})">Eliminar</button></div></div>`;updateBudgets();showScreen('giftDetail');}
 
 let itemEditContext=null;
-function closeItemEditor(){document.getElementById('itemEditor')?.classList.remove('open');itemEditContext=null;}
+function closeItemEditor(){document.getElementById('itemEditor')?.classList.remove('open');itemEditContext=null;editZoneImageFile=null;}
 function editField(label,id,value='',type='text'){return `<label>${label}</label><input id="${id}" type="${type}" value="${esc(value??'')}">`;}
 function openItemEditor(type,key){
  itemEditContext={type,key};const title=document.getElementById('itemEditorTitle'),fields=document.getElementById('itemEditorFields');
  if(type==='personal'){const x=personalItems[key];title.textContent='Editar compra';fields.innerHTML=editField('Nombre','editName',x[0])+editField('Cantidad','editQty',(x[2]||'').replace('Cantidad: ',''))+editField('Presupuesto','editBudget',(x[3]||'').replace('Presupuesto: ',''));}
  else if(type==='gifts'){const g=gifts[key];title.textContent='Editar regalo';fields.innerHTML=editField('Persona','editName',g[0])+editField('Grupo','editGroup',g[1])+editField('Interés','editInterest',g[2])+editField('Idea','editIdea',g[3]);}
- else if(type==='zone'){title.textContent='Editar zona';fields.innerHTML=editField('Nombre','editName',key);}
+ else if(type==='zone'){const z=supabaseZones.find(z=>z.name===key);title.textContent='Editar zona';fields.innerHTML=editField('Nombre','editName',key)+`<label>Imagen de la zona</label><div class="photo-actions"><button type="button" class="photo-action primary" onclick="document.getElementById('editZoneCamera').click()">📸 Sacar foto</button><button type="button" class="photo-action" onclick="document.getElementById('editZoneGallery').click()">🖼️ Elegir foto</button></div><input id="editZoneCamera" type="file" accept="image/*" capture="environment" hidden onchange="selectEditZoneImage(this)"><input id="editZoneGallery" type="file" accept="image/*" hidden onchange="selectEditZoneImage(this)"><p id="editZoneImagePicked" style="font-size:13px;color:#91a3b7;margin:8px 0">${z?.photo_url?'✓ Esta zona ya tiene imagen':'Sin imagen seleccionada'}</p>`;}
  else if(type==='place'){const p=getPlaceById(key);title.textContent='Editar lugar';fields.innerHTML=editField('Nombre','editName',p.name)+`<label>Tipo</label><select id="editType"><option ${p.types.includes('Visitar')?'selected':''}>Visitar</option><option ${p.types.includes('Comer')?'selected':''}>Comer</option><option ${p.types.includes('Compras')?'selected':''}>Compras</option></select>`+editField('Dirección','editAddress',p.address||'');}
  document.getElementById('itemEditor')?.classList.add('open');setTimeout(()=>document.getElementById('editName')?.focus(),50);
+}
+let editZoneImageFile=null;
+function selectEditZoneImage(input){
+ const file=input?.files?.[0]||null;if(!file)return;
+ if(!file.type?.startsWith('image/')){showSavedToast('Elegí una imagen');input.value='';return;}
+ editZoneImageFile=file;const el=document.getElementById('editZoneImagePicked');if(el)el.textContent='✓ '+file.name;
 }
 async function saveItemEdit(){
  if(!itemEditContext)return;const {type,key}=itemEditContext;const name=(document.getElementById('editName')?.value||'').trim();if(!name)return showSavedToast('Escribí un nombre');
@@ -2048,10 +2054,13 @@ async function saveItemEdit(){
    if(row?.id&&supabaseClient&&navigator.onLine)await supabaseClient.from('gifts').update({person_name:g[0],group_name:g[1],interest_category:g[2],idea:g[3]}).eq('id',row.id);
    rememberCustom('gifts',g);currentGiftGroup=g[1];renderGiftHome();closeItemEditor();showGiftDetail(key);
   }else if(type==='zone'){
-   const old=key,z=supabaseZones.find(z=>z.name===old);if(z)z.name=name;places.filter(p=>p.zone===old).forEach(p=>p.zone=name);
+   const old=key,z=supabaseZones.find(z=>z.name===old);
+   let photoUrl=z?.photo_url||'';
+   if(editZoneImageFile)photoUrl=await uploadZoneCover(editZoneImageFile,name);
+   if(z){z.name=name;z.photo_url=photoUrl;}places.filter(p=>p.zone===old).forEach(p=>p.zone=name);
    if(visualImages.zones[old]){visualImages.zones[name]=visualImages.zones[old];delete visualImages.zones[old];}
-   if(z?.id&&supabaseClient&&navigator.onLine){await supabaseClient.from('zones').update({name}).eq('id',z.id);await supabaseClient.from('places').update({zone:name}).eq('zone',old);}
-   forgetCustom('zones',x=>normalizedSearchText(x.name)===normalizedSearchText(old));rememberCustom('zones',z||{id:'local-zone-'+Date.now(),name,_custom:true});const cd=getCustomData();(cd.places||[]).forEach(x=>{if(normalizedSearchText(x.zone)===normalizedSearchText(old))x.zone=name;});setCustomData(cd);currentZone=name;renderZones();updateCounts();closeItemEditor();showZone(name);
+   if(z?.id&&supabaseClient&&navigator.onLine){await supabaseClient.from('zones').update({name,photo_url:photoUrl||null}).eq('id',z.id);await supabaseClient.from('places').update({zone:name}).eq('zone',old);}
+   forgetCustom('zones',x=>normalizedSearchText(x.name)===normalizedSearchText(old));rememberCustom('zones',z||{id:'local-zone-'+Date.now(),name,photo_url:photoUrl,_custom:true});const cd=getCustomData();(cd.places||[]).forEach(x=>{if(normalizedSearchText(x.zone)===normalizedSearchText(old))x.zone=name;});setCustomData(cd);currentZone=name;editZoneImageFile=null;renderZones();updateCounts();closeItemEditor();showZone(name);
   }else if(type==='place'){
    const p=getPlaceById(key);p.name=name;p.types=[document.getElementById('editType')?.value||'Visitar'];p.address=(document.getElementById('editAddress')?.value||'').trim();p.latitude=null;p.longitude=null;
    if((p.cloudId||(!String(p.id).startsWith('local-')&&p.id))&&supabaseClient&&navigator.onLine)await supabaseClient.from('places').update({name:p.name,place_types:p.types,address:p.address,latitude:null,longitude:null}).eq('id',p.cloudId||p.id);
