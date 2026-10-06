@@ -910,7 +910,7 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 
 <section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" data-pct="0%" onclick="openBudgetEditor('personal')"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div>
 <button class="add-button" type="button" onclick="toggleAddPanel('addPersonalPanel')">＋ Agregar compra</button>
-<div class="add-panel" id="addPersonalPanel"><h3>Nueva compra</h3><label>Nombre</label><input id="newPersonalName" placeholder="Ej.: Auriculares"><label>Cantidad (opcional)</label><input id="newPersonalQty" placeholder="Ej.: 1"><label>Presupuesto máximo (opcional)</label><input id="newPersonalBudget" type="number" min="0" placeholder="¥"><div class="add-actions"><button class="add-primary" onclick="addPersonalItem()">Guardar</button><button class="add-secondary" onclick="toggleAddPanel('addPersonalPanel',false)">Cancelar</button></div></div>
+<div class="add-panel" id="addPersonalPanel"><h3>Nueva compra</h3><label>Nombre</label><input id="newPersonalName" placeholder="Ej.: Auriculares"><label>Cantidad (opcional)</label><input id="newPersonalQty" placeholder="Ej.: 1"><label>Presupuesto máximo (opcional)</label><input id="newPersonalBudget" type="number" min="0" placeholder="¥"><label>Imagen (opcional)</label><button type="button" class="photo-action" style="width:100%" onclick="document.getElementById('newPersonalImage').click()">🖼️ Elegir imagen</button><input id="newPersonalImage" type="file" accept="image/*" hidden onchange="selectPersonalImage(this,'new')"><p id="newPersonalImagePicked" style="font-size:13px;color:#91a3b7;margin:8px 0">Sin imagen seleccionada</p><div class="add-actions"><button class="add-primary" onclick="addPersonalItem()">Guardar</button><button class="add-secondary" onclick="cancelAddPersonal()">Cancelar</button></div></div>
 </section>
 
 <section id="regalos"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🎁 Regalos</h2><p>Elegí un grupo o buscá directamente una persona, interés o idea.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" data-pct="0%" onclick="openBudgetEditor('gifts')"><small>Presupuesto</small><strong id="giftBudget">¥25.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="giftSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="giftRemaining">¥25.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="giftFinal">¥0</strong></div></div></div><div class="search-box"><h2>🔎 Buscar regalo</h2><input type="text" id="giftSearch" placeholder="Persona, Pokémon, Harry Potter, Papelería..." oninput="renderGiftHome()"></div><div id="giftGroupNavigation"></div><div class="list" id="giftList"></div>
@@ -1252,7 +1252,7 @@ async function loadWishlistFromSupabase() {
   try {
     const {data,error}=await supabaseClient
       .from('wishlist_items')
-      .select('id, product, category, quantity, budget_min, budget_max, priority, status, actual_price')
+      .select('id, product, category, quantity, budget_min, budget_max, priority, status, actual_price, image_path')
       .order('product',{ascending:true});
 
     if (error) throw error;
@@ -1267,7 +1267,8 @@ async function loadWishlistFromSupabase() {
     wishlistCloudRows=data.map(row=>({
       id:row.id,
       status:row.status || 'Pendiente',
-      price:row.actual_price ?? ''
+      price:row.actual_price ?? '',
+      image_path:row.image_path || ''
     }));
 
     const mapped=data.map(row=>{
@@ -1548,22 +1549,39 @@ function restoreCustomData(){
  (d.personal||[]).forEach(x=>{if(!personalItems.some(y=>normalizedSearchText(y[0])===normalizedSearchText(x[0]))){personalItems.push(x);wishlistCloudRows.push({id:null,status:'Pendiente',price:''});}});
  (d.gifts||[]).forEach(g=>{if(!gifts.some(x=>normalizedSearchText(x[0])===normalizedSearchText(g[0])&&normalizedSearchText(x[1])===normalizedSearchText(g[1]))){gifts.push(g);giftCloudRows.push({id:null,status:'Pendiente',price:''});}});
 }
+let newPersonalImageFile=null,editPersonalImageFile=null;
+function selectPersonalImage(input,mode){
+ const file=input?.files?.[0]||null;if(!file)return;
+ if(!file.type?.startsWith('image/')){showSavedToast('Elegí una imagen');input.value='';return;}
+ if(mode==='edit')editPersonalImageFile=file;else newPersonalImageFile=file;
+ const el=document.getElementById(mode==='edit'?'editPersonalImagePicked':'newPersonalImagePicked');if(el)el.textContent='✓ '+file.name;
+}
+function cancelAddPersonal(){newPersonalImageFile=null;const i=document.getElementById('newPersonalImage');if(i)i.value='';const l=document.getElementById('newPersonalImagePicked');if(l)l.textContent='Sin imagen seleccionada';toggleAddPanel('addPersonalPanel',false);}
+async function uploadPersonalImage(file,name){
+ if(!file)return '';if(!navigator.onLine)throw new Error('Necesitás Internet para subir la imagen.');
+ const blob=await compressPhoto(file,1800,.88);
+ const rr=await fetch(PHOTO_R2_WORKER+'/upload',{method:'POST',headers:{'Content-Type':'image/jpeg','X-Zone':'Para-mi','X-Place':name,'X-Filename':file.name||'producto.jpg'},body:blob});
+ if(!rr.ok)throw new Error('No se pudo subir la imagen: '+await rr.text());
+ const up=await rr.json();return up.key||'';
+}
 async function addPersonalItem(){
  const name=(document.getElementById('newPersonalName')?.value||'').trim();
  const qty=(document.getElementById('newPersonalQty')?.value||'').trim();
  const budgetRaw=(document.getElementById('newPersonalBudget')?.value||'').replace(/[^0-9]/g,'');
  if(!name)return showSavedToast('Escribí un nombre');
  const budget=budgetRaw?`Presupuesto: hasta ¥${Number(budgetRaw).toLocaleString('es-AR')}`:'';
+ let imagePath='';
+ try{if(newPersonalImageFile)imagePath=await uploadPersonalImage(newPersonalImageFile,name);}catch(e){alert(e.message||'No se pudo subir la imagen.');return;}
  const item=[name,'',qty?`Cantidad: ${qty}`:'',budget,'Prioridad:'];
  personalItems.push(item);rememberCustom('personal',item); const idx=personalItems.length-1;
- wishlistCloudRows[idx]={id:null,status:'Pendiente',price:''};
- const payload={product:name,quantity:qty||null,budget_max:budgetRaw?Number(budgetRaw):null,status:'Pendiente'};
+ wishlistCloudRows[idx]={id:null,status:'Pendiente',price:'',image_path:imagePath};
+ const payload={product:name,quantity:qty||null,budget_max:budgetRaw?Number(budgetRaw):null,status:'Pendiente',image_path:imagePath||null};
  try{
    if(!supabaseClient||!navigator.onLine)throw new Error('offline');
-   const {data,error}=await supabaseClient.from('wishlist_items').insert(payload).select('id,status,actual_price').single();
-   if(error)throw error;wishlistCloudRows[idx]={id:data.id,status:data.status||'Pendiente',price:data.actual_price??''};
+   const {data,error}=await supabaseClient.from('wishlist_items').insert(payload).select('id,status,actual_price,image_path').single();
+   if(error)throw error;wishlistCloudRows[idx]={id:data.id,status:data.status||'Pendiente',price:data.actual_price??'',image_path:data.image_path||''};
  }catch(e){queueCrud({action:'insert',table:'wishlist_items',payload});console.warn('Compra pendiente de nube:',e?.message||e);}
- document.getElementById('newPersonalName').value='';document.getElementById('newPersonalQty').value='';document.getElementById('newPersonalBudget').value='';
+ document.getElementById('newPersonalName').value='';document.getElementById('newPersonalQty').value='';document.getElementById('newPersonalBudget').value='';newPersonalImageFile=null;const npi=document.getElementById('newPersonalImage');if(npi)npi.value='';const npl=document.getElementById('newPersonalImagePicked');if(npl)npl.textContent='Sin imagen seleccionada';
  toggleAddPanel('addPersonalPanel',false);renderPersonal();showSavedToast('✓ Compra agregada');
 }
 async function addGiftItem(){
@@ -1931,9 +1949,9 @@ function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a
 const personalVisualImages={
  'Merch Disney':'./assets/personal-disney.webp','Merch Universal':'./assets/personal-universal.webp','Perfumes':'./assets/personal-perfumes.webp','Tazas / vasos / platos / tetera / vasija':'./assets/personal-tea.webp','Merch Harry Potter':'./assets/personal-harry.webp','Ropa UNIQLO y demás':'./assets/personal-uniqlo.webp'
 };
-function personalVisualImage(name){return personalVisualImages[name]||'';}
-function personalVisualMarkup(name,detail=false){
-  const url=personalVisualImage(name);
+function personalVisualImage(name,index=null){const custom=index!=null?wishlistCloudRows[index]?.image_path:'';return custom?(String(custom).startsWith('Japon-2026/')?photoPublicUrl(custom):custom):(personalVisualImages[name]||'');}
+function personalVisualMarkup(name,detail=false,index=null){
+  const url=personalVisualImage(name,index);
   const icon=personalVisualIcon(name);
   if(!url)return `<div class="product-fallback ${detail?'detail-fallback':''}">${icon}</div>`;
   return `<div class="product-image-wrap ${detail?'detail-image-wrap':''}"><img src="${url}" alt="${esc(name)}" loading="lazy"></div>`;
@@ -1949,7 +1967,7 @@ function personalVisualIcon(name){
 const giftDetailImages={'Flor 2|||Amigos Lu':'./assets/personal-harry.webp','Biz|||Amigos Lu':'./assets/gift-fma.webp','Andre|||Amigos Lu':'./assets/gift-baking.webp','Pa y Ma|||Familia Lu':'./assets/gift-tea.webp','Pa y Ma|||Familia Rodo':'./assets/gift-tea.webp','Otto|||Familia Rodo':'./assets/gift-scorpio.webp','Vicen|||Familia Rodo':'./assets/gift-baseball.webp','Mere|||Amigos Rodo':'./assets/gift-watch.webp','Poncho|||Amigos Rodo':'./assets/gift-gameboy.webp','Negra|||Amigos Rodo':'./assets/personal-harry.webp'};
 function giftDetailVisual(g){const u=giftDetailImages[`${g[0]}|||${g[1]}`];return u?`<div class="product-image-wrap detail-image-wrap"><img src="${u}" alt="${esc(g[0])}" loading="lazy"></div>`:'<div style="font-size:82px">📝✒️</div>';}
 function microphoneBrandsMarkup(){return `<div style="margin:14px 0;padding:14px;border:1px solid #2a4660;border-radius:14px;background:#0b1b2b"><strong style="display:block;margin-bottom:8px">🎙️ Marcas/modelos a buscar</strong><div style="line-height:1.8;color:#dce8f5">Audio-Technica · AKG · Beyerdynamic · Sennheiser · Neumann · DJI Mic Mini</div></div>`;}
-function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item personal-row clickable ${d.status==='Comprado'?'is-bought':''}" onclick="showPersonalDetail(${i})">${personalVisualMarkup(x[0],false)}<div class="row-copy"><h3>${esc(x[0])}</h3>${x[3]?`<p>${esc(x[3].replace('Presupuesto: ',''))}</p>`:''}${d.price!==''?`<p>Precio real: ${formatYen(d.price)}</p>`:''}</div><div class="row-end"><span class="row-chevron">›</span></div></div>`}).join('');updateBudgets();}
+function renderPersonal(){document.getElementById('personalList').innerHTML=personalItems.map((x,i)=>{const d=getPurchase('personal',i);return `<div class="item personal-row clickable ${d.status==='Comprado'?'is-bought':''}" onclick="showPersonalDetail(${i})">${personalVisualMarkup(x[0],false,i)}<div class="row-copy"><h3>${esc(x[0])}</h3>${x[3]?`<p>${esc(x[3].replace('Presupuesto: ',''))}</p>`:''}${d.price!==''?`<p>Precio real: ${formatYen(d.price)}</p>`:''}</div><div class="row-end"><span class="row-chevron">›</span></div></div>`}).join('');updateBudgets();}
 let currentGiftGroup='';
 function giftGroupFamily(group){
   if(group==='Familia Lu'||group==='Familia Rodo')return 'Familias';
@@ -2001,7 +2019,7 @@ const celularLuOptions=[
 function celularLuOptionsMarkup(){return `<div class="phone-guide"><div class="phone-guide-head"><div><h3>📱 Opciones de celulares en Japón</h3><p>Precio de referencia · primer valor del rango de la guía</p></div></div><div class="phone-guide-list">${celularLuOptions.map(p=>`<div class="phone-guide-row"><div class="phone-guide-copy"><b>${esc(p.name)}</b><strong>${formatYen(p.price)}</strong><small>Dónde comprar</small><div class="phone-store-tags">${p.stores.map(st=>`<span>${esc(st)}</span>`).join('')}</div></div></div>`).join('')}</div></div>`;}
 const melodicaStores={Tokio:[['Shimamura Music Shinjuku PePe','Shinjuku, Tokio'],['Shimamura Music Futako Tamagawa Rise Shopping Center','Setagaya, Tokio'],['Ishibashi Music - Shibuya','Shibuya, Tokio'],['Shimokura Musical Instruments','Kanda / Ochanomizu, Tokio'],['Suzukigakkihanbaikabushikigaisha','Nihonbashi, Tokio']],Osaka:[['Shimamura Music – Abeno','Abeno, Osaka'],['Shimamura Music – Aeon Mall Dainichi','Moriguchi, Osaka'],['Yamano Music – Aeon Mall Tsurumi Ryokuchi','Tsurumi, Osaka']]};
 function melodicaStoresMarkup(){return `<div class="phone-guide"><div class="phone-guide-head"><div><h3>🎹 Dónde buscar la Melódica</h3><p>Locales de referencia · confirmar stock de PRO-37v3</p></div></div>${Object.entries(melodicaStores).map(([city,stores])=>`<div style="margin-top:12px"><div style="font-weight:800;color:#c7a7ff;font-size:13px;margin:0 0 7px 2px;text-transform:uppercase;letter-spacing:.7px">${esc(city)}</div><div class="phone-guide-list">${stores.map(([name,area])=>`<div class="phone-guide-row"><div class="phone-guide-copy"><b>${esc(name)}</b><small style="grid-column:1/-1">📍 ${esc(area)}</small></div></div>`).join('')}</div></div>`).join('')}</div>`;}
-function showPersonalDetail(index){const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);if(d.status==='Buscando')d.status='Pendiente';const items=getPersonalItems(index);const total=personalItemsTotal(index);const rows=items.length?items.map(y=>`<div class="gift-item-row"><div><b>${esc(y.name)}</b><small>${y.where?'📍 '+esc(y.where):''}</small></div><strong>${formatYen(y.price)}</strong><button class="gift-item-delete" onclick="deletePersonalItem(${index},'${esc(y.id)}')">✕</button></div>`).join(''):`<div class="gift-empty-items"><div class="bag">🛍️</div><p>Todavía no agregaste ninguna compra para este producto.</p></div>`;document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image">${personalVisualMarkup(x[0],true)}</div><h2>${esc(x[0])}</h2>${x[2]?`<div class="detail-form-row"><strong>Cantidad</strong><span>${esc(x[2].replace('Cantidad: ',''))}</span></div>`:''}${x[3]?`<div class="detail-form-row"><strong>Presupuesto</strong><span>${esc(x[3].replace('Presupuesto: ',''))}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="gift-total-box"><span>Total</span><strong>${formatYen(total)}</strong></div><div class="gift-items-head"><h3>Compras</h3><button type="button" class="gift-add-item" onclick="openPersonalItemEditor(${index})">＋ Agregar</button></div>${rows}${normalizedSearchText(x[0])==='celular lu'?celularLuOptionsMarkup():''}${normalizedSearchText(x[0]).includes('melodica suzuki pro-37v3')?melodicaStoresMarkup():''}${normalizedSearchText(x[0])==='microfono corbatero'?microphoneBrandsMarkup():''}<div class="manage-actions" style="grid-template-columns:1fr"><button class="delete-btn" onclick="deleteItem('personal',${index})">Eliminar</button></div></div>`;updateBudgets();showScreen('personalDetail');}
+function showPersonalDetail(index){const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);if(d.status==='Buscando')d.status='Pendiente';const items=getPersonalItems(index);const total=personalItemsTotal(index);const rows=items.length?items.map(y=>`<div class="gift-item-row"><div><b>${esc(y.name)}</b><small>${y.where?'📍 '+esc(y.where):''}</small></div><strong>${formatYen(y.price)}</strong><button class="gift-item-delete" onclick="deletePersonalItem(${index},'${esc(y.id)}')">✕</button></div>`).join(''):`<div class="gift-empty-items"><div class="bag">🛍️</div><p>Todavía no agregaste ninguna compra para este producto.</p></div>`;document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image">${personalVisualMarkup(x[0],true,index)}</div><h2>${esc(x[0])}</h2>${x[2]?`<div class="detail-form-row"><strong>Cantidad</strong><span>${esc(x[2].replace('Cantidad: ',''))}</span></div>`:''}${x[3]?`<div class="detail-form-row"><strong>Presupuesto</strong><span>${esc(x[3].replace('Presupuesto: ',''))}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="gift-total-box"><span>Total</span><strong>${formatYen(total)}</strong></div><div class="gift-items-head"><h3>Compras</h3><button type="button" class="gift-add-item" onclick="openPersonalItemEditor(${index})">＋ Agregar</button></div>${rows}${normalizedSearchText(x[0])==='celular lu'?celularLuOptionsMarkup():''}${normalizedSearchText(x[0]).includes('melodica suzuki pro-37v3')?melodicaStoresMarkup():''}${normalizedSearchText(x[0])==='microfono corbatero'?microphoneBrandsMarkup():''}<div class="manage-actions" style="grid-template-columns:1fr"><button class="delete-btn" onclick="deleteItem('personal',${index})">Eliminar</button></div></div>`;updateBudgets();showScreen('personalDetail');}
 let personalItemsData={};let personalItemEditingIndex=null;
 function personalIdentity(index){const x=personalItems[index];return x?x[0]:'';}
 function loadPersonalItems(){try{personalItemsData=JSON.parse(localStorage.getItem('japon_personal_items_v1')||'{}')||{};}catch(e){personalItemsData={};}}
@@ -2030,7 +2048,7 @@ function closeItemEditor(){document.getElementById('itemEditor')?.classList.remo
 function editField(label,id,value='',type='text'){return `<label>${label}</label><input id="${id}" type="${type}" value="${esc(value??'')}">`;}
 function openItemEditor(type,key){
  itemEditContext={type,key};const title=document.getElementById('itemEditorTitle'),fields=document.getElementById('itemEditorFields');
- if(type==='personal'){const x=personalItems[key];title.textContent='Editar compra';fields.innerHTML=editField('Nombre','editName',x[0])+editField('Cantidad','editQty',(x[2]||'').replace('Cantidad: ',''))+editField('Presupuesto','editBudget',(x[3]||'').replace('Presupuesto: ',''));}
+ if(type==='personal'){const x=personalItems[key],row=wishlistCloudRows[key];title.textContent='Editar compra';fields.innerHTML=editField('Nombre','editName',x[0])+editField('Cantidad','editQty',(x[2]||'').replace('Cantidad: ',''))+editField('Presupuesto','editBudget',(x[3]||'').replace('Presupuesto: ',''))+`<label>Imagen</label><button type="button" class="photo-action" style="width:100%" onclick="document.getElementById('editPersonalImage').click()">🖼️ Elegir / cambiar imagen</button><input id="editPersonalImage" type="file" accept="image/*" hidden onchange="selectPersonalImage(this,'edit')"><p id="editPersonalImagePicked" style="font-size:13px;color:#91a3b7;margin:8px 0">${row?.image_path?'✓ Este producto ya tiene imagen':'Sin imagen seleccionada'}</p>`;}
  else if(type==='gifts'){const g=gifts[key];title.textContent='Editar regalo';fields.innerHTML=editField('Persona','editName',g[0])+editField('Grupo','editGroup',g[1])+editField('Interés','editInterest',g[2])+editField('Idea','editIdea',g[3]);}
  else if(type==='zone'){const z=supabaseZones.find(z=>z.name===key);title.textContent='Editar zona';fields.innerHTML=editField('Nombre','editName',key)+`<label>Imagen de la zona</label><div class="photo-actions"><button type="button" class="photo-action primary" onclick="document.getElementById('editZoneCamera').click()">📸 Sacar foto</button><button type="button" class="photo-action" onclick="document.getElementById('editZoneGallery').click()">🖼️ Elegir foto</button></div><input id="editZoneCamera" type="file" accept="image/*" capture="environment" hidden onchange="selectEditZoneImage(this)"><input id="editZoneGallery" type="file" accept="image/*" hidden onchange="selectEditZoneImage(this)"><p id="editZoneImagePicked" style="font-size:13px;color:#91a3b7;margin:8px 0">${z?.photo_url?'✓ Esta zona ya tiene imagen':'Sin imagen seleccionada'}</p>`;}
  else if(type==='place'){const p=getPlaceById(key);title.textContent='Editar lugar';fields.innerHTML=editField('Nombre','editName',p.name)+`<label>Tipo</label><select id="editType"><option ${p.types.includes('Visitar')?'selected':''}>Visitar</option><option ${p.types.includes('Comer')?'selected':''}>Comer</option><option ${p.types.includes('Compras')?'selected':''}>Compras</option></select>`+editField('Dirección','editAddress',p.address||'');}
@@ -2046,9 +2064,9 @@ async function saveItemEdit(){
  if(!itemEditContext)return;const {type,key}=itemEditContext;const name=(document.getElementById('editName')?.value||'').trim();if(!name)return showSavedToast('Escribí un nombre');
  try{
   if(type==='personal'){
-   const x=personalItems[key],row=wishlistCloudRows[key];x[0]=name;x[2]=(document.getElementById('editQty')?.value||'').trim()?`Cantidad: ${(document.getElementById('editQty').value||'').trim()}`:'';x[3]=(document.getElementById('editBudget')?.value||'').trim()?`Presupuesto: ${(document.getElementById('editBudget').value||'').trim()}`:'';
-   if(row?.id&&supabaseClient&&navigator.onLine){const raw=(x[3]||'').match(/[\d.]+/g);await supabaseClient.from('wishlist_items').update({product:x[0],quantity:(x[2]||'').replace('Cantidad: ',''),budget_max:raw?Number(raw.join('').replace(/\./g,'')):null}).eq('id',row.id);}
-   rememberCustom('personal',x);renderPersonal();closeItemEditor();showPersonalDetail(key);
+   const x=personalItems[key],row=wishlistCloudRows[key],oldName=x[0];let imagePath=row?.image_path||'';if(editPersonalImageFile)imagePath=await uploadPersonalImage(editPersonalImageFile,name);x[0]=name;x[2]=(document.getElementById('editQty')?.value||'').trim()?`Cantidad: ${(document.getElementById('editQty').value||'').trim()}`:'';x[3]=(document.getElementById('editBudget')?.value||'').trim()?`Presupuesto: ${(document.getElementById('editBudget').value||'').trim()}`:'';
+   if(row?.id&&supabaseClient&&navigator.onLine){const raw=(x[3]||'').match(/[\d.]+/g);await supabaseClient.from('wishlist_items').update({product:x[0],quantity:(x[2]||'').replace('Cantidad: ',''),budget_max:raw?Number(raw.join('').replace(/\./g,'')):null,image_path:imagePath||null}).eq('id',row.id);if(row)row.image_path=imagePath;}
+   rememberCustom('personal',x);editPersonalImageFile=null;renderPersonal();closeItemEditor();showPersonalDetail(key);
   }else if(type==='gifts'){
    const g=gifts[key],row=giftCloudRows[key];g[0]=name;g[1]=(document.getElementById('editGroup')?.value||'').trim();g[2]=(document.getElementById('editInterest')?.value||'').trim();g[3]=(document.getElementById('editIdea')?.value||'').trim();
    if(row?.id&&supabaseClient&&navigator.onLine)await supabaseClient.from('gifts').update({person_name:g[0],group_name:g[1],interest_category:g[2],idea:g[3]}).eq('id',row.id);
