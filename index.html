@@ -1634,17 +1634,20 @@ async function addZone(){
  const input=document.getElementById('newZoneName');const name=(input?.value||'').trim();
  if(!name)return showSavedToast('Escribí un nombre');
  if(supabaseZones.some(z=>normalizedSearchText(z.name)===normalizedSearchText(name)))return showSavedToast('Esa zona ya existe');
+ if(!navigator.onLine||!supabaseClient)return alert('Necesitás Internet para crear una zona. Así queda guardada en la nube y aparece en ambos celulares.');
  let photoUrl='';
- try{if(newZoneImageFile)photoUrl=await uploadZoneCover(newZoneImageFile,name);}catch(e){alert(e.message||'No se pudo subir la imagen.');return;}
- const local={id:'local-zone-'+Date.now(),name,photo_url:photoUrl,_custom:true};supabaseZones.push(local);rememberCustom('zones',local);
- const payload={name,photo_url:photoUrl||null};
  try{
-   if(!supabaseClient||!navigator.onLine)throw new Error('offline');
+   if(newZoneImageFile)photoUrl=await uploadZoneCover(newZoneImageFile,name);
+   const payload={name,photo_url:photoUrl||null};
    const {data,error}=await supabaseClient.from('zones').insert(payload).select('id,name,photo_url').single();
-   if(error)throw error;Object.assign(local,data);
- }catch(e){queueCrud({action:'insert',table:'zones',payload});console.warn('Zona pendiente de nube:',e?.message||e);}
- localStorage.setItem('japon_custom_zones',JSON.stringify(supabaseZones.filter(z=>String(z.id).startsWith('local-zone-'))));
- input.value='';clearNewZoneImage();toggleAddPanel('addZonePanel',false);renderZones();showSavedToast('✓ Zona agregada');
+   if(error)throw error;
+   const local={...data,_custom:true};supabaseZones.push(local);rememberCustom('zones',local);
+   localStorage.setItem('japon_custom_zones',JSON.stringify(supabaseZones.filter(z=>String(z.id).startsWith('local-zone-'))));
+   input.value='';clearNewZoneImage();toggleAddPanel('addZonePanel',false);renderZones();showSavedToast('✓ Zona guardada en la nube');
+ }catch(e){
+   console.error('No se creó la zona en Supabase:',e);
+   alert('No se pudo guardar la zona en la nube. No se creó localmente para evitar que quede solo en este celular. Probá de nuevo con Internet.');
+ }
 }
 async function addPlace(){
  const name=(document.getElementById('newPlaceName')?.value||'').trim();
