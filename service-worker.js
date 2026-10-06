@@ -1,5 +1,5 @@
-const CACHE_NAME='v61-zona-portada-segura';
-const RUNTIME_CACHE='viaje-japon-runtime-v61-zona-portada-segura';
+const CACHE_NAME='v62-presupuesto-principal';
+const RUNTIME_CACHE='viaje-japon-runtime-v62-presupuesto-principal';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
