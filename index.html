@@ -2076,17 +2076,22 @@ async function saveItemEdit(){
    rememberCustom('gifts',g);currentGiftGroup=g[1];renderGiftHome();closeItemEditor();showGiftDetail(key);
   }else if(type==='zone'){
    const old=key,z=supabaseZones.find(z=>z.name===old);
+   if(!z?.id||String(z.id).startsWith('local-zone-')||!supabaseClient||!navigator.onLine)throw new Error('La zona debe estar sincronizada antes de editarla.');
    let photoUrl=z?.photo_url||'';
    if(editZoneImageFile)photoUrl=await uploadZoneCover(editZoneImageFile,name);
-   if(z){z.name=name;z.photo_url=photoUrl;}places.filter(p=>p.zone===old).forEach(p=>p.zone=name);
-   if(visualImages.zones[old]){visualImages.zones[name]=visualImages.zones[old];delete visualImages.zones[old];}
-   if(z?.id&&supabaseClient&&navigator.onLine){
-    const {error:zoneErr}=await supabaseClient.from('zones').update({name,photo_url:photoUrl||null}).eq('id',z.id);if(zoneErr)throw zoneErr;
+   const nameChanged=normalizedSearchText(old)!==normalizedSearchText(name);
+   const {error:zoneErr}=await supabaseClient.from('zones').update({name,photo_url:photoUrl||null}).eq('id',z.id);if(zoneErr)throw zoneErr;
+   if(nameChanged){
     const {error:placesErr}=await supabaseClient.from('places').update({zone:name}).eq('zone',old);if(placesErr)throw placesErr;
     const {error:photosErr}=await supabaseClient.from('photos').update({zone_name:name}).eq('zone_name',old);if(photosErr)throw photosErr;
+    places.filter(p=>p.zone===old).forEach(p=>p.zone=name);
     tripPhotos.forEach(ph=>{if(ph.zone_name===old)ph.zone_name=name;});
+    if(visualImages.zones[old]){visualImages.zones[name]=visualImages.zones[old];delete visualImages.zones[old];}
    }
-   forgetCustom('zones',x=>normalizedSearchText(x.name)===normalizedSearchText(old));rememberCustom('zones',z||{id:'local-zone-'+Date.now(),name,photo_url:photoUrl,_custom:true});const cd=getCustomData();(cd.places||[]).forEach(x=>{if(normalizedSearchText(x.zone)===normalizedSearchText(old))x.zone=name;});setCustomData(cd);currentZone=name;editZoneImageFile=null;renderZones();updateCounts();closeItemEditor();showZone(name);
+   z.name=name;z.photo_url=photoUrl;
+   forgetCustom('zones',x=>normalizedSearchText(x.name)===normalizedSearchText(old));rememberCustom('zones',z);
+   const cd=getCustomData();if(nameChanged)(cd.places||[]).forEach(x=>{if(normalizedSearchText(x.zone)===normalizedSearchText(old))x.zone=name;});setCustomData(cd);
+   currentZone=name;editZoneImageFile=null;renderZones();updateCounts();closeItemEditor();showZone(name);
   }else if(type==='place'){
    const p=getPlaceById(key);p.name=name;p.types=[document.getElementById('editType')?.value||'Visitar'];p.address=(document.getElementById('editAddress')?.value||'').trim();p.latitude=null;p.longitude=null;
    if((p.cloudId||(!String(p.id).startsWith('local-')&&p.id))&&supabaseClient&&navigator.onLine)await supabaseClient.from('places').update({name:p.name,place_types:p.types,address:p.address,latitude:null,longitude:null}).eq('id',p.cloudId||p.id);
