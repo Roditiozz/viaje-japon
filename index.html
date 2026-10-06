@@ -908,7 +908,7 @@ if(IS_GUEST) document.documentElement.classList.add('guest-mode');
 <div class="home-photos-mobile" onclick="openPhotoAlbum()"><div class="activity-icon">📷</div><div class="activity-copy"><strong>Fotos recientes</strong><small id="homePhotoSummary">0 fotos</small></div><div id="homeRecentPhotos" class="photo-grid"></div></div>
 </div></div></section>
 
-<section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" data-pct="0%" onclick="openBudgetEditor('personal')"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div>
+<section id="paraMi"><button class="back" onclick="appBack()">← Volver</button><div class="screen-title"><h2>🛍️ Para mí</h2><p>Lista personal de compras.</p></div><div class="budget compact-budget"><div class="budget-grid"><div class="budget-box budget-editable" data-pct="0%" onclick="openBudgetEditor('personal')"><small>Presupuesto</small><strong id="personalBudget">¥200.000</strong><small id="personalBudgetSync" style="display:none"></small></div><div class="budget-box"><small>Gastado</small><strong id="personalSpent">¥0</strong></div><div class="budget-box"><small>Restante</small><strong id="personalRemaining">¥200.000</strong></div><div class="budget-box"><small>Monto final</small><strong id="personalFinal">¥0</strong></div></div></div><div class="list" id="personalList"></div>
 <button class="add-button" type="button" onclick="toggleAddPanel('addPersonalPanel')">＋ Agregar compra</button>
 <div class="add-panel" id="addPersonalPanel"><h3>Nueva compra</h3><label>Nombre</label><input id="newPersonalName" placeholder="Ej.: Auriculares"><label>Cantidad (opcional)</label><input id="newPersonalQty" placeholder="Ej.: 1"><label>Presupuesto máximo (opcional)</label><input id="newPersonalBudget" type="number" min="0" placeholder="¥"><label>Imagen (opcional)</label><button type="button" class="photo-action" style="width:100%" onclick="document.getElementById('newPersonalImage').click()">🖼️ Elegir imagen</button><input id="newPersonalImage" type="file" accept="image/*" hidden onchange="selectPersonalImage(this,'new')"><p id="newPersonalImagePicked" style="font-size:13px;color:#91a3b7;margin:8px 0">Sin imagen seleccionada</p><div class="add-actions"><button class="add-primary" onclick="addPersonalItem()">Guardar</button><button class="add-secondary" onclick="cancelAddPersonal()">Cancelar</button></div></div>
 </section>
@@ -1913,10 +1913,11 @@ function statusLabel(status){return status==='Comprado'?'🟢 Comprado':status==
 function formatYen(n){return '¥'+Number(n||0).toLocaleString('es-AR');}
 
 let editingBudgetType='';
-function openBudgetEditor(type){
+async function openBudgetEditor(type){
  editingBudgetType=type;
  const el=document.getElementById('budgetEditor'),input=document.getElementById('budgetEditorInput'),title=document.getElementById('budgetEditorTitle');
  if(title)title.textContent=type==='personal'?'Editar presupuesto — Para mí':'Editar presupuesto — Regalos';
+ if(supabaseClient&&navigator.onLine){try{await loadBudgetsFromSupabase();updateBudgets();}catch(e){}}
  if(input)input.value=cloudBudgets[type]||'';
  if(el)el.classList.add('open');
  setTimeout(()=>input?.focus(),60);
@@ -1928,8 +1929,8 @@ async function saveBudgetEdit(){
  if(raw==='')return showSavedToast('Ingresá un monto');
  const amount=Number(raw);cloudBudgets[type]=amount;
  localStorage.setItem('japon_custom_budgets',JSON.stringify(cloudBudgets));
- updateBudgets();closeBudgetEditor();showSavedToast('✓ Presupuesto guardado');
- // Guardado en nube si la tabla permite identificar la fila; si no, el valor local sigue vigente.
+ updateBudgets();
+ // Guardado en nube antes de cerrar, para que ambos perfiles vean el mismo valor.
  try{
   if(supabaseClient&&navigator.onLine){
    const {data,error}=await supabaseClient.from('budgets').select('*');
@@ -1946,6 +1947,7 @@ async function saveBudgetEdit(){
    }
   }
  }catch(e){console.warn('Presupuesto guardado localmente; nube pendiente/no compatible:',e?.message||e);}
+ updateBudgets();closeBudgetEditor();showSavedToast('✓ Presupuesto guardado');
 }
 function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalBudget',pb);set('giftBudget',gb);set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);const pp=pb>0?Math.min(100,Math.round(ps/pb*100)):0,gp=gb>0?Math.min(100,Math.round(gs/gb*100)):0;const pbox=document.querySelector('#paraMi .budget-box:first-child'),gbox=document.querySelector('#regalos .budget-box:first-child');if(pbox)pbox.dataset.pct=pp+'%';if(gbox)gbox.dataset.pct=gp+'%';}
 
