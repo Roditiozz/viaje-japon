@@ -1,5 +1,5 @@
-const CACHE_NAME='v63-presupuesto-sync';
-const RUNTIME_CACHE='viaje-japon-runtime-v63-presupuesto-sync';
+const CACHE_NAME='v64-fotos-todos-lugares';
+const RUNTIME_CACHE='viaje-japon-runtime-v64-fotos-todos-lugares';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
