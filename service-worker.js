@@ -1,5 +1,5 @@
-const CACHE_NAME='v65-fotos-multiples';
-const RUNTIME_CACHE='viaje-japon-runtime-v65-fotos-multiples';
+const CACHE_NAME='v66-compras-compartidas';
+const RUNTIME_CACHE='viaje-japon-runtime-v66-compras-compartidas';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
