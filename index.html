@@ -2026,16 +2026,6 @@ const melodicaStores={Tokio:[['Shimamura Music Shinjuku PePe','Shinjuku, Tokio']
 function melodicaStoresMarkup(){return `<div class="phone-guide"><div class="phone-guide-head"><div><h3>🎹 Dónde buscar la Melódica</h3><p>Locales de referencia · confirmar stock de PRO-37v3</p></div></div>${Object.entries(melodicaStores).map(([city,stores])=>`<div style="margin-top:12px"><div style="font-weight:800;color:#c7a7ff;font-size:13px;margin:0 0 7px 2px;text-transform:uppercase;letter-spacing:.7px">${esc(city)}</div><div class="phone-guide-list">${stores.map(([name,area])=>`<div class="phone-guide-row"><div class="phone-guide-copy"><b>${esc(name)}</b><small style="grid-column:1/-1">📍 ${esc(area)}</small></div></div>`).join('')}</div></div>`).join('')}</div>`;}
 function showPersonalDetail(index){
   if(navigator.onLine)syncPurchaseDetails();const x=personalItems[index];if(!x)return;const d=getPurchase('personal',index);if(d.status==='Buscando')d.status='Pendiente';const items=getPersonalItems(index);const total=personalItemsTotal(index);const rows=items.length?items.map(y=>`<div class="gift-item-row"><div><b>${esc(y.name)}</b><small>${y.where?'📍 '+esc(y.where):''}</small></div><strong>${formatYen(y.price)}</strong><button class="gift-item-delete" onclick="deletePersonalItem(${index},'${esc(y.id)}')">✕</button></div>`).join(''):`<div class="gift-empty-items"><div class="bag">🛍️</div><p>Todavía no agregaste ninguna compra para este producto.</p></div>`;document.getElementById('personalDetailContainer').innerHTML=`<div class="detail-card"><div class="detail-product-image">${personalVisualMarkup(x[0],true,index)}</div><h2>${esc(x[0])}</h2>${x[2]?`<div class="detail-form-row"><strong>Cantidad</strong><span>${esc(x[2].replace('Cantidad: ',''))}</span></div>`:''}${x[3]?`<div class="detail-form-row"><strong>Presupuesto</strong><span>${esc(x[3].replace('Presupuesto: ',''))}</span></div>`:''}<div class="detail-form-row"><strong>Estado</strong><button type="button" class="status-btn" onclick="cyclePurchaseStatus('personal',${index})">${statusLabel(d.status)}</button></div><div class="gift-total-box"><span>Total</span><strong>${formatYen(total)}</strong></div><div class="gift-items-head"><h3>Compras</h3><button type="button" class="gift-add-item" onclick="openPersonalItemEditor(${index})">＋ Agregar</button></div>${rows}${normalizedSearchText(x[0])==='celular lu'?celularLuOptionsMarkup():''}${normalizedSearchText(x[0]).includes('melodica suzuki pro-37v3')?melodicaStoresMarkup():''}${normalizedSearchText(x[0])==='microfono corbatero'?microphoneBrandsMarkup():''}<div class="manage-actions"><button type="button" onclick="openItemEditor('personal',${index})">✏️ Editar</button><button class="delete-btn" onclick="deleteItem('personal',${index})">Eliminar</button></div></div>`;updateBudgets();showScreen('personalDetail');}
-async function syncPurchaseDetailsManual(){
- const p=Object.values(personalItemsData).reduce((n,a)=>n+(Array.isArray(a)?a.length:0),0);
- const g=Object.values(giftItemsData).reduce((n,a)=>n+(Array.isArray(a)?a.length:0),0);
- if(!navigator.onLine)return showSavedToast('Conectate a Internet para sincronizar');
- await syncPurchaseDetails();
- const {data,error}=await supabaseClient.from('purchase_details').select('id');
- if(error)return alert('No se pudo verificar la nube: '+error.message);
- showSavedToast('Nube: '+(data||[]).length+' compras · En este celular: '+(p+g));
- alert('Sincronización verificada. En este celular había '+(p+g)+' compras individuales y ahora hay '+(data||[]).length+' en la nube. Abrí el otro perfil nuevamente.');
-}
 let purchaseDetailsCloudLoaded=false;
 async function syncPurchaseDetails(){
  if(!supabaseClient||!navigator.onLine)return;
@@ -2063,7 +2053,7 @@ async function syncPurchaseDetails(){
   }
   savePersonalItemsLocal();saveGiftItemsLocal();purchaseDetailsCloudLoaded=true;
   renderPersonal();renderGiftHome();
- }catch(e){console.warn('Sincronización de detalles de compras:',e?.message||e);showSavedToast('⚠️ Compras sin sincronizar: '+(e?.message||'error'));}
+ }catch(e){console.warn('Sincronización de detalles de compras:',e?.message||e);}
 }
 async function uploadPurchaseDetail(kind,key,item){
  if(!supabaseClient||!navigator.onLine)return;
