@@ -2497,6 +2497,7 @@ document.addEventListener('click',function(e){
   loadPurchaseData();
   loadGiftItems();
   loadPersonalItems();
+  await syncPurchaseDetails();
   applyWishlistCloudPurchaseData();
   applyGiftCloudPurchaseData();
   // Los cambios pendientes tienen prioridad sobre la copia de la nube hasta sincronizarse.
