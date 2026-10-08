@@ -1,5 +1,5 @@
-const CACHE_NAME='v67-reintento-compras';
-const RUNTIME_CACHE='viaje-japon-runtime-v67-reintento-compras';
+const CACHE_NAME='v68-compras-auto';
+const RUNTIME_CACHE='viaje-japon-runtime-v68-compras-auto';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
