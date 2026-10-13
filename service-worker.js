@@ -1,5 +1,5 @@
-const CACHE_NAME='v70-album-videos-r2';
-const RUNTIME_CACHE='viaje-japon-runtime-v70-album-videos-r2';
+const CACHE_NAME='v71-presupuesto-sync';
+const RUNTIME_CACHE='viaje-japon-runtime-v71-presupuesto-sync';
 const APP_SHELL=[
  './','./index.html','./manifest.json','./manifest-rcoronel.json','./manifest-ldambra.json','./icon-192.png','./icon-512.png','./icon-maskable-192.png','./icon-maskable-512.png','./splash-viaje-japon.png','./home-bg.png',
   './para-mi-bg.webp',
