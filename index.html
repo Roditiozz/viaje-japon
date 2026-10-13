@@ -1943,8 +1943,9 @@ async function saveBudgetEdit(){
    if(row?.id){
     const amountKey=['amount','budget','total','value','limit_yen','yen'].find(k=>Object.prototype.hasOwnProperty.call(row,k))||'amount';
     const payload={};payload[amountKey]=amount;
-    const {error:upErr}=await supabaseClient.from('budgets').update(payload).eq('id',row.id);
+    const {data:updated,error:upErr}=await supabaseClient.from('budgets').update(payload).eq('id',row.id).select('id,amount');
     if(upErr)throw upErr;
+    if(!updated?.length)throw new Error('Supabase no confirmó el cambio de presupuesto');
    }
   }
  }catch(e){console.warn('Error sincronizando presupuesto:',e?.message||e);showSavedToast('⚠️ No se pudo sincronizar el presupuesto');return;}
