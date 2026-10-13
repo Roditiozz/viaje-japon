@@ -1939,6 +1939,7 @@ async function saveBudgetEdit(){
     const label=String(r.type??r.name??r.category??r.budget_type??r.section??'').toLowerCase();
     return type==='gifts'?(label.includes('gift')||label.includes('regal')):(label.includes('personal')||label.includes('para'));
    });
+   if(!row?.id)throw new Error('Presupuesto no encontrado en la nube');
    if(row?.id){
     const amountKey=['amount','budget','total','value','limit_yen','yen'].find(k=>Object.prototype.hasOwnProperty.call(row,k))||'amount';
     const payload={};payload[amountKey]=amount;
@@ -1946,7 +1947,7 @@ async function saveBudgetEdit(){
     if(upErr)throw upErr;
    }
   }
- }catch(e){console.warn('Presupuesto guardado localmente; nube pendiente/no compatible:',e?.message||e);}
+ }catch(e){console.warn('Error sincronizando presupuesto:',e?.message||e);showSavedToast('⚠️ No se pudo sincronizar el presupuesto');return;}
  updateBudgets();closeBudgetEditor();showSavedToast('✓ Presupuesto guardado');
 }
 function updateBudgets(){const ps=Object.values(purchaseData.personal).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const gs=Object.values(purchaseData.gifts).reduce((a,d)=>a+(d.status==='Comprado'&&Number(d.price)>0?Number(d.price):0),0);const pb=cloudBudgets.personal,gb=cloudBudgets.gifts;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=formatYen(v)};set('personalBudget',pb);set('giftBudget',gb);set('personalSpent',ps);set('personalRemaining',pb-ps);set('personalFinal',ps);set('giftSpent',gs);set('giftRemaining',gb-gs);set('giftFinal',gs);const pp=pb>0?Math.min(100,Math.round(ps/pb*100)):0,gp=gb>0?Math.min(100,Math.round(gs/gb*100)):0;const pbox=document.querySelector('#paraMi .budget-box:first-child'),gbox=document.querySelector('#regalos .budget-box:first-child');if(pbox)pbox.dataset.pct=pp+'%';if(gbox)gbox.dataset.pct=gp+'%';}
