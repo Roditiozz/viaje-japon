@@ -1315,9 +1315,9 @@ async function loadGiftsFromSupabase() {
     const usable=data.map(row=>({
       row,
       item:[
-        textValue(firstValue(row,['person_name','recipient','name','person'])),
-        textValue(firstValue(row,['group_name','group','family_group','recipient_group'])),
-        textValue(firstValue(row,['interest_category','category','interest','theme'])),
+        textValue(firstValue(row,['recipient','person_name','name','person'])),
+        textValue(firstValue(row,['recipient_group','group_name','group','family_group'])),
+        (Array.isArray(row.interests)?row.interests.join(', '):textValue(firstValue(row,['interest_category','category','interest','theme']))),
         textValue(firstValue(row,['idea','gift_idea','notes','description']))
       ]
     })).filter(x=>x.item[0]);
@@ -2506,7 +2506,7 @@ document.addEventListener('click',function(e){
   // Los cambios pendientes tienen prioridad sobre la copia de la nube hasta sincronizarse.
   applyPendingQueueToLocal();
   try{
-    const savedBudgets=JSON.parse(localStorage.getItem('japon_custom_budgets')||'null');
+    const savedBudgets=results[6]?null:JSON.parse(localStorage.getItem('japon_custom_budgets')||'null');
     if(savedBudgets){if(Number.isFinite(Number(savedBudgets.personal)))cloudBudgets.personal=Number(savedBudgets.personal);if(Number.isFinite(Number(savedBudgets.gifts)))cloudBudgets.gifts=Number(savedBudgets.gifts);}
   }catch(e){}
   renderPersonal();
