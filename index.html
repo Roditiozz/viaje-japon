@@ -2455,11 +2455,11 @@ document.getElementById('galleryPhotoInput').addEventListener('change',async e=>
 function openCurrentPlacePhotoAlbum(){const p=getPlaceById(currentDetailPlaceId);if(!p)return;openPhotoAlbum(p.zone,p.name);}
 function openPhotoAlbum(zone='',place=''){albumZone=zone||'';albumPlace=place||'';renderPhotoAlbum();showScreen('photoAlbum');}
 function updateR2StorageIndicator(){
- const used=1229365457,limit=10000000000;
+ const used=1497775588,limit=10000000000;
  const el=document.getElementById('r2StorageNumbers'),bar=document.getElementById('r2StorageBar');
  if(!el||!bar)return;
  const gb=n=>(n/1e9).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
- el.textContent=gb(used)+' GB utilizados · '+gb(Math.max(0,limit-used))+' GB hasta 10 GB (medición de Cloudflare del 13/10/2026; no se actualiza en vivo)';
+ el.textContent=gb(used)+' GB utilizados · '+gb(Math.max(0,limit-used))+' GB hasta 10 GB (medición de Cloudflare del 18/10/2026; no se actualiza en vivo)';
  bar.style.width=Math.min(100,used/limit*100)+'%';
 }
 function renderPhotoAlbum(){updateR2StorageIndicator();const zf=document.getElementById('photoZoneFilters'),pf=document.getElementById('photoPlaceFilters'),grid=document.getElementById('photoAlbumGrid');const zones=[...new Set(tripPhotos.map(x=>x.zone_name).filter(Boolean))];zf.innerHTML=['',...zones].map(z=>`<button class="photo-filter ${albumZone===z?'active':''}" onclick="albumZone=${JSON.stringify(z)};albumPlace='';renderPhotoAlbum()">${z||'Todas'}</button>`).join('');const places=albumZone?[...new Set(tripPhotos.filter(x=>x.zone_name===albumZone).map(x=>x.place_name).filter(Boolean))]:[];pf.innerHTML=albumZone?['',...places].map(pl=>`<button class="photo-filter ${albumPlace===pl?'active':''}" onclick="albumPlace=${JSON.stringify(pl)};renderPhotoAlbum()">${pl||'Todos los lugares'}</button>`).join(''):'';let a=tripPhotos;if(albumZone)a=a.filter(x=>x.zone_name===albumZone);if(albumPlace)a=a.filter(x=>x.place_name===albumPlace);const pending=a.filter(x=>x._pending).length;document.getElementById('photoAlbumDescription').textContent=`${a.length} archivo${a.length===1?'':'s'}${albumZone?' · '+albumZone:''}${albumPlace?' · '+albumPlace:''}${pending?' · '+pending+' pendiente'+(pending===1?'':'s'):''}`;grid.innerHTML=a.length?a.map(photoThumbHTML).join(''):'<div class="photo-empty">No hay fotos con este filtro.</div>';}
